@@ -1,0 +1,736 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  50% { transform: translate(10px, -15px); opacity: 1; }
+}
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+/* Blend logo’s dark emblem box into dark nav so it doesn’t show a visible square */
+.logo-link-dark img {
+  display: block;
+}
+
+/* Gold glow blobs — fantasy hero ambience */
+.blob-gold-1 {
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, rgba(161, 130, 65, 0.08) 50%, transparent 70%);
+  filter: blur(90px);
+  top: -100px;
+  left: -100px;
+  pointer-events: none;
+}
+.blob-gold-2 {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(161, 130, 65, 0.14) 0%, rgba(120, 95, 40, 0.05) 50%, transparent 70%);
+  filter: blur(80px);
+  bottom: -80px;
+  right: -80px;
+  pointer-events: none;
+}
+
+/* Section gold divider line */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(161, 130, 65, 0.30), transparent);
+}
+
+/* Gold accent bar above section headings */
+.gold-bar {
+  height: 2px;
+  width: 60px;
+  background: linear-gradient(to right, transparent, #A18241, transparent);
+  margin: 0 auto 20px;
+}
+
+/* Fade-in-up animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up            { animation: fadeInUp 0.6s ease forwards; }
+.animation-delay-100           { animation-delay: 0.1s; opacity: 0; }
+.animation-delay-200           { animation-delay: 0.2s; opacity: 0; }
+.animation-delay-300           { animation-delay: 0.3s; opacity: 0; }
+.animation-delay-400           { animation-delay: 0.4s; opacity: 0; }
+
+/* Auto-scrolling marquee for logo strip */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-track-slow {
+  animation: marquee 52s linear infinite;
+}
+.marquee-track-slow:hover {
+  animation-play-state: paused;
+}
+
+/* Dynamic gradient border animation for modern cards */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-border {
+  background: linear-gradient(90deg, rgba(161,130,65,0.4), rgba(201,168,76,0.6), rgba(161,130,65,0.4), rgba(201,168,76,0.6));
+  background-size: 300% 100%;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* Fantasy photo frame — subtle animated gradient border */
+@keyframes frameGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-frame-gradient {
+  animation: frameGradient 8s ease-in-out infinite;
+}
+.photo-frame-fantasy {
+  box-shadow: 0 0 40px -8px rgba(161, 130, 65, 0.25), 0 20px 50px -20px rgba(0, 0, 0, 0.4);
+}
+.photo-frame-fantasy:hover {
+  box-shadow: 0 0 56px -8px rgba(161, 130, 65, 0.35), 0 24px 56px -20px rgba(0, 0, 0, 0.45);
+}
+/* Subtle glow pulse */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 20px rgba(161,130,65,0.15); }
+  50% { opacity: 1; box-shadow: 0 0 32px rgba(161,130,65,0.25); }
+}
+.hover-glow-pulse:hover {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Video placeholder shimmer (shown while video loads or if no file exists) */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.video-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(161,130,65,0.05) 25%,
+    rgba(161,130,65,0.12) 50%,
+    rgba(161,130,65,0.05) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* FAQ accordion — hide default marker; smooth content */
+details summary::-webkit-details-marker { display: none; }
+details > p {
+  overflow: hidden;
+}
+
+/* Soft inner glow on listing cards on hover */
+.listing-card-glow:hover {
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.35),
+              0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Pharmx-style subtle background: soft gradient + very light pattern for depth */
+.landing-bg {
+  background-color: #0D1B2A;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(201, 168, 76, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201, 168, 76, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, transparent 0%, #0D1B2A 100%);
+  background-attachment: scroll;
+}
+
+@layer base {
+  :root {
+    --primary: #c9a84c;
+    --accent: #a18241;
+    --dark-nav: #0d1b2a;
+    --surface: #f4f9ff;
+    --error: #e53935;
+    --warning: #ff8c00;
+    --success: #2e7d32;
+    --text-primary: #1a1a2e;
+    --text-muted: #6b7280;
+    --font-sora: "Sora", sans-serif;
+    --font-inter: "Inter", sans-serif;
+  }
+  /* App-wide: dark navy background, light text, Sora headings + Inter body */
+  body {
+    @apply font-body antialiased;
+    background-color: #0D1B2A;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+  /* Primary buttons: gold background with dark text (navy & gold theme) */
+  .bg-primary.text-white,
+  button.bg-primary,
+  a.bg-primary {
+    color: #0d1b2a !important;
+  }
+}
+
+/* App-only theme (dashboard): dark vs light green/white/orange */
+.app-theme {
+  --app-bg: #0D1B2A;
+  --app-nav-bg: #0d1b2a;
+  --app-nav-text: rgba(255, 255, 255, 0.9);
+  --app-nav-hover: rgba(255, 255, 255, 0.1);
+  --app-nav-hover-text: #16a34a;
+  --app-header-bg: #0F2035;
+  --app-header-border: rgba(161, 130, 65, 0.2);
+  --app-text: rgba(255, 255, 255, 0.9);
+  --app-text-muted: rgba(255, 255, 255, 0.6);
+  --app-primary: #C9A84C;
+  --app-border: rgba(255, 255, 255, 0.1);
+}
+.app-theme.app-light {
+  --app-bg: #ffffff;
+  --app-nav-bg: #ffffff;
+  --app-nav-text: #1a1a2e;
+  --app-nav-hover: rgba(22, 101, 52, 0.08);
+  --app-nav-hover-text: #15803d;
+  --app-header-bg: #f0fdf4;
+  --app-header-border: #e5e7eb;
+  --app-text: #1a1a2e;
+  --app-text-muted: #6b7280;
+  --app-primary: #ea580c;
+  --app-border: #e5e7eb;
+}
+.app-theme .app-theme-inner {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+.app-theme .app-nav {
+  background-color: var(--app-nav-bg) !important;
+  color: var(--app-nav-text) !important;
+}
+.app-theme .app-nav a,
+.app-theme .app-nav [class*="text-white"] {
+  color: var(--app-nav-text) !important;
+}
+.app-theme.app-light .app-nav .border-white\/10 {
+  border-color: #e5e7eb !important;
+}
+.app-theme .app-nav .hover\:bg-white\/10:hover,
+.app-theme .app-nav a:hover {
+  background-color: var(--app-nav-hover) !important;
+  color: var(--app-nav-hover-text) !important;
+}
+.app-theme .app-header {
+  background-color: var(--app-header-bg) !important;
+  border-color: var(--app-header-border) !important;
+  color: var(--app-text) !important;
+}
+.app-theme.app-light .app-header [class*="text-white"],
+.app-theme.app-light .app-header a,
+.app-theme.app-light .app-header button {
+  color: var(--app-text) !important;
+}
+.app-theme.app-light .app-header .hover\:bg-white\/10:hover {
+  background-color: var(--app-border) !important;
+}
+.app-theme.app-light main,
+.app-theme.app-light .app-theme-inner main {
+  color: var(--app-text);
+}
+.app-theme.app-light main .text-white,
+.app-theme.app-light main .text-white\/90,
+.app-theme.app-light main .text-white\/80,
+.app-theme.app-light main .text-white\/70,
+.app-theme.app-light main .text-white\/60,
+.app-theme.app-light main .text-white\/50 {
+  color: var(--app-text) !important;
+}
+.app-theme.app-light main .text-gold,
+.app-theme.app-light main a.text-gold,
+.app-theme.app-light main .text-gold-muted,
+.app-theme.app-light main [class*="text-gold"] {
+  color: var(--app-primary) !important;
+}
+.app-theme.app-light main .bg-gold,
+.app-theme.app-light main .from-gold-muted,
+.app-theme.app-light main .to-gold,
+.app-theme.app-light main .bg-gold\/20 {
+  background-color: var(--app-primary) !important;
+  background-image: none !important;
+}
+.app-theme.app-light main .border-gold\/50,
+.app-theme.app-light main .border-\[rgba\(161\,130\,65\] {
+  border-color: var(--app-primary) !important;
+}
+.app-theme.app-light .app-mobile-nav {
+  background-color: #15803d !important;
+  border-color: var(--app-border) !important;
+}
+.app-theme.app-light .app-mobile-nav [class*="text-white"],
+.app-theme.app-light .app-mobile-nav .text-gold {
+  color: var(--app-nav-text) !important;
+}
+.app-theme.app-light .app-mobile-nav .text-gold {
+  color: var(--app-primary) !important;
+}
+.app-theme.app-light main .bg-white\/5,
+.app-theme.app-light main .bg-mid-navy {
+  background-color: #f0fdf4 !important;
+}
+.app-theme.app-light main .border-white\/10,
+.app-theme.app-light main .border-t.border-white\/10 {
+  border-color: var(--app-border) !important;
+}
+.app-theme.app-light .app-header .bg-mid-navy {
+  background-color: var(--app-header-bg) !important;
+}
+.app-theme.app-light main .bg-gradient-to-r.from-gold-muted.to-gold {
+  background-color: var(--app-primary) !important;
+  background-image: none !important;
+}
+.app-theme.app-light main .text-\[\#0D1B2A\] {
+  color: #1a1a2e !important;
+}
+
+/* Filters panel: white and green in light mode */
+.app-theme.app-light .listing-filters-panel {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filters-title {
+  color: #15803d !important;
+}
+.app-theme.app-light .listing-filters-panel label {
+  color: #374151 !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select,
+.app-theme.app-light .listing-filters-panel .listing-filter-input {
+  background-color: #ffffff !important;
+  color: #1a1a2e !important;
+  border-color: #d1d5db !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select:hover,
+.app-theme.app-light .listing-filters-panel .listing-filter-input:hover {
+  border-color: #15803d !important;
+  background-color: #f0fdf4 !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select:focus,
+.app-theme.app-light .listing-filters-panel .listing-filter-input:focus {
+  border-color: #15803d !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.25);
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select option {
+  background-color: #ffffff !important;
+  color: #1a1a2e !important;
+}
+.app-theme.app-light .listing-filters-panel .text-white\/50 {
+  color: #6b7280 !important;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  50% { transform: translate(10px, -15px); opacity: 1; }
+}
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+/* Blend logo’s dark emblem box into dark nav so it doesn’t show a visible square */
+.logo-link-dark img {
+  display: block;
+}
+
+/* Gold glow blobs — fantasy hero ambience */
+.blob-gold-1 {
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, rgba(161, 130, 65, 0.08) 50%, transparent 70%);
+  filter: blur(90px);
+  top: -100px;
+  left: -100px;
+  pointer-events: none;
+}
+.blob-gold-2 {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(161, 130, 65, 0.14) 0%, rgba(120, 95, 40, 0.05) 50%, transparent 70%);
+  filter: blur(80px);
+  bottom: -80px;
+  right: -80px;
+  pointer-events: none;
+}
+
+/* Section gold divider line */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(161, 130, 65, 0.30), transparent);
+}
+
+/* Gold accent bar above section headings */
+.gold-bar {
+  height: 2px;
+  width: 60px;
+  background: linear-gradient(to right, transparent, #A18241, transparent);
+  margin: 0 auto 20px;
+}
+
+/* Fade-in-up animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up            { animation: fadeInUp 0.6s ease forwards; }
+.animation-delay-100           { animation-delay: 0.1s; opacity: 0; }
+.animation-delay-200           { animation-delay: 0.2s; opacity: 0; }
+.animation-delay-300           { animation-delay: 0.3s; opacity: 0; }
+.animation-delay-400           { animation-delay: 0.4s; opacity: 0; }
+
+/* Auto-scrolling marquee for logo strip */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-track-slow {
+  animation: marquee 52s linear infinite;
+}
+.marquee-track-slow:hover {
+  animation-play-state: paused;
+}
+
+/* Dynamic gradient border animation for modern cards */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-border {
+  background: linear-gradient(90deg, rgba(161,130,65,0.4), rgba(201,168,76,0.6), rgba(161,130,65,0.4), rgba(201,168,76,0.6));
+  background-size: 300% 100%;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* Fantasy photo frame — subtle animated gradient border */
+@keyframes frameGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-frame-gradient {
+  animation: frameGradient 8s ease-in-out infinite;
+}
+.photo-frame-fantasy {
+  box-shadow: 0 0 40px -8px rgba(161, 130, 65, 0.25), 0 20px 50px -20px rgba(0, 0, 0, 0.4);
+}
+.photo-frame-fantasy:hover {
+  box-shadow: 0 0 56px -8px rgba(161, 130, 65, 0.35), 0 24px 56px -20px rgba(0, 0, 0, 0.45);
+}
+/* Subtle glow pulse */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 20px rgba(161,130,65,0.15); }
+  50% { opacity: 1; box-shadow: 0 0 32px rgba(161,130,65,0.25); }
+}
+.hover-glow-pulse:hover {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Video placeholder shimmer (shown while video loads or if no file exists) */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.video-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(161,130,65,0.05) 25%,
+    rgba(161,130,65,0.12) 50%,
+    rgba(161,130,65,0.05) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* FAQ accordion — hide default marker; smooth content */
+details summary::-webkit-details-marker { display: none; }
+details > p {
+  overflow: hidden;
+}
+
+/* Soft inner glow on listing cards on hover */
+.listing-card-glow:hover {
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.35),
+              0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Pharmx-style subtle background: soft gradient + very light pattern for depth */
+.landing-bg {
+  background-color: #0D1B2A;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(201, 168, 76, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201, 168, 76, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, transparent 0%, #0D1B2A 100%);
+  background-attachment: scroll;
+}
+
+/* Angled feature image frame — gold border at offset */
+.feature-frame-border {
+  clip-path: polygon(0% 5%, 100% 0%, 100% 95%, 0% 100%);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Glassmorphic floating card — hero overlay cards */
+.hero-float-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(9, 20, 34, 0.88);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Subtle entrance float animation for hero overlay cards */
+@keyframes heroCardFloat {
+  0%, 100% { transform: translateY(0px) rotate(var(--tilt, 0deg)); }
+  50% { transform: translateY(-6px) rotate(var(--tilt, 0deg)); }
+}
+.hero-card-float {
+  animation: heroCardFloat 6s ease-in-out infinite;
+}
+.hero-card-float-delay {
+  animation: heroCardFloat 7s ease-in-out 1.5s infinite;
+}
+
+@layer base {
+  :root {
+    --primary: #c9a84c;
+    --accent: #a18241;
+    --dark-nav: #0d1b2a;
+    --surface: #f4f9ff;
+    --error: #e53935;
+    --warning: #ff8c00;
+    --success: #2e7d32;
+    --text-primary: #1a1a2e;
+    --text-muted: #6b7280;
+    --font-sora: "Sora", sans-serif;
+    --font-inter: "Inter", sans-serif;
+  }
+  /* App-wide: dark navy background, light text, Sora headings + Inter body */
+  body {
+    @apply font-body antialiased;
+    background-color: #0D1B2A;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+  /* Primary buttons: gold background with dark text (navy & gold theme) */
+  .bg-primary.text-white,
+  button.bg-primary,
+  a.bg-primary {
+    color: #0d1b2a !important;
+  }
+}
+
+/* App-only theme (dashboard): dark vs light green/white/orange */
+.app-theme {
+  --app-bg: #0D1B2A;
+  --app-nav-bg: #0d1b2a;
+  --app-nav-text: rgba(255, 255, 255, 0.9);
+  --app-nav-hover: rgba(255, 255, 255, 0.1);
+  --app-nav-hover-text: #16a34a;
+  --app-header-bg: #0F2035;
+  --app-header-border: rgba(161, 130, 65, 0.2);
+  --app-text: rgba(255, 255, 255, 0.9);
+  --app-text-muted: rgba(255, 255, 255, 0.6);
+  --app-primary: #C9A84C;
+  --app-border: rgba(255, 255, 255, 0.1);
+}
+.app-theme.app-light {
+  --app-bg: #ffffff;
+  --app-nav-bg: #ffffff;
+  --app-nav-text: #1a1a2e;
+  --app-nav-hover: rgba(22, 101, 52, 0.08);
+  --app-nav-hover-text: #15803d;
+  --app-header-bg: #f0fdf4;
+  --app-header-border: #e5e7eb;
+  --app-text: #1a1a2e;
+  --app-text-muted: #6b7280;
+  --app-primary: #ea580c;
+  --app-border: #e5e7eb;
+}
+.app-theme .app-theme-inner {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+.app-theme .app-nav {
+  background-color: var(--app-nav-bg) !important;
+  color: var(--app-nav-text) !important;
+}
+.app-theme .app-nav a,
+.app-theme .app-nav [class*="text-white"] {
+  color: var(--app-nav-text) !important;
+}
+.app-theme.app-light .app-nav .border-white\/10 {
+  border-color: #e5e7eb !important;
+}
+.app-theme .app-nav .hover\:bg-white\/10:hover,
+.app-theme .app-nav a:hover {
+  background-color: var(--app-nav-hover) !important;
+  color: var(--app-nav-hover-text) !important;
+}
+.app-theme .app-header {
+  background-color: var(--app-header-bg) !important;
+  border-color: var(--app-header-border) !important;
+  color: var(--app-text) !important;
+}
+.app-theme.app-light .app-header [class*="text-white"],
+.app-theme.app-light .app-header a,
+.app-theme.app-light .app-header button {
+  color: var(--app-text) !important;
+}
+.app-theme.app-light .app-header .hover\:bg-white\/10:hover {
+  background-color: var(--app-border) !important;
+}
+.app-theme.app-light main,
+.app-theme.app-light .app-theme-inner main {
+  color: var(--app-text);
+}
+.app-theme.app-light main .text-white,
+.app-theme.app-light main .text-white\/90,
+.app-theme.app-light main .text-white\/80,
+.app-theme.app-light main .text-white\/70,
+.app-theme.app-light main .text-white\/60,
+.app-theme.app-light main .text-white\/50 {
+  color: var(--app-text) !important;
+}
+.app-theme.app-light main .text-gold,
+.app-theme.app-light main a.text-gold,
+.app-theme.app-light main .text-gold-muted,
+.app-theme.app-light main [class*="text-gold"] {
+  color: var(--app-primary) !important;
+}
+.app-theme.app-light main .bg-gold,
+.app-theme.app-light main .from-gold-muted,
+.app-theme.app-light main .to-gold,
+.app-theme.app-light main .bg-gold\/20 {
+  background-color: var(--app-primary) !important;
+  background-image: none !important;
+}
+.app-theme.app-light main .border-gold\/50,
+.app-theme.app-light main .border-\[rgba\(161\,130\,65\] {
+  border-color: var(--app-primary) !important;
+}
+.app-theme.app-light .app-mobile-nav {
+  background-color: #15803d !important;
+  border-color: var(--app-border) !important;
+}
+.app-theme.app-light .app-mobile-nav [class*="text-white"],
+.app-theme.app-light .app-mobile-nav .text-gold {
+  color: var(--app-nav-text) !important;
+}
+.app-theme.app-light .app-mobile-nav .text-gold {
+  color: var(--app-primary) !important;
+}
+.app-theme.app-light main .bg-white\/5,
+.app-theme.app-light main .bg-mid-navy {
+  background-color: #f0fdf4 !important;
+}
+.app-theme.app-light main .border-white\/10,
+.app-theme.app-light main .border-t.border-white\/10 {
+  border-color: var(--app-border) !important;
+}
+.app-theme.app-light .app-header .bg-mid-navy {
+  background-color: var(--app-header-bg) !important;
+}
+.app-theme.app-light main .bg-gradient-to-r.from-gold-muted.to-gold {
+  background-color: var(--app-primary) !important;
+  background-image: none !important;
+}
+.app-theme.app-light main .text-\[\#0D1B2A\] {
+  color: #1a1a2e !important;
+}
+
+/* Filters panel: white and green in light mode */
+.app-theme.app-light .listing-filters-panel {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filters-title {
+  color: #15803d !important;
+}
+.app-theme.app-light .listing-filters-panel label {
+  color: #374151 !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select,
+.app-theme.app-light .listing-filters-panel .listing-filter-input {
+  background-color: #ffffff !important;
+  color: #1a1a2e !important;
+  border-color: #d1d5db !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select:hover,
+.app-theme.app-light .listing-filters-panel .listing-filter-input:hover {
+  border-color: #15803d !important;
+  background-color: #f0fdf4 !important;
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select:focus,
+.app-theme.app-light .listing-filters-panel .listing-filter-input:focus {
+  border-color: #15803d !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.25);
+}
+.app-theme.app-light .listing-filters-panel .listing-filter-select option {
+  background-color: #ffffff !important;
+  color: #1a1a2e !important;
+}
+.app-theme.app-light .listing-filters-panel .text-white\/50 {
+  color: #6b7280 !important;
+}

@@ -1,0 +1,26 @@
+Stripe + ngrok — CMD notes (Windows)
+1. Start your app
+cd "F:\GalaxRX\GalaxRX Market Place"
+npm run dev
+Leave this window open.
+
+2. ngrok (HTTPS for live Stripe Connect)
+New CMD window:
+
+ngrok http 3000
+Copy the https://…ngrok-free.dev URL. Put it in .env as:
+
+NEXTAUTH_URL=https://YOUR-NGROK-URL.ngrok-free.dev
+Restart npm run dev. Open the app in the browser using only that https://… URL (not localhost) when connecting the bank account.
+
+3. Stripe CLI — platform webhooks (new CMD window)
+cd F:\GalaxRX\Stripe\stripe_1.37.4_windows_x86_64
+stripe listen --forward-to localhost:3000/api/stripe/webhook --events payment_intent.succeeded,payment_intent.payment_failed,payment_intent.canceled,charge.dispute.created,charge.dispute.updated,charge.dispute.closed
+Copy the whsec_... line into .env as STRIPE_WEBHOOK_SECRET=...
+Leave this window open.
+
+4. Stripe CLI — Connect webhooks (another CMD window)
+cd F:\GalaxRX\Stripe\stripe_1.37.4_windows_x86_64
+stripe listen --forward-to localhost:3000/api/stripe/connect-webhook --events account.updated
+Copy the whsec_... into .env as STRIPE_CONNECT_WEBHOOK_SECRET=...
+Leave this window open.

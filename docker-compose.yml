@@ -1,0 +1,18 @@
+# Local PostgreSQL for GalaxRX development
+# Run: docker compose up -d
+# Then: npm run db:push && npm run db:seed
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: galaxrx
+    ports:
+      - "5432:5432"
+    volumes:
+      - galaxrx_pgdata:/var/lib/postgresql/data
+
+volumes:
+  galaxrx_pgdata:

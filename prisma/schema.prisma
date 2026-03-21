@@ -1,0 +1,485 @@
+// GalaxRX Marketplace — Phase 1
+// PostgreSQL via Supabase
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Drug master — seeded from TGA/PBS data
+model DrugMaster {
+  id          String    @id @default(cuid())
+  productName String
+  genericName String?
+  brand       String?
+  strength    String?
+  form        String?   // tablet, capsule, inhaler, liquid, cream, etc.
+  packSize    Int?
+  pbsCode     String?
+  barcode     String?   @unique
+  category    Category
+  imageUrl    String?
+  listings    Listing[]
+}
+
+model Pharmacy {
+  id               String          @id @default(cuid())
+  name             String
+  abn              String          @unique
+  approvalNumber   String          @unique  // Pharmacy Board approval number
+  address          String
+  suburb           String
+  state            AustralianState
+  postcode         String
+  latitude         Float?          // for distance / nearest sort
+  longitude        Float?          // for distance / nearest sort
+  phone            String
+  mobile           String?
+  email            String          @unique
+  passwordHash     String
+  resetToken       String?
+  resetTokenExpiresAt DateTime?
+  logoUrl          String?
+  verificationDocs String[]       // Uploadthing URLs
+  isVerified       Boolean         @default(false)
+  role             String          @default("PHARMACY") // PHARMACY | ADMIN
+  // Future-proofing fields (not used in Phase 1 UI)
+  subscriptionTier Tier            @default(FREE)
+  stripeAccountId       String?
+  stripeCustomerId       String?
+  stripeChargesEnabled   Boolean        @default(true)  // cached from Stripe account.updated
+  stripePayoutsEnabled   Boolean        @default(true) // cached from Stripe account.updated
+  rating                 Float          @default(0)
+  reviewCount      Int             @default(0)
+  tradeCount       Int             @default(0)
+  notifyNewSale        Boolean     @default(true)
+  notifyPurchase       Boolean     @default(true)
+  notifyNewMessage     Boolean     @default(true)
+  notifyOrderShipped   Boolean     @default(true)
+  notifyOrderDelivered Boolean     @default(true)
+  notifyWantedMatch     Boolean     @default(true)
+  createdAt        DateTime        @default(now())
+  lastSeenAt       DateTime?       // for online user count (updated on presence heartbeat)
+  listings         Listing[]
+  purchases        Order[]         @relation("buyer")
+  sales            Order[]         @relation("seller")
+  reviews          Review[]       @relation("subject")
+  reviewsGiven     Review[]        @relation("reviewer")
+  messagesSent     Message[]       @relation("sender")
+  messagesReceived Message[]       @relation("recipient")
+  wantedItems      WantedItem[]
+  wantedOffersMade WantedOffer[]   @relation("wantedOffersMade")
+  forumTopics      ForumTopic[]    @relation("forumTopicAuthor")
+  forumReplies     ForumReply[]    @relation("forumReplyAuthor")
+  listingNegotiationsAsBuyer ListingNegotiation[] @relation("negotiationBuyer")
+}
+
+model Listing {
+  id               String           @id @default(cuid())
+  pharmacyId       String
+  pharmacy         Pharmacy         @relation(fields: [pharmacyId], references: [id])
+  drugMasterId     String?
+  drugMaster       DrugMaster?      @relation(fields: [drugMasterId], references: [id])
+  productName      String
+  genericName      String?
+  brand            String?
+  strength         String?
+  form             String?
+  packSize         Int
+  quantityUnits    Int // total sellable units; buyers may purchase 1..available
+  reservedUnits    Int              @default(0) // units in active checkouts
+  expiryDate       DateTime
+  pricePerPack     Float            // ex GST
+  priceType        String           @default("NEGOTIABLE") // FIXED | NEGOTIABLE
+  originalRRP      Float?           // for discount % display
+  condition        Condition        @default(SEALED)
+  images           String[]         // Uploadthing URLs, max 6
+  description      String?
+  category         Category
+  fulfillmentType  FulfillmentType  @default(NATIONAL_SHIPPING)
+  deliveryFee      Float            @default(0)   // ex GST, optional shipping/delivery fee
+  stateRestriction AustralianState? // null = sell to all states
+  isActive         Boolean          @default(true)
+  isClearance      Boolean          @default(false)
+  isSponsored      Boolean          @default(false)
+  viewCount        Int              @default(0)
+  noteToPurchasers String?          // note to purchasers (shown at checkout)
+  isGstFree        Boolean?        // null = REVIEW_REQUIRED; true = GST_FREE; false = TAXABLE
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @default(now()) @updatedAt
+  expiresAt        DateTime        // listing auto-deactivates after 30 days or when sold
+  orders           Order[]
+  negotiations     ListingNegotiation[]
+  messages         Message[]       // messages that reference this listing (e.g. wanted-match)
+
+  @@index([isActive, createdAt(sort: Desc)])
+  @@index([pharmacyId])
+  @@index([category])
+  @@index([isClearance])
+  @@index([expiryDate])
+}
+
+model ListingNegotiation {
+  id                 String   @id @default(cuid())
+  listingId          String
+  listing            Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId             String
+  buyer              Pharmacy @relation("negotiationBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  proposedPricePerPack Float   // buyer's offered price (ex GST)
+  message            String?  @db.Text
+  status             String   @default("PENDING") // PENDING | ACCEPTED | REJECTED
+  acceptedAt         DateTime? // set when seller accepts; hold window starts from this time
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+
+  @@index([listingId, buyerId, status, updatedAt(sort: Desc)])
+}
+
+model Order {
+  id              String          @id @default(cuid())
+  listingId       String?         // null when order is from an accepted wanted offer
+  listing         Listing?       @relation(fields: [listingId], references: [id])
+  wantedOfferId   String?         // set when order is from an accepted wanted offer
+  wantedOffer     WantedOffer?    @relation(fields: [wantedOfferId], references: [id])
+  buyerId         String
+  buyer           Pharmacy        @relation("buyer", fields: [buyerId], references: [id])
+  sellerId        String
+  seller          Pharmacy        @relation("seller", fields: [sellerId], references: [id])
+  quantity        Int
+  unitPrice       Float           // ex GST, at time of purchase
+  grossAmount     Float           // unitPrice * quantity (product only)
+  deliveryFee     Float           @default(0)   // ex GST, at time of purchase
+  platformFee     Float           // 3.5% of grossAmount (product only), min $1.50
+  gstAmount       Float           // 10% of (grossAmount + deliveryFee)
+  netAmount       Float           // grossAmount - platformFee + deliveryFee (what seller receives)
+  stripePaymentId String?         // Stripe PaymentIntent id; multiple orders may share one PI (same-seller cart)
+  totalChargedCents Int?          // authoritative total charged in cents; persisted at order creation; null = legacy, fallback to float recompute for refunds
+  chargeModel     String?         // "destination" | "direct"; persisted at order creation; null = legacy, treat as destination for refunds
+  source          OrderSource     @default(STRIPE) // STRIPE = from webhook; MANUAL = admin-created
+  status          OrderStatus     @default(PENDING)
+  inventoryApplied Boolean        @default(false)  // true when core side effects applied: listing (qty/reservedQty) + seller tradeCount, or for wanted-offer just seller tradeCount (retry-safe)
+  fulfillmentType FulfillmentType
+  trackingNumber  String?
+  courierName     String?
+  sellerNotes     String?
+  disputedAt      DateTime?       // set when charge.dispute.created received
+  disputeClosedAt DateTime?       // set when charge.dispute.closed received (outcome final)
+  stripeDisputeId String?         // Stripe dispute id for audit
+  createdAt       DateTime        @default(now())
+  reviews         Review[]
+  refunds         Refund[]
+
+  @@index([stripePaymentId])
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([listingId])
+  @@index([wantedOfferId])
+}
+
+model StripeEvent {
+  id               String    @id @default(cuid())
+  eventId          String    @unique // Stripe event id — idempotency
+  type             String
+  payloadJson      String    @db.Text
+  receivedAt      DateTime  @default(now())
+  processedAt     DateTime?
+  processingStatus String   @default("PENDING") // PENDING | PROCESSED | FAILED
+  errorMessage    String?   @db.Text
+  retryCount      Int       @default(0)   // number of retry attempts (automated or manual)
+  lastRetryAt     DateTime? // when last retry ran; used for backoff
+
+  @@index([type])
+  @@index([processingStatus])
+  @@index([processingStatus, lastRetryAt]) // for retry job: FAILED/PENDING + backoff
+}
+
+// At most one purchase notification email per PaymentIntent per channel (webhook vs reconcile, retries).
+model PurchaseEmailDedup {
+  id                    String   @id @default(cuid())
+  stripePaymentIntentId String
+  channel               String // SELLER_NEW_SALE | BUYER_PURCHASE_CONFIRMED
+  createdAt             DateTime @default(now())
+
+  @@unique([stripePaymentIntentId, channel])
+  @@index([stripePaymentIntentId])
+}
+
+model PaymentAttempt {
+  id                    String    @id @default(cuid())
+  idempotencyKey        String    // client or server-generated; uniqueness scoped by (buyerId, idempotencyScope)
+  idempotencyScope      String    // listingId for listing flow; "wanted:{wantedOfferId}" for wanted-offer flow
+  buyerId               String
+  sellerId              String
+  listingId             String?
+  wantedOfferId         String?
+  quantity              Int
+  deliveryFeeExGstCents  Int      @default(0)
+  grossAmountCents      Int
+  platformFeeCents      Int
+  gstAmountCents        Int
+  totalChargedCents     Int
+  netToSellerCents      Int
+  chargeModel           String?   // "destination" | "direct"; authoritative at checkout for webhook
+  status                String    @default("QUOTED") // QUOTED | PAYMENT_INTENT_CREATED | PAID | EXPIRED | FAILED | CANCELED
+  reservationStatus     String    @default("ACTIVE")  // ACTIVE | CONSUMED | RELEASED | EXPIRED — canonical reservation record for listing
+  stripePaymentIntentId String?
+  expiresAt             DateTime
+  // Strict reuse: only reuse attempt when these match the current request
+  taxClassification     String?   // TAXABLE | GST_FREE | REVIEW_REQUIRED
+  negotiatedPriceSource String?   // LISTING | NEGOTIATION (listing flow only)
+  listingNegotiationId  String?   // set when negotiatedPriceSource = NEGOTIATION
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([buyerId, idempotencyScope, idempotencyKey])
+  @@index([stripePaymentIntentId])
+  @@index([listingId, reservationStatus])
+  @@index([reservationStatus, expiresAt])
+}
+
+// Multi-listing checkout from same seller (one shipment / one payment).
+model CartCheckoutAttempt {
+  id                     String             @id @default(cuid())
+  idempotencyKey         String
+  idempotencyScope       String
+  buyerId                String
+  sellerId               String
+  deliveryFeeExGstCents  Int
+  totalChargedCents      Int
+  grossAmountCents       Int
+  platformFeeCents       Int
+  gstAmountCents         Int
+  netToSellerCents       Int
+  chargeModel            String?
+  status                 String             @default("QUOTED")
+  stripePaymentIntentId  String?
+  expiresAt              DateTime
+  taxClassification      String
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  lines                  CartCheckoutLine[]
+
+  @@unique([buyerId, idempotencyScope, idempotencyKey])
+  @@index([stripePaymentIntentId])
+}
+
+model CartCheckoutLine {
+  id               String              @id @default(cuid())
+  attemptId        String
+  attempt          CartCheckoutAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  listingId        String
+  quantity         Int
+  grossAmountCents Int
+  platformFeeCents Int
+  gstProductCents  Int
+  netLineCents     Int
+
+  @@index([attemptId])
+  @@index([listingId])
+}
+
+model Refund {
+  id             String   @id @default(cuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id])
+  stripeRefundId String?  @unique
+  amountCents    Int
+  reason         String?  @db.Text
+  initiatorId    String?  // pharmacy or admin user id
+  createdAt      DateTime @default(now())
+
+  @@index([orderId])
+}
+
+model WantedItem {
+  id          String        @id @default(cuid())
+  pharmacyId  String
+  pharmacy    Pharmacy      @relation(fields: [pharmacyId], references: [id])
+  productName String
+  strength    String?
+  barcode     String?
+  imageUrl    String?
+  quantityKind String       @default("PACK") // PACK | UNIT
+  quantity    Int           // packs wanted (PACK) or total units (UNIT)
+  unitsPerPack Int?          // required when PACK: units in each pack
+  maxPrice    Float?
+  urgency     Urgency       @default(NORMAL)
+  isSOS       Boolean       @default(false)  // Urgent for patients (hospital, nursing, etc.)
+  notes       String?
+  expiresAt   DateTime
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  offers      WantedOffer[]
+
+  @@index([isActive, expiresAt])
+  @@index([pharmacyId])
+  @@index([isSOS])
+}
+
+model WantedOffer {
+  id           String       @id @default(cuid())
+  wantedItemId String
+  wantedItem   WantedItem   @relation(fields: [wantedItemId], references: [id], onDelete: Cascade)
+  sellerId     String
+  seller       Pharmacy     @relation("wantedOffersMade", fields: [sellerId], references: [id])
+  quantity     Int
+  pricePerPack Float        // ex GST (pack offers); with pricePerUnit for unit-based wanted
+  pricePerUnit Float?       // ex GST per unit when wanted is UNIT-based
+  message      String?      @db.Text
+  status       String       @default("PENDING") // PENDING | ACCEPTED | DECLINED
+  createdAt    DateTime     @default(now())
+  orders       Order[]
+
+  @@index([wantedItemId])
+  @@index([sellerId])
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  threadId    String
+  senderId    String
+  sender      Pharmacy  @relation("sender", fields: [senderId], references: [id])
+  recipientId String
+  recipient   Pharmacy  @relation("recipient", fields: [recipientId], references: [id])
+  content     String
+  listingId   String?   // when set, this message shows a listing card (e.g. wanted-match)
+  listing     Listing?  @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  isRead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  @@index([threadId])
+  @@index([recipientId])
+  @@index([recipientId, isRead])
+  @@index([listingId])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  reviewerId String
+  reviewer   Pharmacy @relation("reviewer", fields: [reviewerId], references: [id])
+  subjectId  String
+  subject    Pharmacy @relation("subject", fields: [subjectId], references: [id])
+  rating     Int      // 1–5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@unique([orderId, reviewerId])
+}
+
+model ForumTopic {
+  id        String       @id @default(cuid())
+  authorId  String
+  author    Pharmacy     @relation("forumTopicAuthor", fields: [authorId], references: [id])
+  title     String       @db.VarChar(200)
+  body      String       @db.Text
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now()) @updatedAt
+  replies  ForumReply[]
+
+  @@index([authorId])
+  @@index([createdAt(sort: Desc)])
+}
+
+model ForumReply {
+  id        String     @id @default(cuid())
+  topicId   String
+  topic     ForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    Pharmacy   @relation("forumReplyAuthor", fields: [authorId], references: [id])
+  content   String     @db.Text
+  createdAt DateTime  @default(now())
+
+  @@index([topicId])
+  @@index([authorId])
+}
+
+// One-time codes for email verification during registration (code sent to email, user enters it).
+model EmailVerification {
+  id         String    @id @default(cuid())
+  email      String
+  code       String
+  expiresAt  DateTime
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
+  @@index([email, expiresAt])
+}
+
+enum Tier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+enum AustralianState {
+  NSW
+  VIC
+  QLD
+  WA
+  SA
+  TAS
+  ACT
+  NT
+}
+enum Condition {
+  SEALED
+  OPENED
+}
+enum FulfillmentType {
+  PICKUP_ONLY
+  LOCAL_COURIER
+  NATIONAL_SHIPPING
+}
+enum OrderSource {
+  STRIPE  // order created from payment_intent.succeeded webhook
+  MANUAL  // order created by admin via API (no Stripe charge)
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  DISPUTED
+  DISPUTE_LOST
+  CANCELLED
+  REFUNDED
+  REFUNDED_PARTIAL
+  REFUNDED_FULL
+}
+enum Urgency {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}
+enum Category {
+  PRESCRIPTION
+  OTC
+  VACCINES
+  VETERINARY
+  COSMETICS
+  SUPPLEMENTS
+  DEVICES
+  CONSUMABLES
+  OTHER
+  // Product categories for filters
+  FRAGRANCE
+  VITAMINS_SUPPLEMENTS
+  PREGNANCY_BABY
+  SKINCARE
+  HAIR_CARE
+  ORAL_CARE
+  PERSONAL_CARE
+  MEDICINES
+  MEDICAL_SUPPLIES
+  FIRST_AID
+  SPORT_FITNESS
+  HOME_PET
+}

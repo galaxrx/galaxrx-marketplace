@@ -14,7 +14,7 @@ export default function AccountLoadFailed() {
       <p className="text-xs text-white/45 leading-relaxed border-t border-white/10 pt-3">
         Operator note: frequent failures often mean the DB pool is exhausted on Vercel — use Supabase{" "}
         <span className="text-white/60">Transaction</span> pool (port 6543) and{" "}
-        <code className="text-gold/80">pgbouncer=true&amp;connection_limit=1</code> in{" "}
+        <code className="text-gold/80">pgbouncer=true&amp;connection_limit=10&amp;pool_timeout=30</code> in{" "}
         <code className="text-gold/80">DATABASE_URL</code>. See repo <code className="text-gold/80">docs/VERCEL-DEPLOY.md</code>.
       </p>
       <ul className="list-disc pl-5 text-sm text-white/70 space-y-1">

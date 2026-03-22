@@ -5,7 +5,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// DATABASE_URL: Supabase *Transaction* pooler (6543) + pgbouncer=true&connection_limit=1 for serverless runtime (avoids MaxClientsInSessionMode).
+// DATABASE_URL: Supabase *Transaction* pooler (6543) + pgbouncer=true&connection_limit=10&pool_timeout=30 (see .env.example; limit=1 causes P2024 with parallel queries).
 // DIRECT_URL: *Session* pooler (5432) on same pooler host — used only by prisma migrate; migrate often hangs on transaction pooler (6543).
 // Avoid db.*.supabase.co from Vercel for url without IPv4 add-on — often P1001.
 datasource db {

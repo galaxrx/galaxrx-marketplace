@@ -31,7 +31,7 @@ In Vercel → Project → **Settings** → **Environment Variables**, add each n
 
 | Variable | Notes |
 |----------|--------|
-| `DATABASE_URL` | **Transaction pooler**, port **`6543`**. **`?pgbouncer=true&connection_limit=1&sslmode=require&connect_timeout=60`** (password URL-encoded). Used by the **app** at runtime. Copy from Supabase → **Connect** → **Transaction pooler**. |
+| `DATABASE_URL` | **Transaction pooler**, port **`6543`**. **`?pgbouncer=true&connection_limit=10&pool_timeout=30&sslmode=require&connect_timeout=60`** (password URL-encoded). Used by the **app** at runtime. **`connection_limit=1`** causes **P2024** pool timeouts on pages that run parallel Prisma queries (e.g. `/dashboard`). Copy from Supabase → **Connect** → **Transaction pooler**, then add or adjust those query params. |
 | `DIRECT_URL` | **Session pooler**, port **`5432`**, same pooler host and password as above, e.g. `postgresql://postgres.[REF]:[PASSWORD]@aws-….pooler.supabase.com:5432/postgres?sslmode=require&connect_timeout=60`. Supabase → **Connect** → **Session pooler**. **Only** `prisma migrate deploy` uses this during Vercel build — avoids **15+ minute hangs** when migrate runs against the transaction pooler. One build-time connection does not hit `MaxClientsInSessionMode` like hundreds of serverless invocations do. |
 | `NEXTAUTH_URL` | Your live site URL, e.g. `https://galaxrx-marketplace.vercel.app` or your custom domain **with `https`**. Must match what users type in the browser. |
 | `NEXTAUTH_SECRET` | Same long random secret you use locally (e.g. `openssl rand -base64 32`). |

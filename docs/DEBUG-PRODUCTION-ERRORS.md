@@ -25,7 +25,8 @@ npx vercel logs <your-deployment-url>
 
 | Symptom / area | What to check |
 |----------------|---------------|
-| **`MaxClientsInSessionMode: max clients reached`** | **`DATABASE_URL`** must use **Transaction** pooler (**`6543`**) + **`pgbouncer=true&connection_limit=1`**. Do not use Session (`5432`) for the **app** URL. (Build still needs **`DIRECT_URL`** = Session `5432` for migrations only — see **[VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md)**.) |
+| **`MaxClientsInSessionMode: max clients reached`** | **`DATABASE_URL`** must use **Transaction** pooler (**`6543`**) + **`pgbouncer=true`**. Do not use Session (`5432`) for the **app** URL. (Build still needs **`DIRECT_URL`** = Session `5432` for migrations only — see **[VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md)**.) |
+| **`P2024` / “Timed out fetching a new connection from the connection pool”** (e.g. `/dashboard`, digest in logs) | Raise Prisma pool headroom on the **transaction** URL: **`connection_limit=10&pool_timeout=30`** on **`DATABASE_URL`** in Vercel. **`connection_limit=1`** starves parallel `prisma.*` calls on one request. |
 | **Vercel build stuck after “Datasource … :6543”** | **`prisma migrate deploy`** hanging on the transaction pooler. **Fix:** add **`DIRECT_URL`** in Vercel (Session pooler **`5432`**, same host/user/password) and redeploy; repo **`schema.prisma`** uses `directUrl` for migrations. |
 | **Right after sign-in, generic error** | **Pending ↔ dashboard redirect loop** if `isVerified` was ever missing on the JWT (fixed in app: `/pending` only sends verified users to `/dashboard` with `=== true`). **Sign out and sign in again** after deploy. |
 | **Any dashboard page** | **`DATABASE_URL`** in Vercel (Supabase **pooler** URI, correct password encoding). See [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md). |

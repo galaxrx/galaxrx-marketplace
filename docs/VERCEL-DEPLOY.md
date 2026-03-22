@@ -31,7 +31,7 @@ In Vercel → Project → **Settings** → **Environment Variables**, add each n
 
 | Variable | Notes |
 |----------|--------|
-| `DATABASE_URL` | Production DB. On **Supabase + Vercel**, use a **pooler** URI (**Session** port **5432** or **Transaction** port **6543**). **Do not** use `db.<project>.supabase.co` from Vercel — it often returns **P1001** (IPv4). `prisma migrate deploy` uses this same URL. |
+| `DATABASE_URL` | **Use Supabase *Transaction* pooler (port `6543`)**, not Session (`5432`). Append **`?pgbouncer=true&connection_limit=1&sslmode=require`** (password URL-encoded). Session mode causes **`MaxClientsInSessionMode: max clients reached`** when Vercel runs many concurrent functions. Copy the URI from Supabase → **Database** → **Connect** → **Transaction pool**. **Do not** use `db.<project>.supabase.co` from Vercel without IPv4 — often **P1001**. `prisma migrate deploy` runs on this URL during build; if migrate ever fails against the transaction pooler, run `npx prisma migrate deploy` once from your machine using a Session pooler or pooled URI that Supabase documents for migrations. |
 | `NEXTAUTH_URL` | Your live site URL, e.g. `https://galaxrx-marketplace.vercel.app` or your custom domain **with `https`**. Must match what users type in the browser. |
 | `NEXTAUTH_SECRET` | Same long random secret you use locally (e.g. `openssl rand -base64 32`). |
 | `AUTH_TRUST_HOST` | Set to `true` (matches `.env.example`). |

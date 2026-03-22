@@ -25,6 +25,7 @@ npx vercel logs <your-deployment-url>
 
 | Symptom / area | What to check |
 |----------------|---------------|
+| **`MaxClientsInSessionMode: max clients reached`** | **`DATABASE_URL` is using Supabase Session pooler (port `5432`)** or too many concurrent connections. **Fix:** switch Vercel **`DATABASE_URL`** to **Transaction pooler** (port **`6543`**) and add **`?pgbouncer=true&connection_limit=1&sslmode=require`**. See **[VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md)** and **`.env.example`**. |
 | **Right after sign-in, generic error** | **Pending ↔ dashboard redirect loop** if `isVerified` was ever missing on the JWT (fixed in app: `/pending` only sends verified users to `/dashboard` with `=== true`). **Sign out and sign in again** after deploy. |
 | **Any dashboard page** | **`DATABASE_URL`** in Vercel (Supabase **pooler** URI, correct password encoding). See [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md). |
 | **After a code deploy** | **Migrations**: build should run `prisma migrate deploy`. If the DB is behind the schema, Prisma throws on missing tables/columns. |

@@ -9,7 +9,13 @@ export default function AccountLoadFailed() {
       <h1 className="text-2xl font-heading font-bold text-gold">My Account</h1>
       <p className="text-white/85 leading-relaxed">
         We couldn&apos;t load your account summary right now. This is usually a short-lived database or network issue on
-        the server.
+        the server. Please try again in a minute.
+      </p>
+      <p className="text-xs text-white/45 leading-relaxed border-t border-white/10 pt-3">
+        Operator note: frequent failures often mean the DB pool is exhausted on Vercel — use Supabase{" "}
+        <span className="text-white/60">Transaction</span> pool (port 6543) and{" "}
+        <code className="text-gold/80">pgbouncer=true&amp;connection_limit=1</code> in{" "}
+        <code className="text-gold/80">DATABASE_URL</code>. See repo <code className="text-gold/80">docs/VERCEL-DEPLOY.md</code>.
       </p>
       <ul className="list-disc pl-5 text-sm text-white/70 space-y-1">
         <li>Wait a minute and use <strong className="text-white">Refresh</strong>.</li>

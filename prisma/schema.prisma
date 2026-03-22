@@ -5,7 +5,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Use a Supabase pooler URI on Vercel (Session or Transaction). Avoid db.*.supabase.co from Vercel — often IPv6-only → P1001.
+// Vercel: use Supabase *Transaction* pooler (port 6543) + ?pgbouncer=true&connection_limit=1 — Session pooler (5432) hits MaxClientsInSessionMode under concurrent functions.
+// Avoid db.*.supabase.co from Vercel without IPv4 — often P1001.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

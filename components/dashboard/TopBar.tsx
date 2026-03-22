@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 import { useAppTheme } from "@/components/providers/AppThemeProvider";
 import { useUnreadCount } from "@/components/dashboard/UnreadCountContext";
 import { useCart } from "@/components/providers/CartContext";
@@ -76,7 +77,7 @@ export default function TopBar({ pharmacyName, pharmacyLogoUrl }: Props) {
             onClick={() => setDropdownOpen((o) => !o)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 text-white"
           >
-            {pharmacyLogoUrl ? (
+            {pharmacyLogoUrl && !shouldSkipImageLoadInProduction(pharmacyLogoUrl) ? (
               <div className="relative w-8 h-8 rounded-full overflow-hidden bg-white/10">
                 <Image src={pharmacyLogoUrl} alt="" fill className="object-cover" sizes="32px" />
               </div>

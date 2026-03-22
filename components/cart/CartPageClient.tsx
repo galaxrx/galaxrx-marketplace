@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { toast } from "sonner";
+import ListingImage from "@/components/listings/ListingImage";
 import { useCart } from "@/components/providers/CartContext";
 import BuyNowModal from "@/components/listings/BuyNowModal";
 import {
@@ -273,7 +273,7 @@ export default function CartPageClient() {
                     className="relative w-20 h-20 rounded-lg bg-white/5 shrink-0 overflow-hidden"
                   >
                     {l.images[0] ? (
-                      <Image src={l.images[0]} alt="" fill className="object-cover" sizes="80px" />
+                      <ListingImage src={l.images[0]} alt="" fill className="object-cover" sizes="80px" />
                     ) : (
                       <span className="absolute inset-0 flex items-center justify-center text-white/30 text-xs">
                         Rx

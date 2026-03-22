@@ -4,6 +4,7 @@ import { useState } from "react";
 import { genUploader } from "uploadthing/client";
 import type { OurFileRouter } from "@/lib/uploadthing";
 import Image from "next/image";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 
 const uploader = genUploader<OurFileRouter>();
 
@@ -73,13 +74,19 @@ export default function LogoUpload({ currentLogoUrl, onUploadComplete }: Props) 
     e.target.value = "";
   }
 
-  const displayUrl = preview || currentLogoUrl;
-
   return (
     <div className="flex items-center gap-4">
-      {displayUrl ? (
+      {preview ? (
         <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-white/5 border border-[rgba(161,130,65,0.2)] flex-shrink-0">
-          <Image src={displayUrl} alt="Logo" fill className="object-cover" sizes="80px" />
+          <Image src={preview} alt="Logo" fill className="object-cover" sizes="80px" />
+        </div>
+      ) : currentLogoUrl && shouldSkipImageLoadInProduction(currentLogoUrl) ? (
+        <div className="w-20 h-20 rounded-lg bg-white/5 border border-amber-500/30 flex items-center justify-center text-[10px] text-amber-400/90 text-center p-1 flex-shrink-0 leading-tight">
+          Logo URL is from local dev — re-upload on this site
+        </div>
+      ) : currentLogoUrl ? (
+        <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-white/5 border border-[rgba(161,130,65,0.2)] flex-shrink-0">
+          <Image src={currentLogoUrl} alt="Logo" fill className="object-cover" sizes="80px" />
         </div>
       ) : (
         <div className="w-20 h-20 rounded-lg bg-white/5 border border-[rgba(161,130,65,0.2)] flex items-center justify-center text-white/40 text-2xl flex-shrink-0">

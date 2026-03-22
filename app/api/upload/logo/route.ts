@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { publicSiteBaseUrl } from "@/lib/public-site-url";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -70,7 +71,6 @@ export async function POST(req: Request) {
     );
   }
 
-  const base = process.env.NEXTAUTH_URL ?? (req.headers.get("origin") || "http://localhost:3000");
-  const url = `${base.replace(/\/$/, "")}/uploads/logos/${filename}`;
+  const url = `${publicSiteBaseUrl(req)}/uploads/logos/${filename}`;
   return NextResponse.json({ url });
 }

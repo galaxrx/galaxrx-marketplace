@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { format } from "date-fns";
+import ListingImage from "@/components/listings/ListingImage";
 
 type AcceptedOffer = {
   id: string;
@@ -65,7 +65,7 @@ export default function DashboardAcceptedOffers() {
             >
               <div className="aspect-video relative bg-white/5">
                 {imageUrl ? (
-                  <Image
+                  <ListingImage
                     src={imageUrl}
                     alt={n.listing.productName}
                     fill

@@ -4,7 +4,9 @@
  */
 export function isLocalDevOnlyImageUrl(src: string): boolean {
   try {
-    const u = new URL(src.trim());
+    const s = src.trim();
+    if (s.startsWith("blob:") || s.startsWith("data:")) return false;
+    const u = new URL(s);
     const h = u.hostname.toLowerCase();
     if (h === "localhost" || h === "127.0.0.1" || h === "[::1]") return true;
     return false;

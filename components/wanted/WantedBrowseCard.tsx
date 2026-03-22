@@ -1,6 +1,7 @@
 "use client";
 
 import MakeOfferModal from "@/components/wanted/MakeOfferModal";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 
 type Item = {
   id: string;
@@ -33,7 +34,7 @@ export default function WantedBrowseCard({ item }: { item: Item }) {
           🚨 SOS
         </span>
       )}
-      {item.imageUrl && (
+      {item.imageUrl && !shouldSkipImageLoadInProduction(item.imageUrl) && (
         <div className="w-full aspect-video rounded-lg overflow-hidden bg-white/5 border border-[rgba(161,130,65,0.25)] mb-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={item.imageUrl} alt="" className="w-full h-full object-contain" />

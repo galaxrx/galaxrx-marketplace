@@ -7,6 +7,21 @@ import path from "path";
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 4 * 1024 * 1024; // 4MB
 
+/** Public origin for returned image URLs — never use localhost on Vercel. */
+function publicUploadBaseUrl(req: Request): string {
+  const nextAuth = process.env.NEXTAUTH_URL?.replace(/\/$/, "");
+  if (nextAuth && !/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(nextAuth)) {
+    return nextAuth;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  if (nextAuth) return nextAuth;
+  const origin = req.headers.get("origin")?.replace(/\/$/, "");
+  if (origin) return origin;
+  return "http://localhost:3000";
+}
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -70,7 +85,6 @@ export async function POST(req: Request) {
     );
   }
 
-  const base = process.env.NEXTAUTH_URL ?? (req.headers.get("origin") || "http://localhost:3000");
-  const url = `${base.replace(/\/$/, "")}/uploads/listings/${filename}`;
+  const url = `${publicUploadBaseUrl(req)}/uploads/listings/${filename}`;
   return NextResponse.json({ url });
 }

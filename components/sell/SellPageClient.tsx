@@ -27,6 +27,7 @@ const BulkUploadHelper = dynamic(() => import("@/components/sell/BulkUploadHelpe
 });
 
 import { CATEGORY_OPTIONS, type CategoryValue } from "@/lib/categories";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 
 const AU_STATES = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"] as const;
 
@@ -458,21 +459,22 @@ export default function SellPageClient({ repeatId, editId }: Props) {
             />
             {searchResults.length > 0 && (
               <ul className="mt-3 rounded-lg border border-[rgba(161,130,65,0.15)] bg-[#0D1B2A]/80 max-h-44 overflow-auto divide-y divide-white/5">
-                {searchResults.map((d) => (
+                {searchResults.map((d) => {
+                  const thumbRaw =
+                    (Array.isArray(d.images) && d.images[0]) || (typeof d.imageUrl === "string" ? d.imageUrl : "");
+                  const thumb =
+                    thumbRaw && !shouldSkipImageLoadInProduction(String(thumbRaw)) ? String(thumbRaw) : "";
+                  return (
                   <li key={d.id || d.barcode || d.productName}>
                     <button
                       type="button"
                       onClick={() => handleSelectDrug(d)}
                       className="w-full text-left px-3 py-2.5 text-sm text-white/90 hover:bg-white/5 rounded flex items-start gap-3"
                     >
-                      {(Array.isArray(d.images) && d.images[0]) || d.imageUrl ? (
+                      {thumb ? (
                         <span className="w-10 h-10 rounded border border-white/10 overflow-hidden bg-white/5 shrink-0 mt-0.5">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={Array.isArray(d.images) && d.images[0] ? d.images[0] : (d.imageUrl as string)}
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
+                          <img src={thumb} alt="" className="w-full h-full object-cover" />
                         </span>
                       ) : (
                         <span className="w-10 h-10 rounded border border-white/10 bg-white/[0.03] shrink-0 mt-0.5" />
@@ -489,7 +491,8 @@ export default function SellPageClient({ repeatId, editId }: Props) {
                       </span>
                     </button>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
             <p className="text-white/40 text-xs mt-3">Not found? Switch to <strong className="text-white/60">Manual</strong>.</p>

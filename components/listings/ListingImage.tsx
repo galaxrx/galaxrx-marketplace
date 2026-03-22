@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 
 /**
  * Hosts allowed for next/image optimization (must match next.config.mjs remotePatterns).
@@ -58,6 +59,12 @@ export default function ListingImage({
   }
 
   const trimmed = src.trim();
+
+  if (shouldSkipImageLoadInProduction(trimmed)) {
+    return (
+      <span className="text-white/40 text-xs px-2 text-center">No image</span>
+    );
+  }
 
   if (!shouldUseNextImage(trimmed)) {
     if (fill) {

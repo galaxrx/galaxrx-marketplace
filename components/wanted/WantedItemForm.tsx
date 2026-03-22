@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { genUploader } from "uploadthing/client";
 import type { OurFileRouter } from "@/lib/uploadthing";
 import { toast } from "sonner";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 
 const uploader = genUploader<OurFileRouter>();
 
@@ -160,7 +161,7 @@ export default function WantedItemForm() {
       <div>
         <label className={labelClass}>Photo (optional)</label>
         <div className="flex flex-wrap items-center gap-3 mt-1">
-          {imageUrl ? (
+          {imageUrl && !shouldSkipImageLoadInProduction(imageUrl) ? (
             <div className="relative group">
               <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-white/5 border border-[rgba(161,130,65,0.25)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -173,6 +174,13 @@ export default function WantedItemForm() {
                 aria-label="Remove photo"
               >
                 ×
+              </button>
+            </div>
+          ) : imageUrl && shouldSkipImageLoadInProduction(imageUrl) ? (
+            <div className="flex flex-col gap-1 text-[11px] text-amber-400/90 max-w-[11rem]">
+              <span>Local dev photo URL — won’t load in production.</span>
+              <button type="button" onClick={() => setImageUrl("")} className="text-left underline hover:text-amber-300">
+                Clear and re-upload
               </button>
             </div>
           ) : (

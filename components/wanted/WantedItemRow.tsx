@@ -8,6 +8,7 @@ import { genUploader } from "uploadthing/client";
 import type { OurFileRouter } from "@/lib/uploadthing";
 import MakeOfferModal from "@/components/wanted/MakeOfferModal";
 import PriceInsightPanel from "@/components/price-intelligence/PriceInsightPanel";
+import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
 
 const uploader = genUploader<OurFileRouter>();
 
@@ -277,7 +278,7 @@ export default function WantedItemRow({
           <div>
             <label className={labelClass}>Photo</label>
             <div className="flex flex-wrap items-center gap-2 mt-1">
-              {form.imageUrl ? (
+              {form.imageUrl && !shouldSkipImageLoadInProduction(form.imageUrl) ? (
                 <div className="relative">
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/5 border border-[rgba(161,130,65,0.25)]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -289,6 +290,17 @@ export default function WantedItemRow({
                     className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500/90 text-white text-xs font-bold"
                   >
                     ×
+                  </button>
+                </div>
+              ) : form.imageUrl && shouldSkipImageLoadInProduction(form.imageUrl) ? (
+                <div className="flex flex-col gap-1 text-[11px] text-amber-400/90 max-w-[10rem]">
+                  <span>Photo link is from local dev and won’t load here.</span>
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, imageUrl: "" }))}
+                    className="text-left underline hover:text-amber-300"
+                  >
+                    Clear and re-upload
                   </button>
                 </div>
               ) : (
@@ -418,7 +430,7 @@ export default function WantedItemRow({
   return (
     <div className={`bg-mid-navy border rounded-xl p-4 shadow-lg hover:border-gold/40 transition ${isSOS ? "border-red-500/50 bg-red-950/20" : "border-[rgba(161,130,65,0.18)]"} ${urgencyStyles[item.urgency] ?? ""}`}>
       <div className="aspect-video bg-white/5 rounded-lg mb-3 overflow-hidden flex items-center justify-center text-white/40 text-sm border border-[rgba(161,130,65,0.15)] relative">
-        {item.imageUrl ? (
+        {item.imageUrl && !shouldSkipImageLoadInProduction(item.imageUrl) ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img src={item.imageUrl} alt="" className="w-full h-full object-contain" />
         ) : (

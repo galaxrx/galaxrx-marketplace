@@ -20,6 +20,7 @@ npx vercel logs <your-deployment-url>
 
 | Symptom / area | What to check |
 |----------------|---------------|
+| **Right after sign-in, generic error** | **Pending ↔ dashboard redirect loop** if `isVerified` was ever missing on the JWT (fixed in app: `/pending` only sends verified users to `/dashboard` with `=== true`). **Sign out and sign in again** after deploy. |
 | **Any dashboard page** | **`DATABASE_URL`** in Vercel (Supabase **pooler** URI, correct password encoding). See [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md). |
 | **After a code deploy** | **Migrations**: build should run `prisma migrate deploy`. If the DB is behind the schema, Prisma throws on missing tables/columns. |
 | **Auth / redirect loops** | **`NEXTAUTH_URL`** must be your live `https://…` URL. **`NEXTAUTH_SECRET`** must be set and stable. |

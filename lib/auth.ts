@@ -49,7 +49,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.isVerified = (user as { isVerified?: boolean }).isVerified;
+        // Always store a boolean so session never treats "missing" as verified (see pending vs dashboard layout).
+        token.isVerified = Boolean((user as { isVerified?: boolean }).isVerified);
         token.role = (user as { role?: string }).role;
       }
       return token;

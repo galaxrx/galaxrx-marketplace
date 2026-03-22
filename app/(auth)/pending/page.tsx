@@ -5,8 +5,12 @@ import Link from "next/link";
 
 export default async function PendingPage() {
   const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
-  if (session?.user?.isVerified !== false) redirect("/dashboard");
+  if (!session?.user) redirect("/login");
+  // Must match dashboard layout: only verified users may use the marketplace shell.
+  // Do NOT use `!== false` — that treats `undefined` as verified and causes a redirect
+  // loop with the dashboard (`isVerified !== true` → /pending).
+  const isVerified = (session.user as { isVerified?: boolean }).isVerified === true;
+  if (isVerified) redirect("/dashboard");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0D1B2A] p-4">

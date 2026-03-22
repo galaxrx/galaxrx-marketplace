@@ -33,12 +33,19 @@ export default async function DashboardLayout({
     redirect("/pending");
   }
 
-  const pharmacyId = (session.user as { id: string }).id;
+  const pharmacyId = (session.user as { id?: string }).id;
+  if (!pharmacyId) redirect("/login");
+
   const userName = session.user?.name ?? "";
   const isAdmin = (session.user as { role?: string })?.role === "ADMIN";
 
-  // Single cached pharmacy lookup for nav + top bar (avoids duplicate getServerSession + Prisma per nav)
-  const pharmacy = await getCachedPharmacyDisplay(pharmacyId);
+  // Single pharmacy lookup for nav + top bar (React cache dedupes within the request)
+  let pharmacy: Awaited<ReturnType<typeof getCachedPharmacyDisplay>> = null;
+  try {
+    pharmacy = await getCachedPharmacyDisplay(pharmacyId);
+  } catch (e) {
+    console.error("[dashboard layout] pharmacy lookup failed", e);
+  }
 
   return (
     <AppThemeProvider>

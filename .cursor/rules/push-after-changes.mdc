@@ -1,0 +1,23 @@
+---
+description: After editing this repo, commit and push to GitHub main
+alwaysApply: true
+---
+
+# Git: commit and push after changes
+
+Whenever you make **any** code or documentation change in this workspace:
+
+1. **`git add -A`** (or stage only what you changed).
+2. **`git commit`** with a short, accurate message.
+3. **`git push origin main`** so GitHub (and Vercel) stay in sync.
+
+Do this **in the same session** as the edits, not left for the user.
+
+## Windows Git on this machine
+
+- If `git commit` fails with **`unknown option 'trailer'`**, use  
+  `"C:\Program Files\Git\mingw64\bin\git.exe"` for commit.
+- If `git push` fails with **credential / spawn sh** errors, use  
+  `"C:\Program Files\Git\bin\git.exe"` for push.
+
+If push fails for auth or network, retry once with the alternate binary, then report the exact error — do not assume the push succeeded.

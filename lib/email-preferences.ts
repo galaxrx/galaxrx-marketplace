@@ -10,6 +10,6 @@ export function shouldSendBuyerPurchaseConfirmationEmail(
 ): boolean {
   const email = buyer?.email?.trim();
   if (!email) return false;
-  if (buyer.notifyPurchase === false) return false;
+  if (buyer?.notifyPurchase === false) return false;
   return true;
 }

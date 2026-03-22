@@ -5,17 +5,20 @@ import {
   unitsToPacksAndExtra,
 } from "@/lib/listing-units";
 
+/** Pack size from DB / UI (may be string from legacy or forms). */
+export type PackSizeInput = number | string | null | undefined;
+
 /** True when the seller listed with "quantity / price per unit" (API stores as packSize 1). */
-export function isPerUnitListing(packSize: number | undefined | null): boolean {
+export function isPerUnitListing(packSize: PackSizeInput): boolean {
   return effectivePackSize(packSize ?? 1) <= 1;
 }
 
-export function listingUnitPriceExGst(pricePerPack: number, packSize: number | undefined | null): number {
+export function listingUnitPriceExGst(pricePerPack: number, packSize: PackSizeInput): number {
   return unitPriceExGstFromPackPrice(pricePerPack, packSize ?? 1);
 }
 
 /** Primary price headline (ex GST) for grids and detail. */
-export function listingPrimaryPriceExGstLabel(pricePerPack: number, packSize: number | undefined | null): string {
+export function listingPrimaryPriceExGstLabel(pricePerPack: number, packSize: PackSizeInput): string {
   const p = Number(pricePerPack);
   if (!Number.isFinite(p) || p < 0) return "—";
   if (isPerUnitListing(packSize)) {
@@ -27,7 +30,7 @@ export function listingPrimaryPriceExGstLabel(pricePerPack: number, packSize: nu
 /** Secondary line under headline, or null if redundant. */
 export function listingSecondaryPriceExGstLine(
   pricePerPack: number,
-  packSize: number | undefined | null
+  packSize: PackSizeInput
 ): string | null {
   if (isPerUnitListing(packSize)) return null;
   const ps = effectivePackSize(packSize ?? 1);
@@ -35,7 +38,7 @@ export function listingSecondaryPriceExGstLine(
 }
 
 /** Pack / unit context for product row on cards (e.g. "60-unit packs · SEALED"). */
-export function listingPackContextLine(packSize: number | undefined | null, condition: string): string {
+export function listingPackContextLine(packSize: PackSizeInput, condition: string): string {
   const ps = effectivePackSize(packSize ?? 1);
   if (ps <= 1) {
     return `Sold by unit · ${condition}`;
@@ -48,7 +51,7 @@ export function listingPackContextLine(packSize: number | undefined | null, cond
  */
 export function listingBuyerAvailabilityLine(
   availableUnits: number,
-  packSize: number | undefined | null,
+  packSize: PackSizeInput,
   opts?: { listedTotal?: number; reservedUnits?: number }
 ): string {
   const avail = Math.max(0, Math.floor(availableUnits));

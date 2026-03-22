@@ -4,7 +4,6 @@ import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import WantedMatchesContent from "@/components/wanted/WantedMatchesContent";
 import ClientOnly from "@/components/ClientOnly";
-import MarketplaceLiveRefresh from "@/components/listings/MarketplaceLiveRefresh";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +55,6 @@ export default async function WantedMatchesPage({
         }}
         searchParams={paramsResolved}
       />
-      </>
     </ClientOnly>
   );
 }

@@ -28,8 +28,9 @@ export default async function WantedMatchesPage() {
     },
   });
 
+  type RowListing = NonNullable<(typeof messages)[0]["listing"]>;
   const seen = new Set<string>();
-  const matches: Array<{ listing: NonNullable<(typeof messages)[0]["listing"]>; notifiedAt: Date }> = [];
+  const matches: Array<{ listing: RowListing & { availableUnits: number }; notifiedAt: Date }> = [];
   for (const m of messages) {
     if (!m.listing || seen.has(m.listing.id)) continue;
     seen.add(m.listing.id);

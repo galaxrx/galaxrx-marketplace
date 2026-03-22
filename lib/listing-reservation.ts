@@ -171,7 +171,7 @@ export async function findStaleListingReservations(): Promise<
 export async function releaseExpiredReservationsForListingIds(
   listingIds: string[]
 ): Promise<void> {
-  const unique = [...new Set(listingIds.filter(Boolean))];
+  const unique = Array.from(new Set(listingIds.filter(Boolean)));
   if (unique.length === 0) return;
   const now = new Date();
   const stale = await prisma.paymentAttempt.findMany({

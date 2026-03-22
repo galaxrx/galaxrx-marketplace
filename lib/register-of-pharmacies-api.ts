@@ -64,6 +64,8 @@ export type VerifyPharmacyResult =
   | { ok: true; pharmacy?: { name?: string; address?: string; suburb?: string; state?: string; postcode?: string; abn?: string; approvalNumber?: string } }
   | { ok: false; message: string };
 
+type MappedPharmacyDetails = NonNullable<Extract<VerifyPharmacyResult, { ok: true }>["pharmacy"]>;
+
 /**
  * Verify a pharmacy by its registration/approval code against the Register of Pharmacies API.
  * Returns verification result and optional details for pre-filling the registration form.
@@ -261,7 +263,7 @@ function parseAustralianAddress(full: string): { street: string; suburb?: string
   return { street: trimmed };
 }
 
-function mapToPharmacyDetails(record: Record<string, unknown>): VerifyPharmacyResult["ok"] extends true ? NonNullable<VerifyPharmacyResult["pharmacy"]> : never {
+function mapToPharmacyDetails(record: Record<string, unknown>): MappedPharmacyDetails {
   const getStr = (...keys: string[]) => {
     for (const k of keys) {
       const v = record[k];
@@ -298,5 +300,5 @@ function mapToPharmacyDetails(record: Record<string, unknown>): VerifyPharmacyRe
       "Registration number",
       "Approval number"
     ),
-  } as NonNullable<VerifyPharmacyResult["pharmacy"]>;
+  } as MappedPharmacyDetails;
 }

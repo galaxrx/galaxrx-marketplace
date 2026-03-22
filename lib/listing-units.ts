@@ -1,5 +1,5 @@
 /** Pack size used for unit math (min 1). */
-export function effectivePackSize(packSize: number): number {
+export function effectivePackSize(packSize: number | string | null | undefined): number {
   const n = Math.floor(Number(packSize));
   return n >= 1 ? n : 1;
 }
@@ -17,14 +17,17 @@ export function totalUnitsFromSellerInput(params: {
 }
 
 /** ex GST price per countable unit (tablet, etc.) from pack price. */
-export function unitPriceExGstFromPackPrice(pricePerPack: number, packSize: number): number {
+export function unitPriceExGstFromPackPrice(
+  pricePerPack: number,
+  packSize: number | string | null | undefined
+): number {
   return pricePerPack / effectivePackSize(packSize);
 }
 
 /** Line total ex GST when quantity is in units (not packs). */
 export function lineTotalExGstFromUnits(
   pricePerPack: number,
-  packSize: number,
+  packSize: number | string | null | undefined,
   quantityUnits: number
 ): number {
   return unitPriceExGstFromPackPrice(pricePerPack, packSize) * quantityUnits;

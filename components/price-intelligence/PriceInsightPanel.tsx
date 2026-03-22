@@ -247,9 +247,9 @@ export default function PriceInsightPanel({
                 <>
                   {isFixedPriceSeller ? (
                     <p className="mt-2 text-sm text-white/80">
-                      You've set a fixed price — no price suggestion. Market context below (for reference only).
+                      You&apos;ve set a fixed price — no price suggestion. Market context below (for reference only).
                     </p>
-                  ) : (
+                  ) : !data ? null : (
                     <>
                       <p className="mt-2 text-xl font-bold text-gold">
                         ${data.suggestedSellerPrice.toFixed(2)}
@@ -261,8 +261,6 @@ export default function PriceInsightPanel({
                       </p>
                       <p className="text-xs text-white/70 mt-1 font-medium">Why this price:</p>
                       <p className="text-xs text-white/60 mt-0.5 break-words whitespace-normal">{data.sellerReasoning}</p>
-                    </>
-                  )}
                   {data.marketListings.length > 0 && (
                     <div className="mt-3 overflow-x-auto">
                       <table className="w-full text-xs border border-white/10 rounded">
@@ -316,8 +314,10 @@ export default function PriceInsightPanel({
                       {applying ? "Applying…" : "Apply this price"}
                     </button>
                   )}
+                    </>
+                  )}
                 </>
-              ) : (
+              ) : !data ? null : (
                 <>
                   <p className="mt-2 text-xl font-bold text-gold">
                     Suggested offer: ${data.suggestedBuyerOffer.toFixed(2)}

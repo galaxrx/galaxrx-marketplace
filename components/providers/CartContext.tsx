@@ -29,7 +29,7 @@ function cleanItems(raw: unknown[]): CartItem[] {
   return raw
     .filter(
       (x): x is CartItem =>
-        x &&
+        x != null &&
         typeof x === "object" &&
         typeof (x as CartItem).listingId === "string" &&
         typeof (x as CartItem).quantity === "number" &&

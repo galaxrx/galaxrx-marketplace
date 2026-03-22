@@ -175,7 +175,7 @@ function getShippingOptions(deliveryFee: number) {
   return { standard, express };
 }
 
-export default function BuyNowModal({
+function BuyNowModalInner({
   onClose,
   listing,
   quantity = 1,
@@ -183,9 +183,6 @@ export default function BuyNowModal({
   cartLines,
 }: Props) {
   const isCartCheckout = Boolean(cartLines && cartLines.length > 0);
-  if (!isCartCheckout && (!listing || quantity < 1)) {
-    return null;
-  }
   const rows = isCartCheckout
     ? cartLines!
     : [{ listing: listing!, quantity, acceptedPricePerPack }];
@@ -1045,4 +1042,11 @@ export default function BuyNowModal({
       </div>
     </div>
   );
+}
+
+export default function BuyNowModal(props: Props) {
+  const isCartCheckout = Boolean(props.cartLines && props.cartLines.length > 0);
+  if (isCartCheckout) return <BuyNowModalInner {...props} />;
+  if (!props.listing || (props.quantity ?? 1) < 1) return null;
+  return <BuyNowModalInner {...props} />;
 }

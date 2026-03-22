@@ -32,9 +32,10 @@ export default async function DashboardWantedMatches({
     },
   });
 
+  type RowListing = NonNullable<(typeof messages)[0]["listing"]>;
   const seen = new Set<string>();
   const matches: Array<{
-    listing: NonNullable<(typeof messages)[0]["listing"]>;
+    listing: RowListing & { availableUnits: number };
     notifiedAt: Date;
   }> = [];
   for (const m of messages) {

@@ -120,7 +120,7 @@ Then update:
 
 ## 6. Cron job (`vercel.json`)
 
-Your repo schedules `/api/admin/stripe-retry-failed` every 10 minutes. Vercel runs this as a **Cron** on supported plans. If something fails, check **Vercel → Project → Settings → Cron Jobs** and deployment logs.
+Your repo schedules `/api/admin/stripe-retry-failed` via `vercel.json`. **Hobby** only allows **once per day** (repo uses `0 2 * * *` — 02:00 UTC). On **Pro**, you can change it to e.g. every 10 minutes (`*/10 * * * *`). If something fails, check **Vercel → Project → Settings → Cron Jobs** and deployment logs.
 
 ---
 

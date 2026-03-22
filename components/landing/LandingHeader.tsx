@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 const NAV_LINKS = [
   { href: "#what-we-do", label: "What we do" },
@@ -14,6 +15,20 @@ const NAV_LINKS = [
 
 export default function LandingHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
 
   return (
     <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3 sm:py-4 border-b border-[rgba(161,130,65,0.15)] bg-[#0D1B2A]/90 backdrop-blur-md">
@@ -95,52 +110,66 @@ export default function LandingHeader() {
           </svg>
         </button>
       </div>
-      {/* Mobile nav overlay */}
-      <div
-        id="mobile-nav"
-        className={`fixed inset-0 top-[3.5rem] z-10 md:hidden bg-[#0D1B2A]/98 backdrop-blur-md transition-opacity duration-200 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        aria-hidden={!mobileOpen}
-      >
-        <nav className="flex flex-col pt-6 px-6 gap-1" aria-label="Mobile navigation">
-          {NAV_LINKS.map(({ href, label }) =>
-            href.startsWith("#") ? (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                className="py-3 px-4 rounded-xl text-white/80 hover:text-gold hover:bg-white/5 text-base font-medium"
-              >
-                {label}
-              </a>
-            ) : (
+      {/* Mobile menu: portal to body so position:fixed is not clipped by header backdrop-blur stacking context */}
+      {portalReady &&
+        mobileOpen &&
+        createPortal(
+          <div
+            id="mobile-nav"
+            className="md:hidden fixed inset-0 z-[200] flex flex-col"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+          >
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/70 z-0"
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+            />
+            <nav
+              className="relative z-10 mt-14 sm:mt-[3.75rem] flex-1 min-h-0 overflow-y-auto bg-[#0F2035] border-t border-[rgba(161,130,65,0.35)] shadow-[0_-8px_32px_rgba(0,0,0,0.45)] flex flex-col pt-4 pb-8 px-4"
+              aria-label="Mobile navigation"
+            >
+              {NAV_LINKS.map(({ href, label }) =>
+                href.startsWith("#") ? (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className="py-3.5 px-4 rounded-xl text-white hover:text-gold hover:bg-white/10 text-base font-medium border border-transparent"
+                  >
+                    {label}
+                  </a>
+                ) : (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className="py-3.5 px-4 rounded-xl text-white hover:text-gold hover:bg-white/10 text-base font-medium border border-transparent"
+                  >
+                    {label}
+                  </Link>
+                )
+              )}
               <Link
-                key={href}
-                href={href}
+                href="/listings"
                 onClick={() => setMobileOpen(false)}
-                className="py-3 px-4 rounded-xl text-white/80 hover:text-gold hover:bg-white/5 text-base font-medium"
+                className="py-3.5 px-4 rounded-xl text-white hover:text-gold hover:bg-white/10 text-base font-medium"
               >
-                {label}
+                Browse listings
               </Link>
-            )
-          )}
-          <Link
-            href="/listings"
-            onClick={() => setMobileOpen(false)}
-            className="py-3 px-4 rounded-xl text-white/80 hover:text-gold hover:bg-white/5 text-base font-medium"
-          >
-            Browse listings
-          </Link>
-          <Link
-            href="/login"
-            onClick={() => setMobileOpen(false)}
-            className="py-3 px-4 rounded-xl text-white/80 hover:text-gold hover:bg-white/5 text-base font-medium"
-          >
-            Sign in
-          </Link>
-        </nav>
-      </div>
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="py-3.5 px-4 rounded-xl text-white hover:text-gold hover:bg-white/10 text-base font-medium"
+              >
+                Sign in
+              </Link>
+            </nav>
+          </div>,
+          document.body
+        )}
     </header>
   );
 }

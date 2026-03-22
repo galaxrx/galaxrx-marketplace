@@ -75,10 +75,10 @@ export default function LandingHeader() {
         </Link>
         <Link
           href="/register"
-          aria-label="Register your pharmacy for free"
+          aria-label="Join GalaxRX free"
           className="bg-gradient-to-r from-gold-muted to-gold text-[#0D1B2A] px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm font-bold font-heading shadow-lg shadow-gold-muted/25 hover:shadow-gold/40 hover:scale-105 transition-all duration-200 whitespace-nowrap"
         >
-          Join free →
+          Join now →
         </Link>
       </nav>
 
@@ -126,7 +126,7 @@ export default function LandingHeader() {
                 onClick={() => setMobileOpen(false)}
                 className="mb-4 py-3.5 px-4 rounded-xl text-center bg-gold text-[#0D1B2A] font-bold font-heading text-sm"
               >
-                Register your pharmacy free
+                Join now
               </Link>
               {NAV_LINKS.map(({ href, label }) =>
                 href.startsWith("#") ? (

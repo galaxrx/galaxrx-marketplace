@@ -126,7 +126,7 @@ export default function LandingHeader() {
                 onClick={() => setMobileOpen(false)}
                 className="mb-4 py-3.5 px-4 rounded-xl text-center bg-gold text-[#0D1B2A] font-bold font-heading text-sm"
               >
-                Create pharmacy account
+                Register your pharmacy free
               </Link>
               {NAV_LINKS.map(({ href, label }) =>
                 href.startsWith("#") ? (

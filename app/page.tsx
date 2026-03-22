@@ -138,10 +138,10 @@ export default function HomePage() {
             <div className="flex flex-col w-full max-w-md sm:max-w-lg gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/register"
-                aria-label="Register your pharmacy — free to join"
+                aria-label="Register your pharmacy free to list surplus and trade with verified pharmacies"
                 className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3.5 rounded-xl font-bold font-heading text-xs sm:text-sm uppercase tracking-wide shadow-[0_8px_28px_-6px_rgba(201,168,76,0.55)] transition-all duration-300 hover:bg-gold/92 hover:shadow-[0_12px_36px_-8px_rgba(201,168,76,0.65)] hover:-translate-y-0.5 active:translate-y-0"
               >
-                Create pharmacy account
+                Register your pharmacy free
               </Link>
               <Link
                 href="/listings"

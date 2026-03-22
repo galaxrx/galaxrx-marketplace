@@ -132,8 +132,8 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mb-8 sm:mb-9">
-              Built for licensed Australian pharmacies: list surplus and clearance, source stock when shelves run short,
-              and settle through Stripe — one straightforward fee, and only when a sale completes.
+              Licensed Australian pharmacies trade surplus and clearance here — Stripe checkout, one simple fee when you
+              sell.
             </p>
             <div className="flex flex-col w-full max-w-md sm:max-w-lg gap-3 sm:flex-row sm:justify-center">
               <Link

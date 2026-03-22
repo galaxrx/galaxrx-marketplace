@@ -13,8 +13,8 @@ Your repo is already on GitHub (`galaxrx/galaxrx-marketplace`). Vercel will **bu
 3. **Import** `galaxrx/galaxrx-marketplace`.
 4. Vercel should detect **Next.js** automatically.
 5. **Root Directory:** leave default (repo root).
-6. **Build Command:** use the line below (important for Prisma migrations — see §3).
-7. **Install Command:** `npm install` (default is fine).
+6. **Build / install:** the repo **`vercel.json`** sets **`installCommand`** (`npm install --ignore-scripts`) so **`postinstall` / `prisma generate` does not run during install** (avoids missing env on some setups). **`buildCommand`** runs `prisma generate` → `migrate deploy` → `next build`. You can override in the dashboard only if you remove or edit `vercel.json`.
+7. **Install Command:** leave default or rely on `vercel.json` (see above).
 8. **Output:** Next.js default (no change).
 
 Do **not** click **Deploy** until you add **Environment Variables** (step 2). You can open **Environment Variables** on the same import screen before the first deploy.
@@ -75,10 +75,10 @@ Your `package.json` has `"postinstall": "prisma generate"` — good. That runs o
 
 **Migrations** are **not** applied by `next build` alone. Set:
 
-**Build Command:**
+**Build Command** (also set in root **`vercel.json`**; use this if configuring manually):
 
 ```bash
-npx prisma migrate deploy && npm run build
+npx prisma generate && npx prisma migrate deploy && npm run build
 ```
 
 - First deploy: applies all migrations in `prisma/migrations` to the **production** database. Prisma uses **`DIRECT_URL`** for migrations when set in `schema.prisma` (Supabase poolers often reject migration DDL without it).
@@ -138,7 +138,7 @@ Your repo schedules `/api/admin/stripe-retry-failed` via `vercel.json`. **Hobby*
 - [ ] Set `DATABASE_URL` (pooled if Supabase serverless) and **`DIRECT_URL`** (direct `5432` for migrations)  
 - [ ] Set `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `AUTH_TRUST_HOST`  
 - [ ] Set Stripe + Resend (+ Uploadthing if needed)  
-- [ ] Build command: `npx prisma migrate deploy && npm run build`  
+- [ ] Build command: `npx prisma generate && npx prisma migrate deploy && npm run build` (see `vercel.json`)  
 - [ ] Deploy  
 - [ ] Add Stripe webhook URL + secret; redeploy  
 - [ ] Open site and smoke-test login + one API route  

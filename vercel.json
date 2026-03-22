@@ -1,4 +1,6 @@
 {
+  "installCommand": "npm install --ignore-scripts",
+  "buildCommand": "npx prisma generate && npx prisma migrate deploy && npm run build",
   "crons": [
     {
       "path": "/api/admin/stripe-retry-failed",

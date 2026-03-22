@@ -14,7 +14,7 @@ const orderInclude = {
   reviews: { select: { id: true, reviewerId: true, subjectId: true } },
 } as const;
 
-const ORDERS_ALL_CACHE_MS = 3_000;
+const ORDERS_ALL_CACHE_MS = 8_000;
 const ordersAllCache = new Map<string, { data: { purchases: unknown[]; sales: unknown[] }; until: number }>();
 
 export async function GET(req: Request) {
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     if (hit && hit.until > now) {
       return NextResponse.json(hit.data);
     }
-    const [purchases, sales] = await prisma.$transaction([
+    const [purchases, sales] = await Promise.all([
       prisma.order.findMany({
         where: { buyerId: pharmacyId },
         orderBy: { createdAt: "desc" },

@@ -47,42 +47,43 @@ export default async function AccountPage() {
 
   const loaded = await (async () => {
     try {
-      // Sequential (not Promise.all): with connection_limit=1, parallel queries exhaust the pool (P2024).
-      const pharmacy = await prisma.pharmacy.findUnique({
-        where: { id: pharmacyId },
-        select: {
-          id: true,
-          name: true,
-          abn: true,
-          address: true,
-          suburb: true,
-          state: true,
-          postcode: true,
-          phone: true,
-          email: true,
-          isVerified: true,
-          stripeAccountId: true,
-          createdAt: true,
-        },
-      });
-      const sales = await prisma.order.findMany({
-        where: { sellerId: pharmacyId },
-        orderBy: { createdAt: "desc" },
-        take: 100,
-        include: {
-          listing: { select: { productName: true } },
-          buyer: { select: { name: true } },
-        },
-      });
-      const purchases = await prisma.order.findMany({
-        where: { buyerId: pharmacyId },
-        orderBy: { createdAt: "desc" },
-        take: 100,
-        include: {
-          listing: { select: { productName: true } },
-          seller: { select: { name: true } },
-        },
-      });
+      const [pharmacy, sales, purchases] = await Promise.all([
+        prisma.pharmacy.findUnique({
+          where: { id: pharmacyId },
+          select: {
+            id: true,
+            name: true,
+            abn: true,
+            address: true,
+            suburb: true,
+            state: true,
+            postcode: true,
+            phone: true,
+            email: true,
+            isVerified: true,
+            stripeAccountId: true,
+            createdAt: true,
+          },
+        }),
+        prisma.order.findMany({
+          where: { sellerId: pharmacyId },
+          orderBy: { createdAt: "desc" },
+          take: 100,
+          include: {
+            listing: { select: { productName: true } },
+            buyer: { select: { name: true } },
+          },
+        }),
+        prisma.order.findMany({
+          where: { buyerId: pharmacyId },
+          orderBy: { createdAt: "desc" },
+          take: 100,
+          include: {
+            listing: { select: { productName: true } },
+            seller: { select: { name: true } },
+          },
+        }),
+      ]);
       return { ok: true as const, pharmacy, sales, purchases };
     } catch (e) {
       console.error("[account] prisma batch failed", e instanceof Error ? e.message : e, { pharmacyId });

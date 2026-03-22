@@ -19,6 +19,17 @@ if (
   );
 }
 
+if (
+  process.env.NODE_ENV === "production" &&
+  databaseUrl.includes("pooler.supabase.com") &&
+  /:6543(\?|\/|$)/.test(databaseUrl) &&
+  /connection_limit=1(?:&|$)/i.test(databaseUrl)
+) {
+  console.warn(
+    "[prisma] DATABASE_URL has connection_limit=1 but the app uses parallel Prisma queries. Expect P2024 pool timeouts and higher latency. Set connection_limit=10&pool_timeout=30 on the transaction pooler URL (Vercel env)."
+  );
+}
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({

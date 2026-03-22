@@ -69,28 +69,24 @@ const FAQ_LANDING = [
 
 const PILLARS = [
   {
-    id: "01",
     title: "List inventory",
     desc: "Scan a barcode or search by name, set quantity, price, and expiry, and publish in seconds — without wading through long forms.",
     img: "/LIST.png",
     alt: "List surplus stock quickly",
   },
   {
-    id: "02",
     title: "Verify stocks",
     desc: "Browse surplus and clearance from verified pharmacies only — no consumers, no anonymous sellers, and key dates visible where it matters.",
     img: "/Verified%20stock.png",
     alt: "Buy from verified pharmacy listings",
   },
   {
-    id: "03",
     title: "Verify network",
     desc: "Every trading partner is a licensed Australian pharmacy checked by our team. You deal with peers you can trust, not the open internet.",
     img: "/Verified%20network.png",
     alt: "Verified pharmacy network",
   },
   {
-    id: "04",
     title: "Secure payment",
     desc: "Stripe-powered checkout with funds held until delivery is confirmed — so you get payment certainty alongside simple, per-sale pricing.",
     img: "/Secure%20payment.png",
@@ -211,13 +207,10 @@ export default function HomePage() {
           <div className="w-full max-w-xl mx-auto flex flex-col gap-4 sm:gap-5">
             {PILLARS.map((item) => (
               <div
-                key={item.id}
-                className="relative rounded-2xl border border-white/[0.08] bg-[#0e1623] px-4 py-5 sm:px-5 sm:py-6 shadow-lg shadow-black/15"
+                key={item.title}
+                className="rounded-2xl border border-white/[0.08] bg-[#0e1623] px-4 py-5 sm:px-5 sm:py-6 shadow-lg shadow-black/15"
               >
-                <span className="absolute top-4 right-4 sm:top-5 sm:right-5 text-[0.6rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-gold/65">
-                  Pillar {item.id}
-                </span>
-                <div className="flex gap-4 pr-16 sm:pr-20">
+                <div className="flex gap-4">
                   <div className="relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0a1522]">
                     <Image src={item.img} alt={item.alt} fill className="object-cover" sizes="56px" />
                   </div>

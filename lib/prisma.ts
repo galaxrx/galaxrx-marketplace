@@ -7,6 +7,17 @@ import { PrismaClient } from "@prisma/client";
  */
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
+/** Vercel warns when env values contain newlines or leading/trailing space — that breaks the URI. */
+function sanitizeDatabaseUrlEnv(raw: string): string {
+  return raw.trim().replace(/\r\n|\r|\n/g, "");
+}
+
+const rawDatabaseUrl = process.env.DATABASE_URL ?? "";
+let databaseUrl = sanitizeDatabaseUrlEnv(rawDatabaseUrl);
+if (databaseUrl !== rawDatabaseUrl) {
+  process.env.DATABASE_URL = databaseUrl;
+}
+
 /**
  * Supabase transaction pooler (6543) + Prisma parallel queries → P2024 if connection_limit=1.
  * Mutates DATABASE_URL at runtime so production survives a mis-set Vercel env until it is fixed.
@@ -25,7 +36,6 @@ function patchSupabaseTransactionPoolerUrl(url: string): string {
   return next;
 }
 
-let databaseUrl = process.env.DATABASE_URL ?? "";
 const patchedUrl = patchSupabaseTransactionPoolerUrl(databaseUrl);
 if (patchedUrl !== databaseUrl) {
   process.env.DATABASE_URL = patchedUrl;

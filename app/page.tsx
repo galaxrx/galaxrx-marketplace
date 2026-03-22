@@ -211,7 +211,7 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* Marketplace pillars */}
+        {/* How GalaxRX works */}
         <section
           id="what-we-do"
           className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
@@ -222,7 +222,7 @@ export default function HomePage() {
           />
           <ScrollReveal as="div" className="relative mb-10 sm:mb-12 text-center">
             <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-[0.12em] [text-shadow:0_2px_24px_rgba(0,0,0,0.3)]">
-              Marketplace pillars
+              How GalaxRX works
             </h2>
             <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
           </ScrollReveal>

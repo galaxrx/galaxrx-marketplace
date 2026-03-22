@@ -11,7 +11,7 @@ Use this **before** pointing production traffic at Vercel. Sections: **Database*
 | Check | Action |
 |--------|--------|
 | **Pooled URL for app** | On Vercel, set `DATABASE_URL` to Supabase **Transaction pooler** (port **`6543`**) with **`?pgbouncer=true&connection_limit=1&sslmode=require`**. **Do not use Session pooler (`5432`)** for production serverless — it triggers **`MaxClientsInSessionMode: max clients reached`** under parallel page/API loads. |
-| **Migrations vs runtime** | Same **`DATABASE_URL`** in this repo. If **`prisma migrate deploy`** on Vercel ever fails against the transaction pool, run migrations once locally against Supabase’s **Session** pooler URI from the dashboard. Avoid **`db.*.supabase.co`** from Vercel for runtime — common **P1001** (IPv4). |
+| **Migrations vs runtime** | Set **`DATABASE_URL`** (transaction `6543`) **and** **`DIRECT_URL`** (session pooler `5432` on same `*.pooler.supabase.com` host). Prisma uses **`directUrl`** for `migrate deploy` so the build does not hang on PgBouncer transaction mode. Avoid **`db.*.supabase.co`** for **`DATABASE_URL`** on Vercel — common **P1001**. |
 | **SSL** | Supabase URLs usually include `sslmode=require` or equivalent. Keep as provided. |
 | **Backups** | Enable Supabase **Point-in-time recovery** / backups for production. |
 

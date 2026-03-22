@@ -276,8 +276,8 @@ export default function HomePage() {
                 <Image src="/logo.png" alt="GalaxRX" fill className="object-contain object-left" sizes="112px" />
               </div>
               <p className="text-white/50 text-sm leading-relaxed">
-                GalaxRX is the trusted marketplace where licensed Australian pharmacies trade surplus stock. List in
-                under 20 seconds. Pay only 3.5% per sale — no subscription.
+                The trusted marketplace where licensed Australian pharmacies trade surplus stock. List in under 20
+                seconds. Pay only 3.5% per sale — no subscription.
               </p>
               <p className="text-white/30 text-xs mt-5">© {new Date().getFullYear()} GalaxRX. All rights reserved.</p>
               <div className="mt-6 flex flex-wrap items-center gap-4">

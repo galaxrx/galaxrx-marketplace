@@ -245,7 +245,6 @@ export default function DashboardSidebarNav({ userName, isAdmin }: Props) {
 
       <div className="shrink-0 border-t border-white/10 p-3">
         <span className="block truncate px-3 py-2 text-sm text-white/60">{userName}</span>
-        <span className="mt-1 block px-3 text-xs text-white/35">GalaxRX</span>
       </div>
     </nav>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image";
+import ListingImage from "@/components/listings/ListingImage";
 import { format } from "date-fns";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -544,12 +544,13 @@ function BuyNowModalInner({
                     >
                       <div className="aspect-square rounded-lg border border-gray-200 bg-gray-50 overflow-hidden flex items-center justify-center">
                         {img ? (
-                          <Image
+                          <ListingImage
                             src={img}
                             alt={r.listing.productName}
+                            fill={false}
                             width={100}
                             height={100}
-                            className="object-contain w-full h-full"
+                            className="object-contain w-full h-full max-w-full max-h-full"
                           />
                         ) : (
                           <span className="text-3xl text-gray-400">💊</span>
@@ -581,12 +582,13 @@ function BuyNowModalInner({
               <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-4">
                 <div className="aspect-square rounded-lg border border-gray-200 bg-gray-50 overflow-hidden flex items-center justify-center">
                   {firstImage ? (
-                    <Image
+                    <ListingImage
                       src={firstImage}
                       alt={primary.productName}
+                      fill={false}
                       width={140}
                       height={140}
-                      className="object-contain w-full h-full"
+                      className="object-contain w-full h-full max-w-full max-h-full"
                     />
                   ) : (
                     <span className="text-4xl text-gray-400">💊</span>

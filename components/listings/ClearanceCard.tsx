@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { differenceInDays, format } from "date-fns";
+import ListingImage from "@/components/listings/ListingImage";
 import {
   listingPackContextLine,
   listingPrimaryPriceExGstLabel,
@@ -45,7 +45,7 @@ export default function ClearanceCard({ listing }: { listing: Listing }) {
         </div>
         <div className="aspect-video bg-white/5 rounded-lg mb-3 overflow-hidden flex items-center justify-center text-white/40 text-sm border border-[rgba(161,130,65,0.15)] relative">
           {firstImage ? (
-            <Image
+            <ListingImage
               src={firstImage}
               alt={listing.productName}
               fill

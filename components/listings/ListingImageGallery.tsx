@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import ListingImage from "@/components/listings/ListingImage";
 
 const CATEGORY_ICONS: Record<string, string> = {
   PRESCRIPTION: "💊",
@@ -56,7 +56,7 @@ export default function ListingImageGallery({ images, category }: Props) {
           onClick={() => setLightboxOpen(true)}
           className="relative block w-full h-[18rem] sm:h-[22rem] md:h-[26rem] rounded-lg overflow-hidden bg-mid-navy border border-white/10"
         >
-          <Image
+          <ListingImage
             src={current}
             alt="Listing"
             fill
@@ -73,7 +73,7 @@ export default function ListingImageGallery({ images, category }: Props) {
                 onClick={() => setPrimaryIndex(i)}
                 className={`relative flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 ${i === primaryIndex ? "border-primary" : "border-transparent"}`}
               >
-                <Image src={url} alt="" fill className="object-cover" sizes="64px" />
+                <ListingImage src={url} alt="" fill className="object-cover" sizes="64px" />
               </button>
             ))}
           </div>
@@ -112,7 +112,7 @@ export default function ListingImageGallery({ images, category }: Props) {
             </>
           )}
           <div className="relative w-full max-w-3xl h-[80vh] mx-4">
-            <Image
+            <ListingImage
               src={current}
               alt="Listing"
               fill

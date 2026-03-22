@@ -14,6 +14,24 @@ function memberIdFromPharmacyId(id: string): string {
   return id.slice(-6).toUpperCase();
 }
 
+/** date-fns `format` throws on Invalid Date — avoid crashing the whole page. */
+function safeFormatDate(value: unknown, fmt: string): string {
+  if (value == null) return "—";
+  const d = value instanceof Date ? value : new Date(value as string);
+  const t = d.getTime();
+  if (!Number.isFinite(t)) return "—";
+  try {
+    return format(d, fmt);
+  } catch {
+    return "—";
+  }
+}
+
+function formatMoney(value: unknown): string {
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toFixed(2) : "—";
+}
+
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
   const pharmacyId = (session?.user as { id?: string })?.id;
@@ -60,12 +78,12 @@ export default async function AccountPage() {
   const salesWithMeta = sales.map((order) => ({
     order,
     type: "sale" as const,
-    counterparty: order.buyer.name,
+    counterparty: order.buyer?.name ?? "—",
   }));
   const purchasesWithMeta = purchases.map((order) => ({
     order,
     type: "purchase" as const,
-    counterparty: order.seller.name,
+    counterparty: order.seller?.name ?? "—",
   }));
   const allTransactions = [...salesWithMeta, ...purchasesWithMeta]
     .sort((a, b) => new Date(b.order.createdAt).getTime() - new Date(a.order.createdAt).getTime())
@@ -76,10 +94,10 @@ export default async function AccountPage() {
   const memberId = memberIdFromPharmacyId(pharmacy.id);
   const fullAddress = [pharmacy.address, pharmacy.suburb, pharmacy.state, pharmacy.postcode].filter(Boolean).join(", ");
 
-  const totalTransactionValue = sales.reduce((s, o) => s + o.grossAmount, 0);
-  const totalPlatformFee = sales.reduce((s, o) => s + o.platformFee, 0);
-  const totalGstAmt = sales.reduce((s, o) => s + o.gstAmount, 0);
-  const totalNetToSeller = sales.reduce((s, o) => s + o.netAmount, 0);
+  const totalTransactionValue = sales.reduce((s, o) => s + (Number(o.grossAmount) || 0), 0);
+  const totalPlatformFee = sales.reduce((s, o) => s + (Number(o.platformFee) || 0), 0);
+  const totalGstAmt = sales.reduce((s, o) => s + (Number(o.gstAmount) || 0), 0);
+  const totalNetToSeller = sales.reduce((s, o) => s + (Number(o.netAmount) || 0), 0);
   const pendingPayoutsResult = await prisma.order.aggregate({
     where: {
       sellerId: pharmacyId,
@@ -87,7 +105,9 @@ export default async function AccountPage() {
     },
     _sum: { netAmount: true },
   });
-  const amountDueToYou = pendingPayoutsResult._sum.netAmount ?? 0;
+  const rawPending = pendingPayoutsResult._sum.netAmount;
+  const amountDueToYou = Number(rawPending);
+  const amountDueDisplay = Number.isFinite(amountDueToYou) ? amountDueToYou : 0;
 
   return (
     <div className="space-y-8 w-full max-w-none">
@@ -172,7 +192,7 @@ export default async function AccountPage() {
                 allTransactions.map(({ order, type, counterparty }) => (
                   <tr key={order.id} className="border-b border-white/5 hover:bg-white/5">
                     <td className="px-4 py-3 text-white/80 whitespace-nowrap">
-                      {format(new Date(order.createdAt), "d MMM yyyy, HH:mm")}
+                      {safeFormatDate(order.createdAt, "d MMM yyyy, HH:mm")}
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -189,7 +209,7 @@ export default async function AccountPage() {
                     <td className="px-4 py-3 text-white/90">{order.listing?.productName ?? "—"}</td>
                     <td className="px-4 py-3 text-white/70">{counterparty}</td>
                     <td className="px-4 py-3 text-right font-medium text-white">
-                      {type === "sale" ? "+" : "-"}${order.grossAmount.toFixed(2)}
+                      {type === "sale" ? "+" : "-"}${formatMoney(order.grossAmount)}
                     </td>
                     <td className="px-4 py-3 text-white/70">{order.status}</td>
                     <td className="px-4 py-3">
@@ -216,10 +236,10 @@ export default async function AccountPage() {
           <SellerPayoutTimingNotice />
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="font-heading font-semibold text-lg text-white">Sales & fees</h2>
-            {amountDueToYou > 0 && (
+            {amountDueDisplay > 0 && (
               <div className="bg-success/15 border border-success/40 rounded-lg px-4 py-2">
                 <span className="text-white/70 text-sm">Amount due to you (pending payout)</span>
-                <p className="text-xl font-bold text-success">${amountDueToYou.toFixed(2)}</p>
+                <p className="text-xl font-bold text-success">${amountDueDisplay.toFixed(2)}</p>
               </div>
             )}
           </div>
@@ -248,12 +268,12 @@ export default async function AccountPage() {
                 sales.map((o) => (
                   <tr key={o.id} className="border-b border-white/5 hover:bg-white/5">
                     <td className="px-4 py-3 text-white/90 font-mono text-xs">GX-{o.id.slice(-6).toUpperCase()}</td>
-                    <td className="px-4 py-3 text-white/80">{format(new Date(o.createdAt), "d MMM yyyy")}</td>
+                    <td className="px-4 py-3 text-white/80">{safeFormatDate(o.createdAt, "d MMM yyyy")}</td>
                     <td className="px-4 py-3 text-white/90">{o.listing?.productName ?? "—"}</td>
-                    <td className="px-4 py-3 text-white/90 text-right">${o.grossAmount.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-white/70 text-right">${o.platformFee.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-white/70 text-right">${o.gstAmount.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-gold font-medium text-right">${o.netAmount.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-white/90 text-right">${formatMoney(o.grossAmount)}</td>
+                    <td className="px-4 py-3 text-white/70 text-right">${formatMoney(o.platformFee)}</td>
+                    <td className="px-4 py-3 text-white/70 text-right">${formatMoney(o.gstAmount)}</td>
+                    <td className="px-4 py-3 text-gold font-medium text-right">${formatMoney(o.netAmount)}</td>
                   </tr>
                 ))
               )}
@@ -262,10 +282,10 @@ export default async function AccountPage() {
         </div>
         {sales.length > 0 && (
           <div className="p-4 bg-white/5 border-t border-white/10 flex flex-wrap gap-6 justify-end text-sm">
-            <span className="text-white/70">Total transaction value: <strong className="text-white">${totalTransactionValue.toFixed(2)}</strong></span>
-            <span className="text-white/70">Total platform fee: <strong className="text-white">${totalPlatformFee.toFixed(2)}</strong></span>
-            <span className="text-white/70">Total GST: <strong className="text-white">${totalGstAmt.toFixed(2)}</strong></span>
-            <span className="text-gold font-semibold">Total net to you: ${totalNetToSeller.toFixed(2)}</span>
+            <span className="text-white/70">Total transaction value: <strong className="text-white">${formatMoney(totalTransactionValue)}</strong></span>
+            <span className="text-white/70">Total platform fee: <strong className="text-white">${formatMoney(totalPlatformFee)}</strong></span>
+            <span className="text-white/70">Total GST: <strong className="text-white">${formatMoney(totalGstAmt)}</strong></span>
+            <span className="text-gold font-semibold">Total net to you: ${formatMoney(totalNetToSeller)}</span>
           </div>
         )}
       </section>

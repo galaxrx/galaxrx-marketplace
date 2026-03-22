@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { differenceInDays, format } from "date-fns";
+import ListingImage from "@/components/listings/ListingImage";
 import StarRating from "@/components/ui/StarRating";
 import PriceInsightPanel from "@/components/price-intelligence/PriceInsightPanel";
 import {
@@ -75,11 +75,12 @@ export default function ListingCard({ listing, distanceText, compactImage }: Lis
           }
         >
           {firstImage ? (
-            <Image
+            <ListingImage
               src={firstImage}
               alt={listing.productName}
               fill
               className="object-contain"
+              compact={compactImage}
               sizes={
                 compactImage
                   ? "(max-width: 640px) 90vw, 200px"

@@ -24,7 +24,8 @@ npx vercel logs <your-deployment-url>
 | **Any dashboard page** | **`DATABASE_URL`** in Vercel (Supabase **pooler** URI, correct password encoding). See [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md). |
 | **After a code deploy** | **Migrations**: build should run `prisma migrate deploy`. If the DB is behind the schema, Prisma throws on missing tables/columns. |
 | **Auth / redirect loops** | **`NEXTAUTH_URL`** must be your live `https://…` URL. **`NEXTAUTH_SECRET`** must be set and stable. |
-| **My Account / orders** | DB reachable; `Order` / `Pharmacy` data intact (no manual DB edits breaking relations). |
+| **My Account / orders** | DB reachable; `Order` / `Pharmacy` data intact. The account page uses safe date/money formatting so **invalid `createdAt` or missing buyer/seller** does not crash the whole route. |
+| **Some listing images broken** | Often **UploadThing `*.ufs.sh` URLs** (add to `next.config.mjs` `images.remotePatterns`) or **third-party product image hosts** not allowlisted — the app falls back to a plain `<img>` for unknown HTTPS hosts and shows “Image unavailable” on 404. |
 
 ## 3. Reproduce locally with production-like settings
 

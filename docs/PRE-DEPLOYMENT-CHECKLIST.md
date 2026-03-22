@@ -11,7 +11,7 @@ Use this **before** pointing production traffic at Vercel. Sections: **Database*
 | Check | Action |
 |--------|--------|
 | **Pooled URL for app** | On Vercel, set `DATABASE_URL` to Supabase **connection pooling** (often **Transaction** pooler, port **6543**), not the long-lived **direct** `5432` session URL. Direct URLs exhaust Postgres `max_connections` when many Vercel functions run at once. |
-| **Migrations vs runtime** | Repo uses Prisma **`directUrl` = `DIRECT_URL`**: set **`DIRECT_URL`** to the **direct** `db.*.supabase.co:5432` URI in Vercel (same password as `DATABASE_URL`). **`DATABASE_URL`** can stay pooled for runtime. If you use a single direct URL only, set **`DIRECT_URL`** equal to **`DATABASE_URL`**. |
+| **Migrations vs runtime** | **`DATABASE_URL`** only: use a **pooler** URI from Vercel (Session `5432` or Transaction `6543`). Avoid **`db.*.supabase.co`** from Vercel without IPv4 add-on — common **P1001**. |
 | **SSL** | Supabase URLs usually include `sslmode=require` or equivalent. Keep as provided. |
 | **Backups** | Enable Supabase **Point-in-time recovery** / backups for production. |
 

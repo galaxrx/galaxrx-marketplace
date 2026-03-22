@@ -5,11 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// DATABASE_URL: runtime (Supabase pooler on Vercel). DIRECT_URL: migrations (direct db.*.supabase.co:5432).
+// Use a Supabase pooler URI on Vercel (Session or Transaction). Avoid db.*.supabase.co from Vercel — often IPv6-only → P1001.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // Drug master — seeded from TGA/PBS data

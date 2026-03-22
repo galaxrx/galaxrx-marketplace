@@ -29,8 +29,7 @@ In Vercel → Project → **Settings** → **Environment Variables**, add each n
 
 | Variable | Notes |
 |----------|--------|
-| `DATABASE_URL` | Production DB for **runtime** queries. On **Supabase + Vercel**, prefer the **pooled** / transaction string (often port **6543**). |
-| `DIRECT_URL` | **Required** for builds: Prisma runs `migrate deploy` via **direct** Postgres (`db.<project>.supabase.co`, port **5432**). Same user/password as `DATABASE_URL`. If you use only one non-pooled URL, set `DIRECT_URL` **equal** to `DATABASE_URL`. |
+| `DATABASE_URL` | Production DB. On **Supabase + Vercel**, use a **pooler** URI (**Session** port **5432** or **Transaction** port **6543**). **Do not** use `db.<project>.supabase.co` from Vercel — it often returns **P1001** (IPv4). `prisma migrate deploy` uses this same URL. |
 | `NEXTAUTH_URL` | Your live site URL, e.g. `https://galaxrx-marketplace.vercel.app` or your custom domain **with `https`**. Must match what users type in the browser. |
 | `NEXTAUTH_SECRET` | Same long random secret you use locally (e.g. `openssl rand -base64 32`). |
 | `AUTH_TRUST_HOST` | Set to `true` (matches `.env.example`). |
@@ -81,8 +80,8 @@ Your `package.json` has `"postinstall": "prisma generate"` — good. That runs o
 npx prisma generate && npx prisma migrate deploy && npm run build
 ```
 
-- First deploy: applies all migrations in `prisma/migrations` to the **production** database. Prisma uses **`DIRECT_URL`** for migrations when set in `schema.prisma` (Supabase poolers often reject migration DDL without it).
-- Ensure **`DATABASE_URL`** and **`DIRECT_URL`** are set **before** the first deploy, or the build will fail at `migrate deploy` or `prisma generate`.
+- First deploy: applies all migrations to the **production** database using **`DATABASE_URL`**. It must be a **reachable** string from Vercel (Supabase **pooler**, not `db.*.supabase.co`, unless you use Supabase **IPv4 add-on** for direct).
+- Ensure **`DATABASE_URL`** is correct **before** the first deploy.
 
 If you prefer not to run migrations during build, run once from your PC against production (advanced):
 
@@ -135,7 +134,7 @@ Your repo schedules `/api/admin/stripe-retry-failed` via `vercel.json`. **Hobby*
 ## Quick checklist
 
 - [ ] Import GitHub repo on Vercel  
-- [ ] Set `DATABASE_URL` (pooled if Supabase serverless) and **`DIRECT_URL`** (direct `5432` for migrations)  
+- [ ] Set `DATABASE_URL` to a **Supabase pooler** URI (reachable from Vercel)  
 - [ ] Set `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `AUTH_TRUST_HOST`  
 - [ ] Set Stripe + Resend (+ Uploadthing if needed)  
 - [ ] Build command: `npx prisma generate && npx prisma migrate deploy && npm run build` (see `vercel.json`)  

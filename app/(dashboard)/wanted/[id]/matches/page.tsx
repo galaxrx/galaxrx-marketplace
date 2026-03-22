@@ -3,8 +3,6 @@ import { authOptions } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import WantedMatchesContent from "@/components/wanted/WantedMatchesContent";
-import ClientOnly from "@/components/ClientOnly";
-
 export const dynamic = "force-dynamic";
 
 export default async function WantedMatchesPage({
@@ -42,19 +40,17 @@ export default async function WantedMatchesPage({
 
   const paramsResolved = await searchParams;
   return (
-    <ClientOnly fallback={<div className="flex items-center justify-center min-h-[200px] text-white/50">Loading…</div>}>
-      <WantedMatchesContent
-        wantedItem={{
-          id: wantedItem.id,
-          productName: wantedItem.productName,
-          strength: wantedItem.strength,
-          maxPrice: wantedItem.maxPrice,
-          quantity: wantedItem.quantity,
-          quantityKind: wantedItem.quantityKind,
-          unitsPerPack: wantedItem.unitsPerPack,
-        }}
-        searchParams={paramsResolved}
-      />
-    </ClientOnly>
+    <WantedMatchesContent
+      wantedItem={{
+        id: wantedItem.id,
+        productName: wantedItem.productName,
+        strength: wantedItem.strength,
+        maxPrice: wantedItem.maxPrice,
+        quantity: wantedItem.quantity,
+        quantityKind: wantedItem.quantityKind,
+        unitsPerPack: wantedItem.unitsPerPack,
+      }}
+      searchParams={paramsResolved}
+    />
   );
 }

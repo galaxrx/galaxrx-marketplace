@@ -11,11 +11,11 @@ export default async function BuyPage({
 }) {
   const params = await searchParams;
   return (
-    <ClientOnly fallback={<div className="flex items-center justify-center min-h-[200px] text-white/50">Loading…</div>}>
-      <>
+    <>
+      <ClientOnly fallback={null}>
         <MarketplaceLiveRefresh />
-        <ListingsBrowseContent searchParams={params} variant="buy" />
-      </>
-    </ClientOnly>
+      </ClientOnly>
+      <ListingsBrowseContent searchParams={params} variant="buy" />
+    </>
   );
 }

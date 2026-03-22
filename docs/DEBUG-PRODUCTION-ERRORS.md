@@ -47,4 +47,4 @@ Use a copy of **production** env vars in `.env.local` (never commit them). Error
 
 ## 4. Code change: dashboard pharmacy lookup
 
-The dashboard layout loads pharmacy display data for the header. That path previously used **`unstable_cache`**, which can be flaky with **`force-dynamic`** on serverless. It now uses React **`cache()`** for per-request deduplication only (`lib/pharmacy-cache.ts`). If errors persist, the logs above still point to the true cause (usually DB or schema).
+The dashboard header uses **`lib/pharmacy-cache.ts`**: React **`cache()`** per request plus **`unstable_cache`** (~90s) to cut repeated DB reads on tab navigation. If errors persist, the logs above still point to the true cause (usually DB or schema).

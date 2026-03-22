@@ -2,14 +2,12 @@ import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { getCachedPharmacyDisplay } from "@/lib/pharmacy-cache";
-
 export const dynamic = "force-dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import DashboardNav from "@/components/dashboard/DashboardNav";
 import DashboardSidebarShell from "@/components/dashboard/DashboardSidebarShell";
-import PharmacyTopBar from "@/components/dashboard/PharmacyTopBar";
+import PharmacyTopBarAsync from "@/components/dashboard/PharmacyTopBarAsync";
 import ClientOnly from "@/components/ClientOnly";
 import MobileBottomNav from "@/components/dashboard/MobileBottomNav";
 import SessionChangeBanner from "@/components/dashboard/SessionChangeBanner";
@@ -39,14 +37,6 @@ export default async function DashboardLayout({
   const userName = session.user?.name ?? "";
   const isAdmin = (session.user as { role?: string })?.role === "ADMIN";
 
-  // Single pharmacy lookup for nav + top bar (React cache dedupes within the request)
-  let pharmacy: Awaited<ReturnType<typeof getCachedPharmacyDisplay>> = null;
-  try {
-    pharmacy = await getCachedPharmacyDisplay(pharmacyId);
-  } catch (e) {
-    console.error("[dashboard layout] pharmacy lookup failed", e);
-  }
-
   return (
     <AppThemeProvider>
       <UnreadCountProvider>
@@ -75,10 +65,7 @@ export default async function DashboardLayout({
         <SessionChangeBanner />
         <div className="flex-1 flex flex-col min-h-screen md:ml-[var(--dashboard-sidebar-width)]">
         <Suspense fallback={headerFallback}>
-          <PharmacyTopBar
-            pharmacyName={pharmacy?.name ?? "Pharmacy"}
-            pharmacyLogoUrl={pharmacy?.logoUrl ?? null}
-          />
+          <PharmacyTopBarAsync pharmacyId={pharmacyId} />
         </Suspense>
         <main className="flex-1 p-4 md:p-6 lg:px-8 xl:px-10 pb-20 md:pb-6">
           <Suspense fallback={<div className="flex items-center justify-center min-h-[200px] text-white/50">Loading…</div>}>

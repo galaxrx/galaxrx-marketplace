@@ -2,6 +2,8 @@
 
 **Before first production deploy**, complete **[PRE-DEPLOYMENT-CHECKLIST.md](./PRE-DEPLOYMENT-CHECKLIST.md)** (database pooling, Stripe live webhooks, auth URL, scale notes).
 
+**Upgrading paid tiers** (Supabase, UploadThing, barcode API, NSW pharmacist API) and **pushing to GitHub / Vercel**: see **[PRO-SERVICES-AND-DEPLOY.md](./PRO-SERVICES-AND-DEPLOY.md)**.
+
 Your repo is already on GitHub (`galaxrx/galaxrx-marketplace`). Vercel will **build from Git** on every push to `main`.
 
 ---

@@ -56,6 +56,13 @@ B2B marketplace where licensed Australian pharmacies buy and sell surplus, short
 
 To access `/admin`, set a pharmacy's role to `ADMIN` in the database (e.g. Supabase SQL: `UPDATE "Pharmacy" SET role = 'ADMIN' WHERE email = 'your@email.com';`). Then sign in with that account.
 
+## Deployment & paid services
+
+- **[docs/VERCEL-DEPLOY.md](docs/VERCEL-DEPLOY.md)** — first-time Vercel setup and env vars  
+- **[docs/PUSH-TO-GITHUB.md](docs/PUSH-TO-GITHUB.md)** — commit and push to GitHub  
+- **[docs/PRO-SERVICES-AND-DEPLOY.md](docs/PRO-SERVICES-AND-DEPLOY.md)** — moving to Pro/paid for database, UploadThing, barcode lookup, NSW pharmacist register; updating Vercel and redeploying  
+- **[docs/DEBUG-PRODUCTION-ERRORS.md](docs/DEBUG-PRODUCTION-ERRORS.md)** — “Something went wrong” / Server Components errors: Vercel logs, `digest`, common causes  
+
 ## Design
 
 - **Primary blue:** `#1A6FC4`

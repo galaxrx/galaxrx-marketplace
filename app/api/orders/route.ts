@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     if (hit && hit.until > now) {
       return NextResponse.json(hit.data);
     }
-    const [purchases, sales] = await Promise.all([
+    const [purchases, sales] = await prisma.$transaction([
       prisma.order.findMany({
         where: { buyerId: pharmacyId },
         orderBy: { createdAt: "desc" },

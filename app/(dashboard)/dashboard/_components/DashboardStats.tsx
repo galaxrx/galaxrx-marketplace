@@ -4,13 +4,15 @@ import Link from "next/link";
 export default async function DashboardStats({ pharmacyId }: { pharmacyId: string }) {
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
+  // With Supabase + `connection_limit=1`, parallel Promise.all exhausts Prisma's pool (P2024).
+  // $transaction runs these sequentially on one connection.
   const [
     activeListings,
     ordersThisMonth,
     pharmacy,
     expiringCount,
     pendingPayoutsResult,
-  ] = await Promise.all([
+  ] = await prisma.$transaction([
     prisma.listing.count({ where: { pharmacyId, isActive: true } }),
     prisma.order.count({
       where: {

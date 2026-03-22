@@ -7,7 +7,34 @@ import { PrismaClient } from "@prisma/client";
  */
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
-const databaseUrl = process.env.DATABASE_URL ?? "";
+/**
+ * Supabase transaction pooler (6543) + Prisma parallel queries → P2024 if connection_limit=1.
+ * Mutates DATABASE_URL at runtime so production survives a mis-set Vercel env until it is fixed.
+ */
+function patchSupabaseTransactionPoolerUrl(url: string): string {
+  if (!url || !url.includes("pooler.supabase.com") || !/:6543(\?|\/|$)/.test(url)) {
+    return url;
+  }
+  let next = url;
+  if (/connection_limit=1(?=&|$)/i.test(next)) {
+    next = next.replace(/connection_limit=1(?=&|$)/gi, "connection_limit=10");
+  }
+  if (!/pool_timeout=/i.test(next)) {
+    next += next.includes("?") ? "&pool_timeout=30" : "?pool_timeout=30";
+  }
+  return next;
+}
+
+let databaseUrl = process.env.DATABASE_URL ?? "";
+const patchedUrl = patchSupabaseTransactionPoolerUrl(databaseUrl);
+if (patchedUrl !== databaseUrl) {
+  process.env.DATABASE_URL = patchedUrl;
+  databaseUrl = patchedUrl;
+  console.info(
+    "[prisma] Adjusted DATABASE_URL for Supabase transaction pooler (connection_limit≥10, pool_timeout=30). Update Vercel env to match docs/VERCEL-DEPLOY.md so this patch is not required."
+  );
+}
+
 if (
   process.env.NODE_ENV === "production" &&
   databaseUrl.includes("pooler.supabase.com") &&

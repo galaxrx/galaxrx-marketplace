@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import { isStripeConnectAccountNotFoundError } from "@/lib/stripe-account-errors";
 
 /**
  * GET: Return the current session's Stripe Connect account health.
@@ -47,7 +48,16 @@ export async function GET() {
       requirementsPastDue: account.requirements?.past_due ?? [],
       reason: chargesEnabled && payoutsEnabled ? "HEALTHY" : "RESTRICTED",
     });
-  } catch {
+  } catch (e: unknown) {
+    if (isStripeConnectAccountNotFoundError(e)) {
+      return NextResponse.json({
+        connected: true,
+        chargesEnabled: false,
+        payoutsEnabled: false,
+        reason: "ACCOUNT_NOT_FOUND",
+        needsSellerReconnect: true,
+      });
+    }
     return NextResponse.json({
       connected: true,
       chargesEnabled: false,

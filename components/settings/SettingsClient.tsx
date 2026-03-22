@@ -53,6 +53,27 @@ export default function SettingsClient({ pharmacy }: Props) {
   const [notifSaving, setNotifSaving] = useState(false);
   const [stripeLoading, setStripeLoading] = useState(false);
   const [stripeDisconnectLoading, setStripeDisconnectLoading] = useState(false);
+  const [stripeNeedsReconnect, setStripeNeedsReconnect] = useState(false);
+
+  useEffect(() => {
+    if (!pharmacy.stripeAccountId) {
+      setStripeNeedsReconnect(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/stripe/connect-status")
+      .then((r) => r.json())
+      .then((d: { needsSellerReconnect?: boolean; reason?: string }) => {
+        if (cancelled) return;
+        if (d.needsSellerReconnect || d.reason === "ACCOUNT_NOT_FOUND") {
+          setStripeNeedsReconnect(true);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [pharmacy.stripeAccountId]);
 
   useEffect(() => {
     const stripe = searchParams.get("stripe");
@@ -289,6 +310,17 @@ export default function SettingsClient({ pharmacy }: Props) {
       <section className="bg-mid-navy border border-[rgba(161,130,65,0.18)] rounded-xl p-6">
         <h2 className="font-heading font-semibold text-lg text-white mb-2">Bank account (Stripe Connect)</h2>
         <p className="text-sm text-white/70 mb-4">Connect your bank account to receive payments from sales.</p>
+        {stripeNeedsReconnect && (
+          <div
+            className="mb-4 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100"
+            role="status"
+          >
+            <strong className="text-amber-200">Action required:</strong> Stripe does not recognise the saved payout
+            account (common after switching from test to live keys). Use{" "}
+            <strong className="text-white">Reconnect for live payments</strong> below, complete onboarding, so buyers
+            can pay you.
+          </div>
+        )}
         <SellerPayoutTimingNotice className="mb-5" />
         <div className="flex items-center gap-3 flex-wrap">
           <span

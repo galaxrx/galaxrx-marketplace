@@ -14,6 +14,11 @@ import { CHECKOUT_RESERVATION_MINUTES } from "@/lib/checkout-ttl";
 import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
 import { CHECKOUT_BLOCKED_PLATFORM_FEE_CODE } from "@/lib/pricing";
 import Stripe from "stripe";
+import {
+  isStripeConnectAccountNotFoundError,
+  SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE,
+  stripeDestinationErrorResponse,
+} from "@/lib/stripe-account-errors";
 
 const LISTING_RESERVATION_EXPIRY_MINUTES = CHECKOUT_RESERVATION_MINUTES;
 const CART_IDEMPOTENCY_BUCKET_MS = CHECKOUT_RESERVATION_MINUTES * 60 * 1000;
@@ -138,8 +143,14 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
-    } catch {
-      console.warn("[GalaxRX] Could not verify seller account health for:", sellerStripeAccountId);
+    } catch (e: unknown) {
+      if (isStripeConnectAccountNotFoundError(e)) {
+        return NextResponse.json(
+          { code: "SELLER_STRIPE_INVALID", message: SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE },
+          { status: 400 }
+        );
+      }
+      console.warn("[GalaxRX] Could not verify seller account health for:", sellerStripeAccountId, e);
     }
 
     const lineInputs: {
@@ -360,6 +371,10 @@ export async function POST(req: Request) {
   } catch (e) {
     if (e instanceof DirectChargeNotSupportedError) {
       return NextResponse.json({ message: e.message }, { status: 503 });
+    }
+    const dest = stripeDestinationErrorResponse(e);
+    if (dest) {
+      return NextResponse.json(dest, { status: 400 });
     }
     console.error("[create-cart-payment-intent]", e);
     return NextResponse.json(

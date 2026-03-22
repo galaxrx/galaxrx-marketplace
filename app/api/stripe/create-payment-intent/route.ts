@@ -29,6 +29,11 @@ import { CHECKOUT_RESERVATION_MINUTES } from "@/lib/checkout-ttl";
 import { unitPriceExGstFromPackPrice } from "@/lib/listing-units";
 import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
 import Stripe from "stripe";
+import {
+  isStripeConnectAccountNotFoundError,
+  SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE,
+  stripeDestinationErrorResponse,
+} from "@/lib/stripe-account-errors";
 
 const LISTING_RESERVATION_EXPIRY_MINUTES = CHECKOUT_RESERVATION_MINUTES;
 /** Align with reservation window so retries stay on the same PaymentIntent bucket. */
@@ -315,8 +320,14 @@ export async function POST(req: Request) {
             { status: 400 }
           );
         }
-      } catch {
-        console.warn("[GalaxRX] Could not verify seller account health for:", sellerStripeAccountId);
+      } catch (e: unknown) {
+        if (isStripeConnectAccountNotFoundError(e)) {
+          return NextResponse.json(
+            { code: "SELLER_STRIPE_INVALID", message: SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE },
+            { status: 400 }
+          );
+        }
+        console.warn("[GalaxRX] Could not verify seller account health for:", sellerStripeAccountId, e);
       }
       const deliveryFeeExGST =
         typeof deliveryFeeOverride === "number" && deliveryFeeOverride >= 0 ? deliveryFeeOverride : 0;
@@ -535,8 +546,14 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
-    } catch {
-      console.warn("[GalaxRX] Could not verify seller account health for:", sellerStripeAccountId);
+    } catch (e: unknown) {
+      if (isStripeConnectAccountNotFoundError(e)) {
+        return NextResponse.json(
+          { code: "SELLER_STRIPE_INVALID", message: SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE },
+          { status: 400 }
+        );
+      }
+      console.warn("[GalaxRX] Could not verify seller account health for:", sellerStripeAccountId, e);
     }
 
     // Use agreed negotiated price if seller accepted a buyer offer
@@ -842,6 +859,10 @@ export async function POST(req: Request) {
         { message: e.message },
         { status: 503 }
       );
+    }
+    const dest = stripeDestinationErrorResponse(e);
+    if (dest) {
+      return NextResponse.json(dest, { status: 400 });
     }
     console.error("[create-payment-intent]", e);
     let message = "Failed to create payment intent";

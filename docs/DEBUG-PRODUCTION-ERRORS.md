@@ -2,11 +2,16 @@
 
 In **production**, Next.js often hides the real error text and shows a generic message plus a **`digest`** (reference id). That is normal — it avoids leaking stack traces or secrets to browsers.
 
+## Build log vs runtime log
+
+- **Build** log (what you see after “Compiled successfully”, route table, “Build Completed”) only proves **`next build`** worked. It does **not** show errors when a user opens `/account`.
+- To debug **“Something went wrong”** in the browser, open **Runtime** logs: **Project → your deployment → Logs** and filter to **Runtime** / **Functions** / **Serverless** (wording varies), then reproduce the page load and look for a **red** stack trace or `Error:` line.
+
 ## 1. Read the error on Vercel
 
 1. Open **[vercel.com](https://vercel.com)** → your **Project**.
 2. Go to **Deployments** → open the deployment that failed (or the latest **Production** build).
-3. Open **Logs** (or **Runtime Logs** / **Functions** depending on UI).
+3. Open **Runtime** / **Functions** logs — **not** only the build output from the deploy summary.
 4. Reproduce the issue (reload **My Account** or the route that breaks), then watch for a **red** error line — it usually includes the real message (e.g. Prisma `P1001`, missing column, `NEXTAUTH_SECRET`, etc.).
 5. If you have the **digest** from the error page, search the logs around the same time; some setups log it next to the failure.
 

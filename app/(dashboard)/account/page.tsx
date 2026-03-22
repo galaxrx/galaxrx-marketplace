@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { PLATFORM } from "@/lib/platform";
 import AccountPaymentMethods from "@/components/account/AccountPaymentMethods";
+import AccountLoadFailed from "@/components/account/AccountLoadFailed";
 import SellerPayoutTimingNotice from "@/components/account/SellerPayoutTimingNotice";
 
 export const dynamic = "force-dynamic";
@@ -32,48 +33,67 @@ function formatMoney(value: unknown): string {
   return Number.isFinite(n) ? n.toFixed(2) : "—";
 }
 
+function safeCreatedAtMs(value: unknown): number {
+  if (value == null) return 0;
+  const d = value instanceof Date ? value : new Date(value as string);
+  const t = d.getTime();
+  return Number.isFinite(t) ? t : 0;
+}
+
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
   const pharmacyId = (session?.user as { id?: string })?.id;
   if (!pharmacyId) redirect("/login");
 
-  const [pharmacy, sales, purchases] = await Promise.all([
-    prisma.pharmacy.findUnique({
-      where: { id: pharmacyId },
-      select: {
-        id: true,
-        name: true,
-        abn: true,
-        address: true,
-        suburb: true,
-        state: true,
-        postcode: true,
-        phone: true,
-        email: true,
-        isVerified: true,
-        stripeAccountId: true,
-        createdAt: true,
-      },
-    }),
-    prisma.order.findMany({
-      where: { sellerId: pharmacyId },
-      orderBy: { createdAt: "desc" },
-      take: 100,
-      include: {
-        listing: { select: { productName: true } },
-        buyer: { select: { name: true } },
-      },
-    }),
-    prisma.order.findMany({
-      where: { buyerId: pharmacyId },
-      orderBy: { createdAt: "desc" },
-      take: 100,
-      include: {
-        listing: { select: { productName: true } },
-        seller: { select: { name: true } },
-      },
-    }),
-  ]);
+  const loaded = await (async () => {
+    try {
+      const [pharmacy, sales, purchases] = await Promise.all([
+        prisma.pharmacy.findUnique({
+          where: { id: pharmacyId },
+          select: {
+            id: true,
+            name: true,
+            abn: true,
+            address: true,
+            suburb: true,
+            state: true,
+            postcode: true,
+            phone: true,
+            email: true,
+            isVerified: true,
+            stripeAccountId: true,
+            createdAt: true,
+          },
+        }),
+        prisma.order.findMany({
+          where: { sellerId: pharmacyId },
+          orderBy: { createdAt: "desc" },
+          take: 100,
+          include: {
+            listing: { select: { productName: true } },
+            buyer: { select: { name: true } },
+          },
+        }),
+        prisma.order.findMany({
+          where: { buyerId: pharmacyId },
+          orderBy: { createdAt: "desc" },
+          take: 100,
+          include: {
+            listing: { select: { productName: true } },
+            seller: { select: { name: true } },
+          },
+        }),
+      ]);
+      return { ok: true as const, pharmacy, sales, purchases };
+    } catch (e) {
+      console.error("[account] prisma batch failed", e instanceof Error ? e.message : e, { pharmacyId });
+      return { ok: false as const };
+    }
+  })();
+
+  if (!loaded.ok) return <AccountLoadFailed />;
+
+  const { pharmacy, sales, purchases } = loaded;
 
   const salesWithMeta = sales.map((order) => ({
     order,
@@ -86,7 +106,7 @@ export default async function AccountPage() {
     counterparty: order.seller?.name ?? "—",
   }));
   const allTransactions = [...salesWithMeta, ...purchasesWithMeta]
-    .sort((a, b) => new Date(b.order.createdAt).getTime() - new Date(a.order.createdAt).getTime())
+    .sort((a, b) => safeCreatedAtMs(b.order.createdAt) - safeCreatedAtMs(a.order.createdAt))
     .slice(0, 200);
 
   if (!pharmacy) redirect("/login");
@@ -98,15 +118,20 @@ export default async function AccountPage() {
   const totalPlatformFee = sales.reduce((s, o) => s + (Number(o.platformFee) || 0), 0);
   const totalGstAmt = sales.reduce((s, o) => s + (Number(o.gstAmount) || 0), 0);
   const totalNetToSeller = sales.reduce((s, o) => s + (Number(o.netAmount) || 0), 0);
-  const pendingPayoutsResult = await prisma.order.aggregate({
-    where: {
-      sellerId: pharmacyId,
-      status: { in: ["PAID", "SHIPPED"] },
-    },
-    _sum: { netAmount: true },
-  });
-  const rawPending = pendingPayoutsResult._sum.netAmount;
-  const amountDueToYou = Number(rawPending);
+  let rawPendingNet: number | null = null;
+  try {
+    const pendingAgg = await prisma.order.aggregate({
+      where: {
+        sellerId: pharmacyId,
+        status: { in: ["PAID", "SHIPPED"] },
+      },
+      _sum: { netAmount: true },
+    });
+    rawPendingNet = pendingAgg._sum.netAmount ?? null;
+  } catch (e) {
+    console.error("[account] pending payout aggregate failed", e instanceof Error ? e.message : e, { pharmacyId });
+  }
+  const amountDueToYou = Number(rawPendingNet);
   const amountDueDisplay = Number.isFinite(amountDueToYou) ? amountDueToYou : 0;
 
   return (

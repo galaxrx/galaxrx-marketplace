@@ -23,7 +23,7 @@ export default function LandingSlideshow({ className = "" }: { className?: strin
 
   return (
     <div
-      className={`relative w-full aspect-[4/3] sm:aspect-[3/2] lg:aspect-[16/10] rounded-xl overflow-hidden border border-white/[0.08] bg-[#0a1522] shadow-lg shadow-black/20 ${className}`}
+      className={`group/slides relative w-full aspect-[4/3] sm:aspect-[3/2] lg:aspect-[16/10] rounded-2xl overflow-hidden bg-[#0a1522] shadow-[0_24px_64px_-16px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.06),inset_0_1px_0_0_rgba(255,255,255,0.04)] ring-1 ring-gold/15 transition-shadow duration-500 hover:shadow-[0_32px_80px_-20px_rgba(201,168,76,0.12),0_24px_64px_-16px_rgba(0,0,0,0.5),0_0_0_1px_rgba(201,168,76,0.12)] ${className}`}
       aria-label="Platform screenshots"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -48,16 +48,22 @@ export default function LandingSlideshow({ className = "" }: { className?: strin
         </div>
       ))}
       <div
-        className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#0D1B2A]/25 via-transparent to-transparent z-[1]"
+        className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#0D1B2A]/40 via-transparent to-[#0D1B2A]/10 z-[1]"
         aria-hidden
       />
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-[2]">
+      <div
+        className="absolute inset-0 pointer-events-none z-[1] opacity-40 mix-blend-overlay bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(201,168,76,0.15),transparent)]"
+        aria-hidden
+      />
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-[2] rounded-full bg-black/35 px-2 py-1.5 backdrop-blur-sm border border-white/[0.08]">
         {SLIDE_IMAGES.map((_, index) => (
           <button
             key={index}
             type="button"
-            className={`h-1.5 rounded-full transition-colors ${
-              index === activeIndex ? "w-5 bg-gold" : "w-1.5 bg-white/35 hover:bg-white/50"
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              index === activeIndex
+                ? "w-6 bg-gold shadow-[0_0_12px_rgba(201,168,76,0.5)]"
+                : "w-1.5 bg-white/30 hover:bg-white/55 hover:w-2"
             }`}
             aria-label={`Go to slide ${index + 1}`}
             aria-current={index === activeIndex ? "true" : undefined}

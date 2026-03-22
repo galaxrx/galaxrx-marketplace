@@ -35,7 +35,7 @@ export default function ScrollReveal({
           opacity: 1,
           y: 0,
           x: 0,
-          transition: { duration: 0.35, delay, ease: [0.25, 0.1, 0.25, 1] },
+          transition: { duration: 0.52, delay, ease: [0.22, 1, 0.36, 1] },
         },
       }}
       className={className}

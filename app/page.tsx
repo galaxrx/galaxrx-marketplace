@@ -115,14 +115,21 @@ export default function HomePage() {
         <LandingHeader />
 
         {/* Hero — centered stack + visual below (Stitch-style) */}
-        <section className="relative z-10 px-4 sm:px-6 lg:px-8 xl:px-10 pt-6 pb-10 sm:pt-8 sm:pb-12 md:pb-14">
-          <div className="w-full max-w-3xl mx-auto text-center flex flex-col items-center">
-            <p className="mb-4 inline-flex items-center rounded-full border border-white/[0.12] bg-black/25 px-3.5 py-1.5 text-[0.62rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold/95">
+        <section className="relative z-10 overflow-hidden px-4 sm:px-6 lg:px-8 xl:px-10 pt-6 pb-10 sm:pt-8 sm:pb-12 md:pb-14">
+          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+            <div className="landing-hero-orb-primary absolute -top-40 left-[8%] h-[min(28rem,80vw)] w-[min(28rem,80vw)] rounded-full bg-gold/20 blur-[100px]" />
+            <div className="landing-hero-orb-secondary absolute top-8 -right-24 h-[min(22rem,70vw)] w-[min(22rem,70vw)] rounded-full bg-[#3d6fb8]/25 blur-[90px]" />
+            <div className="absolute bottom-0 left-1/2 h-48 w-[120%] -translate-x-1/2 bg-gradient-to-t from-[#0D1B2A] via-transparent to-transparent opacity-90" />
+          </div>
+          <div className="relative w-full max-w-3xl mx-auto text-center flex flex-col items-center">
+            <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06]">
               Verified B2B marketplace
             </p>
             <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-[2.75rem] font-bold leading-[1.12] tracking-tight text-balance mb-4 sm:mb-5">
-              <span className="text-white">Pharmacy surplus and clearance,</span>{" "}
-              <span className="text-gold italic">traded with confidence.</span>
+              <span className="text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">Pharmacy surplus and clearance,</span>{" "}
+              <span className="bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)]">
+                traded with confidence.
+              </span>
             </h1>
             <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mb-8 sm:mb-9">
               Built for licensed Australian pharmacies: list surplus and clearance, source stock when shelves run short,
@@ -132,22 +139,26 @@ export default function HomePage() {
               <Link
                 href="/register"
                 aria-label="Register your pharmacy — free to join"
-                className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3.5 rounded-lg font-bold font-heading text-xs sm:text-sm uppercase tracking-wide hover:bg-gold/90 transition-colors"
+                className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3.5 rounded-xl font-bold font-heading text-xs sm:text-sm uppercase tracking-wide shadow-[0_8px_28px_-6px_rgba(201,168,76,0.55)] transition-all duration-300 hover:bg-gold/92 hover:shadow-[0_12px_36px_-8px_rgba(201,168,76,0.65)] hover:-translate-y-0.5 active:translate-y-0"
               >
                 Create pharmacy account
               </Link>
               <Link
                 href="/listings"
                 aria-label="Browse current pharmacy stock listings"
-                className="inline-flex items-center justify-center border border-gold/35 text-gold px-6 py-3.5 rounded-lg font-semibold font-heading text-xs sm:text-sm uppercase tracking-wide hover:bg-white/[0.06] transition-colors"
+                className="inline-flex items-center justify-center rounded-xl border border-gold/40 bg-white/[0.03] px-6 py-3.5 font-semibold font-heading text-xs sm:text-sm uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/55 hover:bg-white/[0.08] hover:shadow-[0_0_24px_-8px_rgba(201,168,76,0.2)]"
               >
                 View listings
               </Link>
             </div>
           </div>
 
-          <div className="relative w-full max-w-4xl mx-auto mt-10 sm:mt-12">
-            <LandingSlideshow className="w-full" />
+          <div className="relative mx-auto mt-10 w-full max-w-4xl sm:mt-12">
+            <div
+              className="pointer-events-none absolute -inset-1 rounded-[1.15rem] bg-gradient-to-br from-gold/25 via-white/[0.08] to-transparent opacity-70 blur-sm"
+              aria-hidden
+            />
+            <LandingSlideshow className="relative w-full" />
           </div>
 
           <div
@@ -155,9 +166,9 @@ export default function HomePage() {
             role="note"
             aria-label="Promotional offer for new pharmacies"
           >
-            <div className="relative w-full overflow-hidden rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.09] via-[#0c1828]/95 to-[#0a1522] px-4 py-4 sm:px-5 sm:py-5 text-left shadow-[0_16px_40px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            <div className="relative w-full overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.12] via-[#0c1828]/95 to-[#0a1522] px-4 py-4 sm:px-5 sm:py-5 text-left shadow-[0_20px_50px_-24px_rgba(201,168,76,0.2),0_16px_40px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-shadow duration-500 hover:shadow-[0_24px_56px_-20px_rgba(201,168,76,0.25),inset_0_1px_0_0_rgba(255,255,255,0.1)]">
               <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-gold/40 via-gold/60 to-transparent"
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent"
                 aria-hidden
               />
               <p className="text-[0.65rem] sm:text-xs font-semibold uppercase tracking-[0.28em] text-gold/95 mb-2">
@@ -179,50 +190,62 @@ export default function HomePage() {
         {/* Fee spotlight */}
         <ScrollReveal
           as="section"
-          className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]"
         >
-          <div className="w-full max-w-lg mx-auto text-center">
-            <p className="font-heading text-5xl sm:text-6xl font-bold text-gold leading-none tracking-tight">3.5%</p>
-            <p className="mt-2 font-heading text-sm sm:text-base font-semibold text-white uppercase tracking-[0.2em]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_45%,rgba(201,168,76,0.09),transparent_65%)]" aria-hidden />
+          <div
+            className="landing-fee-glow pointer-events-none absolute left-1/2 top-1/2 h-[min(32rem,90vw)] w-[min(32rem,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/15 blur-[100px]"
+            aria-hidden
+          />
+          <div className="relative z-[1] w-full max-w-lg mx-auto text-center">
+            <p className="font-heading text-5xl sm:text-6xl font-bold leading-none tracking-tight text-gold [text-shadow:0_0_48px_rgba(201,168,76,0.35)]">
+              3.5%
+            </p>
+            <p className="mt-3 font-heading text-sm sm:text-base font-semibold text-white uppercase tracking-[0.2em]">
               Flat fee on completed sales
             </p>
-            <div className="mt-6 flex items-center justify-center gap-2 text-white/70 text-xs sm:text-sm">
-              <ShieldCheckIcon className="h-5 w-5 shrink-0 text-gold/90" />
+            <div className="mt-7 inline-flex items-center gap-2.5 rounded-full border border-white/[0.1] bg-white/[0.03] px-4 py-2.5 text-white/75 text-xs sm:text-sm backdrop-blur-sm">
+              <ShieldCheckIcon className="h-5 w-5 shrink-0 text-gold drop-shadow-[0_0_8px_rgba(201,168,76,0.4)]" />
               <span>Payments processed securely with Stripe</span>
             </div>
           </div>
         </ScrollReveal>
 
         {/* Marketplace pillars */}
-        <ScrollReveal
-          as="section"
+        <section
           id="what-we-do"
-          className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
         >
-          <div className="w-full max-w-2xl mx-auto mb-10 sm:mb-12 text-center">
-            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-[0.12em]">
+          <div
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(201,168,76,0.03)_0%,transparent_35%,transparent_100%)]"
+            aria-hidden
+          />
+          <ScrollReveal as="div" className="relative mb-10 sm:mb-12 text-center">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-[0.12em] [text-shadow:0_2px_24px_rgba(0,0,0,0.3)]">
               Marketplace pillars
             </h2>
-          </div>
-          <div className="w-full max-w-xl mx-auto flex flex-col gap-4 sm:gap-5">
-            {PILLARS.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border border-white/[0.08] bg-[#0e1623] px-4 py-5 sm:px-5 sm:py-6 shadow-lg shadow-black/15"
-              >
-                <div className="flex gap-4">
-                  <div className="relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0a1522]">
-                    <Image src={item.img} alt={item.alt} fill className="object-cover" sizes="56px" />
-                  </div>
-                  <div className="min-w-0 pt-0.5">
-                    <h3 className="font-heading text-lg sm:text-xl font-bold text-white leading-snug">{item.title}</h3>
-                    <p className="mt-2 text-sm text-white/55 leading-relaxed">{item.desc}</p>
+            <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
+          </ScrollReveal>
+          <div className="relative mx-auto flex w-full max-w-xl flex-col gap-4 sm:gap-5">
+            {PILLARS.map((item, i) => (
+              <ScrollReveal key={item.title} as="div" delay={i * 0.09}>
+                <div className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/95 to-[#0e1623] px-4 py-5 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/20 hover:shadow-[0_24px_48px_-20px_rgba(201,168,76,0.12)] sm:px-5 sm:py-6">
+                  <div className="flex gap-4">
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-white/[0.1] bg-[#0a1522] shadow-inner ring-1 ring-white/[0.04] transition-all duration-300 group-hover:ring-gold/25 sm:h-14 sm:w-14">
+                      <Image src={item.img} alt={item.alt} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="56px" />
+                    </div>
+                    <div className="min-w-0 pt-0.5">
+                      <h3 className="font-heading text-lg font-bold leading-snug text-white transition-colors duration-300 group-hover:text-gold/95 sm:text-xl">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-white/55">{item.desc}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
-        </ScrollReveal>
+        </section>
 
         {SHOW_TESTIMONIALS && (
           <ScrollReveal as="section" className="py-14 sm:py-20 md:py-28 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-[rgba(161,130,65,0.10)]">
@@ -248,31 +271,40 @@ export default function HomePage() {
         )}
 
         {/* FAQ */}
-        <ScrollReveal as="section" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]">
-          <div className="w-full max-w-xl mx-auto">
+        <ScrollReveal
+          as="section"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]"
+        >
+          <div
+            className="pointer-events-none absolute right-0 top-1/4 h-64 w-64 rounded-full bg-gold/[0.04] blur-[80px]"
+            aria-hidden
+          />
+          <div className="relative mx-auto w-full max-w-xl">
             <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-10 leading-tight">
-              <span className="block text-white">Questions</span>
-              <span className="block text-gold">answered.</span>
+              <span className="block text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.25)]">Questions</span>
+              <span className="mt-1 block bg-gradient-to-r from-gold via-[#dfc88a] to-gold bg-clip-text text-transparent">
+                answered.
+              </span>
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {FAQ_LANDING.map(({ q, a }, i) => (
                 <details
                   key={q}
                   open={i === 0}
-                  className="group rounded-xl border border-white/[0.08] bg-[#0e1623]/80 overflow-hidden"
+                  className="group rounded-xl border border-white/[0.08] bg-[#0e1623]/90 overflow-hidden shadow-[0_8px_32px_-20px_rgba(0,0,0,0.4)] transition-[border-color,box-shadow] duration-300 open:border-gold/25 open:shadow-[0_12px_40px_-16px_rgba(201,168,76,0.12)] hover:border-white/[0.14]"
                 >
-                  <summary className="flex justify-between items-center gap-4 cursor-pointer list-none px-4 py-3.5 select-none">
-                    <span className="font-heading font-semibold text-white text-sm sm:text-base leading-snug text-left">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 select-none transition-colors duration-200 hover:bg-white/[0.03]">
+                    <span className="font-heading text-left text-sm font-semibold leading-snug text-white sm:text-base">
                       {q}
                     </span>
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-gold/80 group-open:rotate-180 transition-transform">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-gold/15 bg-gold/[0.06] text-gold/90 transition-all duration-300 group-open:rotate-180 group-open:border-gold/30 group-open:bg-gold/10">
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </span>
                   </summary>
-                  <div className="border-t border-white/[0.06] px-4 pb-3.5 pt-0">
-                    <p className="text-white/55 text-sm leading-relaxed pt-3">{a}</p>
+                  <div className="border-t border-white/[0.06] bg-black/10 px-4 pb-4 pt-0">
+                    <p className="pt-3 text-sm leading-relaxed text-white/55">{a}</p>
                   </div>
                 </details>
               ))}
@@ -281,18 +313,21 @@ export default function HomePage() {
         </ScrollReveal>
 
         {/* Gold CTA band */}
-        <ScrollReveal as="section" className="bg-gold px-4 sm:px-6 py-12 sm:py-14 text-center border-t border-gold/30">
-          <div className="w-full max-w-lg mx-auto">
-            <h2 className="font-heading text-xl sm:text-2xl font-bold text-[#1a1408] uppercase tracking-wide mb-3">
+        <ScrollReveal
+          as="section"
+          className="landing-cta-sheen relative overflow-hidden bg-gradient-to-br from-gold via-[#c9a84c] to-[#b08d3a] px-4 py-12 text-center shadow-[0_-12px_40px_-20px_rgba(201,168,76,0.25)] sm:px-6 sm:py-14 border-t border-white/20"
+        >
+          <div className="relative z-[1] mx-auto w-full max-w-lg">
+            <h2 className="font-heading text-xl font-bold uppercase tracking-wide text-[#1a1408] sm:text-2xl [text-shadow:0_1px_0_rgba(255,255,255,0.2)] mb-3">
               Ready to list or buy?
             </h2>
-            <p className="text-[#2c2415] text-sm sm:text-base leading-relaxed mb-8">
+            <p className="mb-8 text-sm leading-relaxed text-[#2c2415] sm:text-base">
               Register free, complete verification, then trade surplus and clearance with pharmacies like yours — fees only
               when you sell.
             </p>
             <Link
               href="/register"
-              className="inline-flex items-center justify-center min-w-[12rem] bg-[#1e160c] text-gold px-8 py-3.5 rounded-lg font-bold font-heading text-xs sm:text-sm uppercase tracking-wide hover:bg-[#2a2114] transition-colors"
+              className="inline-flex min-w-[12rem] items-center justify-center rounded-xl bg-[#1e160c] px-8 py-3.5 font-bold font-heading text-xs uppercase tracking-wide text-gold shadow-[0_8px_24px_-6px_rgba(0,0,0,0.45)] transition-all duration-300 hover:bg-[#2a2114] hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 active:translate-y-0 sm:text-sm"
             >
               Join free
             </Link>

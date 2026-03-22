@@ -23,8 +23,7 @@ const LandingHeader = dynamic(
   { ssr: true }
 );
 
-/* Content constants — GalaxRX app-specific */
-const SHOW_TESTIMONIALS = false; // set to true to show "Real stories, real impact"
+const SHOW_TESTIMONIALS = false;
 
 const TESTIMONIALS = [
   {
@@ -44,156 +43,194 @@ const TESTIMONIALS = [
   },
 ];
 
-const FAQ_ITEMS = [
+/** Landing FAQ — accurate, AU-focused (no US regulatory claims). */
+const FAQ_LANDING = [
   {
-    q: "Who can join GalaxRX?",
-    a: "GalaxRX is open to licensed Australian pharmacies only. Every applicant is manually verified by our team — typically within 24 hours — before they can buy or sell.",
+    q: "Who can use GalaxRX?",
+    a: "Licensed Australian pharmacies only. Our team manually verifies every applicant — usually within 24 hours — before you can buy or sell.",
   },
   {
     q: "How much does it cost?",
-    a: "Nothing to join, nothing monthly. GalaxRX charges a flat 3.5% transaction fee on completed sales only. Buyers pay no fee at all.",
+    a: "Free to join, no subscription. GalaxRX charges 3.5% on completed sales only. Buyers pay no platform fee.",
   },
   {
-    q: "How fast is listing?",
-    a: "Scan a barcode or search by product name. GalaxRX auto-fills product details. Set quantity, expiry, and price — publish in under 20 seconds.",
+    q: "How are payments handled?",
+    a: "Checkout runs on Stripe. Buyer funds are held until delivery is confirmed, then released to the seller — so both sides have a clear, traceable settlement.",
   },
   {
-    q: "Are payments protected?",
-    a: "Yes. All payments run through Stripe. Buyer funds are held in escrow and only released to the seller after delivery is confirmed.",
+    q: "What about short-dated or clearance stock?",
+    a: "List it with the expiry visible on our Expiry Clearance board. Buyers searching for discounted lines can find it quickly so you recover value before stock expires.",
   },
   {
-    q: "What if I need something urgently?",
-    a: "Use the Wanted board and flag your request as SOS. Verified pharmacies who have the item can make you an offer immediately.",
-  },
-  {
-    q: "What about short-dated stock?",
-    a: "List it on the Expiry Clearance board with the expiry date visible. Buyers searching for discounted clearance stock find it there — you recover value before it expires.",
-  },
-  {
-    q: "How long does pharmacy verification take?",
-    a: "Typically under 24 hours. Our team manually reviews each application. You'll receive an email confirmation once approved.",
+    q: "How do deliveries work?",
+    a: "You arrange shipping or pickup directly with the other pharmacy. GalaxRX focuses on discovery, verification, and secure payment — you stay in control of logistics.",
   },
 ];
+
+const PILLARS = [
+  {
+    id: "01",
+    title: "List inventory",
+    desc: "Scan a barcode or search by name, set quantity, price, and expiry, and publish in seconds — without wading through long forms.",
+    img: "/LIST.png",
+    alt: "List surplus stock quickly",
+  },
+  {
+    id: "02",
+    title: "Verify stocks",
+    desc: "Browse surplus and clearance from verified pharmacies only — no consumers, no anonymous sellers, and key dates visible where it matters.",
+    img: "/Verified%20stock.png",
+    alt: "Buy from verified pharmacy listings",
+  },
+  {
+    id: "03",
+    title: "Verify network",
+    desc: "Every trading partner is a licensed Australian pharmacy checked by our team. You deal with peers you can trust, not the open internet.",
+    img: "/Verified%20network.png",
+    alt: "Verified pharmacy network",
+  },
+  {
+    id: "04",
+    title: "Secure payment",
+    desc: "Stripe-powered checkout with funds held until delivery is confirmed — so you get payment certainty alongside simple, per-sale pricing.",
+    img: "/Secure%20payment.png",
+    alt: "Secure Stripe payments",
+  },
+];
+
+function ShieldCheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 3.5l7 3.2v5.4c0 4.5-3 8.7-7 9.8-4-1.1-7-5.3-7-9.8V6.7l7-3.2z"
+      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col text-white overflow-x-hidden w-full max-w-[100vw]">
-      {/* Top: header + compact hero */}
       <div className="relative border-b border-white/[0.06]">
         <HeroWallpaper className="z-0" variant="calm" />
         <LandingHeader />
 
-        <section className="relative z-10 py-8 sm:py-10 md:py-12 lg:py-10 px-4 sm:px-6 lg:px-8 xl:px-10">
-          <div className="relative w-full max-w-none mx-auto">
-            <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.22fr)] gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-start">
-              <div className="min-w-0 flex flex-col items-start text-left w-full max-w-xl sm:max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
-                <h1 className="font-heading text-3xl sm:text-4xl md:text-[2.65rem] font-bold text-white leading-[1.15] tracking-tight text-balance mb-3 sm:mb-4 w-full">
-                  B2B marketplace for pharmacy surplus and clearance
-                </h1>
+        {/* Hero — centered stack + visual below (Stitch-style) */}
+        <section className="relative z-10 px-4 sm:px-6 lg:px-8 xl:px-10 pt-6 pb-10 sm:pt-8 sm:pb-12 md:pb-14">
+          <div className="w-full max-w-3xl mx-auto text-center flex flex-col items-center">
+            <p className="mb-4 inline-flex items-center rounded-full border border-white/[0.12] bg-black/25 px-3.5 py-1.5 text-[0.62rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold/95">
+              Verified B2B marketplace
+            </p>
+            <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-[2.75rem] font-bold leading-[1.12] tracking-tight text-balance mb-4 sm:mb-5">
+              <span className="text-white">Pharmacy surplus and clearance,</span>{" "}
+              <span className="text-gold italic">traded with confidence.</span>
+            </h1>
+            <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mb-8 sm:mb-9">
+              The Australian B2B platform where licensed pharmacies list, discover, and settle surplus stock — manually
+              verified peers, Stripe-backed payments, and a simple fee only when you sell.
+            </p>
+            <div className="flex flex-col w-full max-w-md sm:max-w-lg gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/register"
+                aria-label="Register your pharmacy — free to join"
+                className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3.5 rounded-lg font-bold font-heading text-xs sm:text-sm uppercase tracking-wide hover:bg-gold/90 transition-colors"
+              >
+                Create pharmacy account
+              </Link>
+              <Link
+                href="/listings"
+                aria-label="Browse current pharmacy stock listings"
+                className="inline-flex items-center justify-center border border-gold/35 text-gold px-6 py-3.5 rounded-lg font-semibold font-heading text-xs sm:text-sm uppercase tracking-wide hover:bg-white/[0.06] transition-colors"
+              >
+                View listings
+              </Link>
+            </div>
+          </div>
 
-                <p className="text-white/60 text-base sm:text-[1.05rem] w-full max-w-xl lg:max-w-2xl leading-relaxed mb-5 sm:mb-6">
-                  List, browse, and trade with verified Australian pharmacies. Manual verification, Stripe-secured
-                  settlement, 3.5% per completed sale — no subscription.
-                </p>
+          <div className="relative w-full max-w-4xl mx-auto mt-10 sm:mt-12">
+            <LandingSlideshow className="w-full" />
+          </div>
 
-                <div className="flex flex-wrap gap-3 justify-start w-full">
-                  <Link
-                    href="/register"
-                    aria-label="Register your pharmacy — free to join"
-                    className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3 rounded-lg font-bold font-heading text-sm hover:bg-gold/90 transition-colors"
-                  >
-                    Create pharmacy account
-                  </Link>
-                  <Link
-                    href="/listings"
-                    aria-label="Browse current pharmacy stock listings"
-                    className="inline-flex items-center justify-center border border-white/20 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-white/[0.06] transition-colors"
-                  >
-                    View listings
-                  </Link>
-                </div>
-
-                <div
-                  className="mt-6 sm:mt-8 w-full max-w-xl lg:max-w-2xl pt-5 sm:pt-6 border-t border-white/[0.08]"
-                  role="note"
-                  aria-label="Promotional offer for new pharmacies"
-                >
-                  <div className="relative w-full overflow-hidden rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.09] via-[#0c1828]/95 to-[#0a1522] px-4 py-4 sm:px-5 sm:py-5 text-left shadow-[0_16px_40px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
-                    <div
-                      className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-gold/40 via-gold/60 to-transparent"
-                      aria-hidden
-                    />
-                    <p className="text-[0.65rem] sm:text-xs font-semibold uppercase tracking-[0.28em] text-gold/95 mb-2">
-                      Limited welcome offer
-                    </p>
-                    <p className="font-heading text-base sm:text-lg md:text-xl font-semibold text-white leading-snug text-balance">
-                      Your first 30 days: zero GalaxRX transaction fees
-                    </p>
-                    <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                      New pharmacies pay <span className="text-white/75 font-medium">0% platform fees</span> for 30 days
-                      from signup — then our standard <span className="text-white/65">3.5%</span> on completed sales only.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="min-w-0 w-full max-w-xl mx-auto lg:max-w-none lg:mx-0">
-                <LandingSlideshow className="w-full" />
-              </div>
+          <div
+            className="mt-8 sm:mt-10 w-full max-w-xl mx-auto pt-6 sm:pt-8 border-t border-white/[0.08]"
+            role="note"
+            aria-label="Promotional offer for new pharmacies"
+          >
+            <div className="relative w-full overflow-hidden rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.09] via-[#0c1828]/95 to-[#0a1522] px-4 py-4 sm:px-5 sm:py-5 text-left shadow-[0_16px_40px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+              <div
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-gold/40 via-gold/60 to-transparent"
+                aria-hidden
+              />
+              <p className="text-[0.65rem] sm:text-xs font-semibold uppercase tracking-[0.28em] text-gold/95 mb-2">
+                Limited welcome offer
+              </p>
+              <p className="font-heading text-base sm:text-lg md:text-xl font-semibold text-white leading-snug text-balance">
+                Your first 30 days: zero GalaxRX transaction fees
+              </p>
+              <p className="mt-2 text-sm text-white/50 leading-relaxed">
+                New pharmacies pay <span className="text-white/75 font-medium">0% platform fees</span> for 30 days from
+                signup — then our standard <span className="text-white/65">3.5%</span> on completed sales only.
+              </p>
             </div>
           </div>
         </section>
       </div>
 
       <main className="flex-1">
-        {/* What we do — description on hover (lg+); always visible on small screens */}
-        <ScrollReveal as="section" id="what-we-do" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]">
-          <div className="w-full max-w-none mx-auto">
-            <div className="mb-10 max-w-2xl">
-              <p className="text-gold/90 text-xs font-semibold tracking-wider uppercase mb-2">What we do</p>
-              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white mb-3">
-                One platform for surplus, clearance, and trusted trade
-              </h2>
-              <p className="text-white/55 text-sm sm:text-base leading-relaxed">
-                Verified Australian pharmacies only — list stock fast, buy with confidence, settle through Stripe.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-              {[
-                { title: "List in Seconds", desc: "Scan barcode, set price, publish. No lengthy forms or data entry — list in under 20 seconds.", img: "/LIST.png", alt: "List surplus in seconds" },
-                { title: "Verify Stocks", desc: "Search surplus and clearance from verified pharmacies only. No consumers, no grey market.", img: "/Verified%20stock.png", alt: "Buy verified pharmacy stock" },
-                { title: "Verify Network", desc: "Every pharmacy is manually verified before they can trade. Deal only with licensed Australian pharmacies.", img: "/Verified%20network.png", alt: "Verified pharmacy network" },
-                { title: "Secure Payment", desc: "Stripe-powered payments. You pay only 3.5% when you sell — no subscription, no listing fees.", img: "/Secure%20payment.png", alt: "Secure payments with Stripe" },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  tabIndex={0}
-                  className="group rounded-xl overflow-hidden border border-white/[0.08] bg-[#0a1522]/80 hover:border-white/[0.14] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={item.img}
-                      alt={item.alt}
-                      fill
-                      className="object-cover transition-transform duration-300 lg:group-hover:scale-[1.02]"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                  </div>
-                  <div className="px-4 py-3 border-t border-white/[0.06]">
-                    <h3 className="font-heading font-semibold text-white text-base leading-snug lg:group-hover:text-gold/95 transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-white/50 text-sm leading-relaxed lg:opacity-0 lg:max-h-0 lg:mt-0 lg:overflow-hidden lg:transition-all lg:duration-300 lg:group-hover:opacity-100 lg:group-hover:max-h-[140px] lg:group-hover:mt-2 lg:group-focus-within:opacity-100 lg:group-focus-within:max-h-[140px] lg:group-focus-within:mt-2">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
+        {/* Fee spotlight */}
+        <ScrollReveal
+          as="section"
+          className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]"
+        >
+          <div className="w-full max-w-lg mx-auto text-center">
+            <p className="font-heading text-5xl sm:text-6xl font-bold text-gold leading-none tracking-tight">3.5%</p>
+            <p className="mt-2 font-heading text-sm sm:text-base font-semibold text-white uppercase tracking-[0.2em]">
+              Flat fee on completed sales
+            </p>
+            <div className="mt-6 flex items-center justify-center gap-2 text-white/70 text-xs sm:text-sm">
+              <ShieldCheckIcon className="h-5 w-5 shrink-0 text-gold/90" />
+              <span>Payments processed securely with Stripe</span>
             </div>
           </div>
         </ScrollReveal>
 
-        {/* 10. Testimonials */}
+        {/* Marketplace pillars */}
+        <ScrollReveal
+          as="section"
+          id="what-we-do"
+          className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
+        >
+          <div className="w-full max-w-2xl mx-auto mb-10 sm:mb-12 text-center">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-[0.12em]">
+              Marketplace pillars
+            </h2>
+          </div>
+          <div className="w-full max-w-xl mx-auto flex flex-col gap-4 sm:gap-5">
+            {PILLARS.map((item) => (
+              <div
+                key={item.id}
+                className="relative rounded-2xl border border-white/[0.08] bg-[#0e1623] px-4 py-5 sm:px-5 sm:py-6 shadow-lg shadow-black/15"
+              >
+                <span className="absolute top-4 right-4 sm:top-5 sm:right-5 text-[0.6rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-gold/65">
+                  Pillar {item.id}
+                </span>
+                <div className="flex gap-4 pr-16 sm:pr-20">
+                  <div className="relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0a1522]">
+                    <Image src={item.img} alt={item.alt} fill className="object-cover" sizes="56px" />
+                  </div>
+                  <div className="min-w-0 pt-0.5">
+                    <h3 className="font-heading text-lg sm:text-xl font-bold text-white leading-snug">{item.title}</h3>
+                    <p className="mt-2 text-sm text-white/55 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
+
         {SHOW_TESTIMONIALS && (
           <ScrollReveal as="section" className="py-14 sm:py-20 md:py-28 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-[rgba(161,130,65,0.10)]">
             <div className="w-full max-w-none mx-auto">
@@ -217,40 +254,25 @@ export default function HomePage() {
           </ScrollReveal>
         )}
 
-        {/* Final CTA */}
-        <ScrollReveal as="section" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0B1220] border-t border-white/[0.06] text-center">
-          <div className="w-full max-w-none mx-auto">
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white mb-4">
-              Ready to trade with verified pharmacies?
-            </h2>
-            <p className="text-white/50 text-sm sm:text-base max-w-lg mx-auto mb-8 leading-relaxed">
-              Register your business, complete verification, then list or buy on the same platform.
-            </p>
-            <Link
-              href="/register"
-              aria-label="Register your pharmacy — free to join"
-              className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-8 py-3 rounded-lg font-bold font-heading text-sm hover:bg-gold/90 transition-colors"
-            >
-              Create account
-            </Link>
-          </div>
-        </ScrollReveal>
-
         {/* FAQ */}
-        <ScrollReveal as="section" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]">
-          <div className="w-full max-w-none mx-auto px-0">
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white text-center mb-8">FAQ</h2>
+        <ScrollReveal as="section" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]">
+          <div className="w-full max-w-xl mx-auto">
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-10 leading-tight">
+              <span className="block text-white">Questions</span>
+              <span className="block text-gold">answered.</span>
+            </h2>
             <div className="space-y-2">
-              {FAQ_ITEMS.map(({ q, a }) => (
+              {FAQ_LANDING.map(({ q, a }, i) => (
                 <details
                   key={q}
-                  className="group rounded-lg border border-white/[0.08] bg-[#0a1522]/50 overflow-hidden"
+                  open={i === 0}
+                  className="group rounded-xl border border-white/[0.08] bg-[#0e1623]/80 overflow-hidden"
                 >
                   <summary className="flex justify-between items-center gap-4 cursor-pointer list-none px-4 py-3.5 select-none">
-                    <span className="font-heading font-medium text-white text-sm sm:text-base leading-snug">
+                    <span className="font-heading font-semibold text-white text-sm sm:text-base leading-snug text-left">
                       {q}
                     </span>
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-white/50 group-open:rotate-180 transition-transform">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-gold/80 group-open:rotate-180 transition-transform">
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
@@ -265,6 +287,25 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
+        {/* Gold CTA band */}
+        <ScrollReveal as="section" className="bg-gold px-4 sm:px-6 py-12 sm:py-14 text-center border-t border-gold/30">
+          <div className="w-full max-w-lg mx-auto">
+            <h2 className="font-heading text-xl sm:text-2xl font-bold text-[#1a1408] uppercase tracking-wide mb-3">
+              Ready to list or buy?
+            </h2>
+            <p className="text-[#2c2415] text-sm sm:text-base leading-relaxed mb-8">
+              Register free, complete verification, then trade surplus and clearance with pharmacies like yours — fees only
+              when you sell.
+            </p>
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center min-w-[12rem] bg-[#1e160c] text-gold px-8 py-3.5 rounded-lg font-bold font-heading text-xs sm:text-sm uppercase tracking-wide hover:bg-[#2a2114] transition-colors"
+            >
+              Join free
+            </Link>
+          </div>
+        </ScrollReveal>
+
         {/* Footer */}
         <footer
           id="footer-enquiry"
@@ -272,14 +313,17 @@ export default function HomePage() {
         >
           <div className="w-full max-w-none mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-14">
             <div className="lg:col-span-3 max-w-xs">
+              <p className="font-heading font-bold text-gold text-lg mb-2">GalaxRX</p>
               <div className="relative h-10 w-28 mb-3">
                 <Image src="/logo.png" alt="GalaxRX" fill className="object-contain object-left" sizes="112px" />
               </div>
               <p className="text-white/50 text-sm leading-relaxed">
-                The trusted marketplace where licensed Australian pharmacies trade surplus stock. List in under 20
-                seconds. Pay only 3.5% per sale — no subscription.
+                B2B marketplace for licensed Australian pharmacies. List in seconds, browse verified stock, settle through
+                Stripe — 3.5% per completed sale, no subscription.
               </p>
-              <p className="text-white/30 text-xs mt-5">© {new Date().getFullYear()} GalaxRX. All rights reserved.</p>
+              <p className="text-white/30 text-xs mt-5">
+                © {new Date().getFullYear()} GalaxRX. All rights reserved.
+              </p>
               <div className="mt-6 flex flex-wrap items-center gap-4">
                 <span className="text-white/35 text-xs font-semibold uppercase tracking-wider">Connect</span>
                 <div className="flex flex-wrap items-center gap-3">
@@ -368,7 +412,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <div>
-                <p className="font-semibold text-gold/80 mb-3">About</p>
+                <p className="font-semibold text-gold/80 mb-3">Legal &amp; about</p>
                 <Link href="/about" className="block text-white/50 hover:text-white mb-2">
                   About GalaxRX
                 </Link>
@@ -379,7 +423,7 @@ export default function HomePage() {
                   Privacy policy
                 </Link>
                 <a href="#footer-enquiry" className="block text-white/50 hover:text-white">
-                  Enquiry form
+                  Contact us
                 </a>
               </div>
             </div>

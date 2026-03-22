@@ -33,20 +33,18 @@ export default function LandingHeader() {
   return (
     <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3 sm:py-4 border-b border-[rgba(161,130,65,0.15)] bg-[#0D1B2A]/90 backdrop-blur-md">
       <Link href="/" className="flex items-center gap-2 sm:gap-3 min-h-[3rem] min-w-0">
-        <div className="relative h-10 w-28 sm:h-14 sm:w-36 md:h-16 md:w-48 shrink-0">
+        <div className="relative h-9 w-24 sm:h-10 sm:w-28 md:h-14 md:w-36 shrink-0">
           <Image
             src="/logo.png"
             alt=""
             fill
             className="object-contain object-left"
             priority
-            sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, 192px"
+            sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 144px"
           />
         </div>
-        <span className="font-heading font-bold text-lg sm:text-xl md:text-2xl tracking-tight truncate">
-          <span className="text-white">Galax</span>
-          <span className="text-gold">RX</span>
-          <span className="text-white hidden sm:inline"> Market Place</span>
+        <span className="font-heading font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-gold truncate">
+          GalaxRX
         </span>
       </Link>
 
@@ -84,24 +82,17 @@ export default function LandingHeader() {
         </Link>
       </nav>
 
-      {/* Mobile: hamburger + CTA */}
-      <div className="flex md:hidden items-center gap-2">
-        <Link
-          href="/register"
-          aria-label="Register your pharmacy for free"
-          className="bg-gradient-to-r from-gold-muted to-gold text-[#0D1B2A] px-3 py-2 rounded-xl text-xs font-bold font-heading shrink-0"
-        >
-          Join free →
-        </Link>
+      {/* Mobile: hamburger only (matches landing mock) */}
+      <div className="flex md:hidden items-center">
         <button
           type="button"
           onClick={() => setMobileOpen((o) => !o)}
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label="Toggle menu"
-          className="p-2 rounded-lg text-white/80 hover:text-gold hover:bg-white/5 transition-colors"
+          className="p-2.5 rounded-md border border-gold/45 text-gold hover:bg-white/[0.06] transition-colors"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
             {mobileOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -110,7 +101,6 @@ export default function LandingHeader() {
           </svg>
         </button>
       </div>
-      {/* Mobile menu: portal to body so position:fixed is not clipped by header backdrop-blur stacking context */}
       {portalReady &&
         mobileOpen &&
         createPortal(
@@ -131,6 +121,13 @@ export default function LandingHeader() {
               className="relative z-10 mt-14 sm:mt-[3.75rem] flex-1 min-h-0 overflow-y-auto bg-[#0F2035] border-t border-[rgba(161,130,65,0.35)] shadow-[0_-8px_32px_rgba(0,0,0,0.45)] flex flex-col pt-4 pb-8 px-4"
               aria-label="Mobile navigation"
             >
+              <Link
+                href="/register"
+                onClick={() => setMobileOpen(false)}
+                className="mb-4 py-3.5 px-4 rounded-xl text-center bg-gold text-[#0D1B2A] font-bold font-heading text-sm"
+              >
+                Create pharmacy account
+              </Link>
               {NAV_LINKS.map(({ href, label }) =>
                 href.startsWith("#") ? (
                   <a
@@ -157,7 +154,7 @@ export default function LandingHeader() {
                 onClick={() => setMobileOpen(false)}
                 className="py-3.5 px-4 rounded-xl text-white hover:text-gold hover:bg-white/10 text-base font-medium"
               >
-                Browse listings
+                View listings
               </Link>
               <Link
                 href="/login"

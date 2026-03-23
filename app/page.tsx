@@ -130,7 +130,7 @@ export default function HomePage() {
                 Pharmacy surplus and clearance,
               </span>
               <span className="block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)] leading-snug">
-                traded with confidence.
+                trade with confidence.
               </span>
             </h1>
             <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mb-8 sm:mb-9">

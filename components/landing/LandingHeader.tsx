@@ -10,7 +10,8 @@ const NAV_LINKS = [
   { href: "/solutions", label: "Solutions" },
   { href: "/why-galaxrx", label: "Why GalaxRX" },
   { href: "/about", label: "About" },
-  { href: "#footer-enquiry", label: "Contact us" },
+  // Use /#… so “Contact us” works from marketing pages (hash-only is only valid on `/`).
+  { href: "/#footer-enquiry", label: "Contact us" },
 ];
 
 export default function LandingHeader() {
@@ -51,7 +52,7 @@ export default function LandingHeader() {
       {/* Desktop nav */}
       <nav aria-label="Main navigation" className="hidden md:flex items-center gap-4 lg:gap-6">
         {NAV_LINKS.map(({ href, label }) =>
-          href.startsWith("#") ? (
+          href.startsWith("#") || href.includes("#") ? (
             <a key={href} href={href} className="text-white/70 hover:text-gold text-sm font-medium transition-colors">
               {label}
             </a>
@@ -129,7 +130,7 @@ export default function LandingHeader() {
                 Join now
               </Link>
               {NAV_LINKS.map(({ href, label }) =>
-                href.startsWith("#") ? (
+                href.startsWith("#") || href.includes("#") ? (
                   <a
                     key={href}
                     href={href}

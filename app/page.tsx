@@ -125,15 +125,17 @@ export default function HomePage() {
             <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06]">
               Verified B2B marketplace
             </p>
-            <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-[2.75rem] font-bold leading-[1.12] tracking-tight text-balance mb-4 sm:mb-5">
-              <span className="text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">Pharmacy surplus and clearance,</span>{" "}
-              <span className="bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)]">
+            <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-[2.75rem] font-bold tracking-tight text-balance mb-4 sm:mb-5 flex flex-col items-center gap-2.5 sm:gap-3 md:gap-3.5 leading-tight">
+              <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)] leading-snug">
+                Pharmacy surplus and clearance,
+              </span>
+              <span className="block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)] leading-snug">
                 traded with confidence.
               </span>
             </h1>
             <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mb-8 sm:mb-9">
-              Licensed Australian pharmacies trade surplus and clearance here — straightforward selling that helps you
-              move stock with confidence.
+              Licensed Australian pharmacies trade surplus and clearance here — recover capital from excess inventory
+              instead of letting it sit on the shelf.
             </p>
             <div className="flex flex-col w-full max-w-md sm:max-w-lg gap-3 sm:flex-row sm:justify-center">
               <Link

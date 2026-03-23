@@ -660,22 +660,22 @@ export default function SellPageClient({ repeatId, editId }: Props) {
 
           {form.stockType === "PACK" ? (
             <div
-              className="rounded-lg border border-sky-500/35 bg-sky-500/10 px-3 py-2.5 mb-4 text-sm text-sky-100/95"
+              className="rounded-lg border border-sky-300 bg-sky-50 px-3 py-2.5 mb-4 text-sm text-sky-900 dark:border-sky-500/35 dark:bg-sky-500/10 dark:text-sky-100/95"
               role="status"
             >
-              <strong className="text-sky-50">Reminder:</strong> you are listing{" "}
-              <strong className="text-white">full sealed packs</strong>. Enter how many packs below, then your{" "}
-              <strong className="text-white">price per pack</strong> (ex GST). Buyers will see both pack price and how
+              <strong className="text-sky-950 dark:text-sky-50">Reminder:</strong> you are listing{" "}
+              <strong className="text-slate-900 dark:text-white">full sealed packs</strong>. Enter how many packs below, then your{" "}
+              <strong className="text-slate-900 dark:text-white">price per pack</strong> (ex GST). Buyers will see both pack price and how
               much stock is available in units and packs.
             </div>
           ) : (
             <div
-              className="rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-3 py-2.5 mb-4 text-sm text-emerald-100/95"
+              className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2.5 mb-4 text-sm text-emerald-900 dark:border-emerald-500/35 dark:bg-emerald-500/10 dark:text-emerald-100/95"
               role="status"
             >
-              <strong className="text-emerald-50">Reminder:</strong> you are listing{" "}
-              <strong className="text-white">individual units</strong>, not packs. Enter how many units below, then your{" "}
-              <strong className="text-white">price per unit</strong> (ex GST). Buyers will see how many units they can buy
+              <strong className="text-emerald-950 dark:text-emerald-50">Reminder:</strong> you are listing{" "}
+              <strong className="text-slate-900 dark:text-white">individual units</strong>, not packs. Enter how many units below, then your{" "}
+              <strong className="text-slate-900 dark:text-white">price per unit</strong> (ex GST). Buyers will see how many units they can buy
               and the price per unit.
             </div>
           )}

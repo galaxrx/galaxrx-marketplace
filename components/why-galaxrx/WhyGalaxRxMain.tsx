@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import MarketingEyebrow from "@/components/landing/MarketingEyebrow";
 
 const viewport = { once: true, amount: 0.1 };
 
@@ -129,13 +130,10 @@ export default function WhyGalaxRxMain() {
           transition={{ duration: 0.5 }}
           className="min-w-0"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <span className="h-px w-10 bg-gradient-to-r from-gold/80 to-transparent" aria-hidden />
-            <p className="text-gold/90 text-xs font-semibold tracking-[0.22em] uppercase">Why GalaxRX</p>
-          </div>
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-[2.4rem] font-bold text-white mb-4 leading-[1.1] tracking-tight">
-            Clearer pricing.
-            <span className="text-white/95"> Negotiation you can trust.</span>
+          <MarketingEyebrow className="mb-5">Why GalaxRX</MarketingEyebrow>
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-[2.4rem] font-bold tracking-tight text-white mb-4 flex flex-col gap-2 sm:gap-2.5 leading-tight">
+            <span className="text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.25)]">Clearer pricing.</span>
+            <span className="text-white/95">Negotiation you can trust.</span>
           </h1>
           <p className="text-white/55 text-base sm:text-lg leading-relaxed max-w-xl">
             Surplus, clearance, and wanted stock between <strong className="text-white/80 font-medium">verified</strong>{" "}
@@ -285,14 +283,14 @@ export default function WhyGalaxRxMain() {
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/45 to-transparent" aria-hidden />
         <div>
           <p className="font-heading font-semibold text-white text-lg mb-1">See it on live listings</p>
-          <p className="text-white/50 text-sm">Register to trade, or browse first.</p>
+          <p className="text-white/50 text-sm">Join to trade, or browse first.</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
             href="/register"
             className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3 rounded-xl font-bold font-heading text-sm hover:bg-gold/90 transition-colors shadow-md shadow-gold/10"
           >
-            Create account
+            Join now
           </Link>
           <Link
             href="/listings"

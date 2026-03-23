@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import MarketingEyebrow from "@/components/landing/MarketingEyebrow";
 import { USE_CASES, PLATFORM_FEATURES } from "@/lib/solutions-data";
 
 const viewport = { once: true, amount: 0.08 };
@@ -40,10 +41,7 @@ export default function SolutionsMain() {
         transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
         className="relative mb-14 sm:mb-16 max-w-5xl"
       >
-        <div className="flex items-center gap-3 mb-5">
-          <span className="h-px w-10 bg-gradient-to-r from-gold/80 to-transparent" aria-hidden />
-          <p className="text-gold/90 text-xs font-semibold tracking-[0.2em] uppercase">Solutions</p>
-        </div>
+        <MarketingEyebrow className="mb-5">Solutions</MarketingEyebrow>
         <h1 className="font-heading text-3xl sm:text-4xl md:text-[2.35rem] font-bold text-white mb-3 leading-[1.12] tracking-tight">
           How pharmacies move stock on GalaxRX
         </h1>

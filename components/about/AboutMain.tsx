@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import MarketingEyebrow from "@/components/landing/MarketingEyebrow";
 
 const viewport = { once: true, amount: 0.1 };
 
@@ -103,10 +104,7 @@ export default function AboutMain() {
           transition={{ duration: 0.5 }}
           className="min-w-0"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <span className="h-px w-10 bg-gradient-to-r from-gold/80 to-transparent" aria-hidden />
-            <p className="text-gold/90 text-xs font-semibold tracking-[0.22em] uppercase">About</p>
-          </div>
+          <MarketingEyebrow className="mb-5">About</MarketingEyebrow>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-[2.35rem] font-bold text-white mb-5 leading-[1.1] tracking-tight">
             Built for pharmacy-to-pharmacy trade
           </h1>
@@ -212,7 +210,7 @@ export default function AboutMain() {
             href="/register"
             className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3 rounded-xl font-bold font-heading text-sm hover:bg-gold/90 transition-colors shadow-md shadow-gold/10"
           >
-            Register your pharmacy
+            Join now
           </Link>
           <Link
             href="/listings"

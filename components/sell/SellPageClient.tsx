@@ -618,8 +618,8 @@ export default function SellPageClient({ repeatId, editId }: Props) {
             <strong className="text-white/60">how many units</strong> — that total is what buyers can purchase from this
             listing.
           </p>
-          <p className="text-xs text-amber-200/90 bg-amber-500/10 border border-amber-500/25 rounded-lg px-3 py-2 mb-4">
-            <strong className="text-amber-100">Buyer limit:</strong> buyers cannot purchase more than the total you list
+          <p className="text-xs text-amber-900 bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-4 dark:text-amber-200/90 dark:bg-amber-500/10 dark:border-amber-500/25">
+            <strong className="text-amber-950 dark:text-amber-100">Buyer limit:</strong> buyers cannot purchase more than the total you list
             here (units still in stock after other sales/reservations). If they try a higher quantity, they&apos;ll see a
             clear &quot;not available&quot; message.
           </p>
@@ -633,10 +633,10 @@ export default function SellPageClient({ repeatId, editId }: Props) {
                 className="text-gold focus:ring-gold mt-1"
               />
               <span>
-                <span className="block font-medium text-white">Sell by full pack</span>
-                <span className="block text-sm text-white/55 mt-0.5">
-                  You count <strong className="text-white/70">how many sealed packs</strong> you have. Your price is{" "}
-                  <strong className="text-gold/90">per pack</strong> (one price for the whole pack).
+                <span className="block font-medium text-slate-900 dark:text-white">Sell by full pack</span>
+                <span className="block text-sm text-slate-600 dark:text-white/55 mt-0.5">
+                  You count <strong className="text-slate-800 dark:text-white/70">how many sealed packs</strong> you have. Your price is{" "}
+                  <strong className="text-amber-700 dark:text-gold/90">per pack</strong> (one price for the whole pack).
                 </span>
               </span>
             </label>
@@ -649,10 +649,10 @@ export default function SellPageClient({ repeatId, editId }: Props) {
                 className="text-gold focus:ring-gold mt-1"
               />
               <span>
-                <span className="block font-medium text-white">Sell by unit</span>
-                <span className="block text-sm text-white/55 mt-0.5">
-                  You count <strong className="text-white/70">how many individual units</strong> (e.g. tablets) buyers can
-                  buy. Your price is <strong className="text-gold/90">per unit</strong>.
+                <span className="block font-medium text-slate-900 dark:text-white">Sell by unit</span>
+                <span className="block text-sm text-slate-600 dark:text-white/55 mt-0.5">
+                  You count <strong className="text-slate-800 dark:text-white/70">how many individual units</strong> (e.g. tablets) buyers can
+                  buy. Your price is <strong className="text-amber-700 dark:text-gold/90">per unit</strong>.
                 </span>
               </span>
             </label>

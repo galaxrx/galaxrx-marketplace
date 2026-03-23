@@ -96,14 +96,14 @@ export default function MessageThread({
   }
 
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] flex-1 min-h-0 h-full overflow-hidden bg-[#0D1B2A]">
+    <div className="grid grid-rows-[auto_1fr_auto] flex-1 min-h-0 h-full bg-[#0D1B2A]">
       <div className="md:hidden px-4 py-2 border-b border-[rgba(161,130,65,0.2)] bg-[#0F2035]">
         <Link href="/messages" className="text-sm text-gold hover:underline">
           ← Back to inbox
         </Link>
       </div>
       <div
-        className="min-h-0 overflow-y-auto overscroll-contain p-4 pb-28 md:pb-4 space-y-3 bg-[#0D1B2A]"
+        className="min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-4 pb-28 md:pb-4 space-y-3 bg-[#0D1B2A]"
         style={{ scrollbarGutter: "stable", WebkitOverflowScrolling: "touch" }}
       >
         {messages.length === 0 ? (

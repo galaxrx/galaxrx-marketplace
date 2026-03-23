@@ -13,7 +13,7 @@ export default function MessagesPaneLayout({
   const inThread = /^\/messages\/[^/]+/.test(pathname);
 
   return (
-    <div className="flex flex-col md:flex-row h-[calc(100dvh-8rem)] md:h-[calc(100dvh-6rem)] min-h-0 border border-[rgba(161,130,65,0.2)] rounded-xl overflow-hidden bg-[#0F2035]">
+    <div className="flex flex-col md:flex-row h-[calc(100dvh-8rem)] md:h-[calc(100dvh-6rem)] min-h-0 border border-[rgba(161,130,65,0.2)] rounded-xl overflow-hidden md:overflow-hidden bg-[#0F2035]">
       <aside
         className={`${inThread ? "hidden md:flex" : "flex"} w-full md:w-80 border-b md:border-b-0 md:border-r border-[rgba(161,130,65,0.2)] flex-shrink-0 flex-col bg-[#0F2035]`}
       >
@@ -22,7 +22,7 @@ export default function MessagesPaneLayout({
         </div>
         <div className="flex-1 overflow-y-auto bg-[#0F2035]">{threadList}</div>
       </aside>
-      <main className={`${inThread ? "flex" : "hidden md:flex"} flex-1 flex-col min-h-0 bg-[#0D1B2A]`}>
+      <main className={`${inThread ? "flex" : "hidden md:flex"} flex-1 flex-col min-h-0 overflow-y-auto md:overflow-hidden bg-[#0D1B2A]`}>
         {children}
       </main>
     </div>

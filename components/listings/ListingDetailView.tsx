@@ -102,7 +102,7 @@ export default function ListingDetailView({
   const displayPriceExGst = acceptedPricePerPack ?? listing.pricePerPack;
 
   return (
-    <div className="min-h-screen bg-[#0D1B2A]">
+    <main className="min-h-screen">
       <div className="w-full max-w-none mx-auto p-4 md:p-6 lg:px-8 xl:px-10">
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <Link href="/buy" className="text-gold text-sm hover:underline">
@@ -311,6 +311,6 @@ export default function ListingDetailView({
           </a>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

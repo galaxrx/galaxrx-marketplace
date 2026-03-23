@@ -16,6 +16,7 @@ import {
 import { isPerUnitListing, listingPackContextLine } from "@/lib/listing-price-display";
 import { isValidAustralianPostcodeForShipping } from "@/lib/australian-postcode";
 import { quoteSellerCart } from "@/lib/cart-checkout-quote";
+import { useAppTheme } from "@/components/providers/AppThemeProvider";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -89,6 +90,7 @@ function PaymentForm({
 }) {
   const stripe = useStripe();
   const elements = useElements();
+  const { theme } = useAppTheme();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -138,7 +140,11 @@ function PaymentForm({
           <button
             type="submit"
             disabled={!stripe || !elements || loading}
-            className="px-4 py-2 bg-[#c9a84c] text-[#0d1b2a] rounded-md font-medium hover:opacity-90 disabled:opacity-50"
+            className={
+              theme === "light"
+                ? "px-4 py-2 bg-[#c026d3] text-white rounded-md font-medium hover:opacity-90 disabled:opacity-50"
+                : "px-4 py-2 bg-[#c9a84c] text-[#0d1b2a] rounded-md font-medium hover:opacity-90 disabled:opacity-50"
+            }
           >
             {loading ? "Processing…" : "Agree and Purchase"}
           </button>
@@ -182,6 +188,7 @@ function BuyNowModalInner({
   acceptedPricePerPack,
   cartLines,
 }: Props) {
+  const { theme } = useAppTheme();
   const isCartCheckout = Boolean(cartLines && cartLines.length > 0);
   const rows = isCartCheckout
     ? cartLines!
@@ -486,9 +493,32 @@ function BuyNowModalInner({
     auspostLoading,
   ]);
 
+  const stripeAppearance =
+    theme === "light"
+      ? {
+          theme: "stripe" as const,
+          variables: {
+            colorPrimary: "#c026d3",
+            colorBackground: "#ffffff",
+            colorText: "#171717",
+            colorTextSecondary: "#525252",
+            colorDanger: "#dc2626",
+          },
+        }
+      : {
+          theme: "night" as const,
+          variables: {
+            colorPrimary: "#c9a84c",
+            colorBackground: "#0f172a",
+            colorText: "#f8fafc",
+            colorTextSecondary: "#94a3b8",
+          },
+        };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      style={{ colorScheme: theme === "light" ? "light" : "dark" }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="buy-modal-title"
@@ -1024,7 +1054,7 @@ function BuyNowModalInner({
               stripe={stripePromise}
               options={{
                 clientSecret,
-                appearance: { theme: "stripe" },
+                appearance: stripeAppearance,
               }}
             >
               <PaymentForm

@@ -11,13 +11,13 @@ export default async function ListingsPage({
 }) {
   const params = await searchParams;
   return (
-    <div className="min-h-screen bg-[#0D1B2A]">
+    <main className="min-h-screen">
       <div className="w-full max-w-none mx-auto p-4 sm:p-6 lg:px-8 xl:px-10">
         <ClientOnly fallback={null}>
           <MarketplaceLiveRefresh />
         </ClientOnly>
         <ListingsBrowseContent searchParams={params} showSignIn />
       </div>
-    </div>
+    </main>
   );
 }

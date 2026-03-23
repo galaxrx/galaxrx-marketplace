@@ -83,16 +83,16 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
   );
 
   const selectClass =
-    "w-full min-w-[7rem] px-2 py-1.5 rounded-lg text-sm listing-filter-select " +
+    "w-full px-2 py-1.5 rounded-lg text-sm listing-filter-select " +
     "bg-white/5 border border-[rgba(161,130,65,0.25)] text-white focus:ring-2 focus:ring-gold focus:border-gold/50 [&>option]:bg-[#0D1B2A]";
   const inputClass =
-    "w-24 min-w-[5rem] px-2 py-1 rounded-lg text-sm listing-filter-input " +
+    "w-full px-2 py-1 rounded-lg text-sm listing-filter-input " +
     "bg-white/5 border border-[rgba(161,130,65,0.25)] text-white placeholder-white/40 focus:ring-2 focus:ring-gold [&::placeholder]:text-white/30";
   return (
     <section className="listing-filters-panel w-full p-4 rounded-xl bg-mid-navy/80 border border-[rgba(161,130,65,0.18)]">
-      <div className="flex flex-wrap gap-x-4 gap-y-3 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-3 items-end">
         {/* Sort */}
-        <div className="min-w-[8rem]">
+        <div className="sm:col-span-2 lg:col-span-1">
           <label className="block text-xs font-medium text-white/70 mb-1">Sort by</label>
           <select
             value={sort}
@@ -107,7 +107,7 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
           </select>
           {locationLoading && <p className="text-xs text-gold mt-1">Getting location…</p>}
         </div>
-        <div className="min-w-[8rem]">
+        <div>
           <label className="block text-xs font-medium text-white/70 mb-1">Category</label>
           <select value={category} onChange={(e) => update("category", e.target.value)} className={selectClass}>
             <option value="">All</option>
@@ -116,7 +116,7 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
             ))}
           </select>
         </div>
-        <div className="min-w-[6rem]">
+        <div>
           <label className="block text-xs font-medium text-white/70 mb-1">State</label>
           <select value={state} onChange={(e) => update("state", e.target.value)} className={selectClass}>
             <option value="">All</option>
@@ -125,7 +125,7 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
             ))}
           </select>
         </div>
-        <div className="min-w-[7rem]">
+        <div>
           <label className="block text-xs font-medium text-white/70 mb-1">Expiry</label>
           <select value={expiry} onChange={(e) => update("expiry", e.target.value)} className={selectClass}>
             {EXPIRY_OPTS.map((o) => (
@@ -133,7 +133,7 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
             ))}
           </select>
         </div>
-        <div className="min-w-[6rem]">
+        <div>
           <label className="block text-xs font-medium text-white/70 mb-1">Condition</label>
           <select value={condition} onChange={(e) => update("condition", e.target.value)} className={selectClass}>
             <option value="">All</option>
@@ -141,7 +141,7 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
             <option value="OPENED">Opened</option>
           </select>
         </div>
-        <div className="min-w-[8rem]">
+        <div>
           <label className="block text-xs font-medium text-white/70 mb-1">Delivery</label>
           <select value={fulfillment} onChange={(e) => update("fulfillment", e.target.value)} className={selectClass}>
             <option value="">All</option>
@@ -150,9 +150,9 @@ export default function ListingFilters({ basePath: basePathProp, defaultMaxPrice
             <option value="NATIONAL_SHIPPING">National shipping</option>
           </select>
         </div>
-        <div>
+        <div className="sm:col-span-2 lg:col-span-1">
           <label className="block text-xs font-medium text-white/70 mb-1">Price range ($)</label>
-          <div className="flex gap-1 items-center">
+          <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
             <input type="number" min={0} step={1} value={minPrice} onChange={(e) => update("minPrice", e.target.value)} className={inputClass} placeholder="0" />
             <span className="text-white/50">–</span>
             <input type="number" min={0} step={1} value={maxPrice} onChange={(e) => update("maxPrice", e.target.value)} className={inputClass} placeholder="200" />

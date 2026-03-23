@@ -415,13 +415,7 @@ export default function SellPageClient({ repeatId, editId }: Props) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-full items-start">
       <div className="min-w-0 w-full max-w-none">
-        <h1 className="text-2xl font-heading font-bold text-gold mb-2">Sell stock</h1>
-        <p className="text-white/55 text-sm mb-6 max-w-xl">
-          You&apos;ll choose whether you&apos;re selling <strong className="text-white/75">full packs</strong> (enter how many
-          packs + price <em className="text-white/60">per pack</em>) or <strong className="text-white/75">units</strong>{" "}
-          (enter how many units + price <em className="text-white/60">per unit</em>). Buyers always see the same basis on the
-          listing.
-        </p>
+        <h1 className="text-2xl font-heading font-bold text-gold mb-6">Sell stock</h1>
         <div className="flex flex-wrap gap-1 p-1 rounded-lg bg-white/5 border border-[rgba(161,130,65,0.15)] mb-5 w-fit">
           <button
             type="button"

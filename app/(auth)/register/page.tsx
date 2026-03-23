@@ -285,7 +285,17 @@ export default function RegisterPage() {
   const labelClass = "block text-sm font-medium mb-1 text-white/80";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0D1B2A] p-4 py-12">
+    <div className="relative min-h-screen flex items-center justify-center bg-[#0D1B2A] p-4 py-12">
+      <Link
+        href="/"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 text-sm text-white/55 hover:text-gold transition-colors inline-flex items-center gap-1.5"
+        aria-label="Back to home"
+      >
+        <span aria-hidden className="text-lg leading-none">
+          ←
+        </span>
+        Back to home
+      </Link>
       <div className="w-full max-w-lg bg-mid-navy border border-[rgba(161,130,65,0.18)] rounded-xl shadow-xl p-8">
         <div className="text-center mb-6">
           <Link href="/" className="text-2xl font-heading font-bold text-gold">

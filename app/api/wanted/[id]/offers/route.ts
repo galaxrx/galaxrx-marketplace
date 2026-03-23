@@ -4,6 +4,33 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+const CONTACT_KEYWORDS = [
+  "call me",
+  "text me",
+  "whatsapp",
+  "telegram",
+  "contact me",
+  "phone number",
+  "mobile number",
+  "reach me",
+];
+const EMAIL_REGEX = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+const URL_REGEX = /\b(?:https?:\/\/|www\.)[^\s]+/i;
+const PHONE_TOKEN_REGEX = /(?:\+?\d[\d\s().-]{7,}\d)/g;
+
+function hasPhoneLikeValue(text: string): boolean {
+  const tokens = text.match(PHONE_TOKEN_REGEX) ?? [];
+  return tokens.some((token) => token.replace(/\D/g, "").length >= 8);
+}
+
+function containsOffPlatformContact(content: string): boolean {
+  const normalized = content.toLowerCase();
+  if (EMAIL_REGEX.test(content) || URL_REGEX.test(content) || hasPhoneLikeValue(content)) {
+    return true;
+  }
+  return CONTACT_KEYWORDS.some((keyword) => normalized.includes(keyword));
+}
+
 const createOfferSchema = z.object({
   quantity: z.coerce.number().int().positive(),
   pricePerPack: z.coerce.number().positive().optional(),
@@ -65,6 +92,19 @@ export async function POST(
       );
     }
     const data = parsed.data;
+    const sanitizedMessage = data.message && String(data.message).trim()
+      ? String(data.message).trim()
+      : null;
+    if (sanitizedMessage && containsOffPlatformContact(sanitizedMessage)) {
+      return NextResponse.json(
+        {
+          code: "CONTACT_INFO_BLOCKED",
+          message:
+            "Contact details can only be shared after payment is completed in-app for this trade.",
+        },
+        { status: 400 }
+      );
+    }
     const isUnit = item.quantityKind === "UNIT";
     if (isUnit) {
       const pu = Number(data.pricePerUnit);
@@ -90,7 +130,7 @@ export async function POST(
         quantity: Number(data.quantity),
         pricePerPack: isUnit ? 0 : Number(data.pricePerPack),
         pricePerUnit: isUnit ? Number(data.pricePerUnit) : null,
-        message: data.message && String(data.message).trim() ? String(data.message).trim() : null,
+        message: sanitizedMessage,
         status: "PENDING",
       },
       include: { seller: { select: { id: true, name: true, isVerified: true, state: true } } },

@@ -55,3 +55,18 @@ This creates:
 
 - **Register through the UI:** [http://localhost:3000/register](http://localhost:3000/register) — use a new email and ABN (e.g. 44444444444).
 - Re-running **`npm run db:seed`** only adds test pharmacies that don’t already exist (by email or ABN); it won’t duplicate them or re-create listings for sellers that already have listings.
+
+---
+
+## 5. Messaging safety regression checks
+
+Use these checks to confirm off-platform contact sharing is blocked before payment:
+
+1. In **Messages thread** (`/api/messages/[threadId]`), send a phone/email/link before any paid order.
+   - Expected: blocked with contact-sharing warning.
+2. In **Listing negotiate** flow (`/api/listings/[id]/negotiate`), include a phone number in the optional message.
+   - Expected: offer request rejected with contact-sharing warning.
+3. In **Wanted offer** flow (`/api/wanted/[id]/offers`), include phone/email/link in optional message.
+   - Expected: offer creation rejected with contact-sharing warning.
+4. Complete payment for the listing/wanted trade, then retry in the chat thread.
+   - Expected: contact details are allowed in thread messages after paid status.

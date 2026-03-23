@@ -24,6 +24,7 @@ export default function MessageThread({
   const [recipientId, setRecipientId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const fetchMessages = useCallback(() => {
@@ -61,6 +62,7 @@ export default function MessageThread({
     const text = content.trim();
     if (!text || !recipientId) return;
     setSending(true);
+    setSendError(null);
     try {
       const res = await fetch(`/api/messages/${encodeURIComponent(threadId)}`, {
         method: "POST",
@@ -70,6 +72,9 @@ export default function MessageThread({
       if (res.ok) {
         setContent("");
         fetchMessages();
+      } else {
+        const data = (await res.json().catch(() => null)) as { message?: string } | null;
+        setSendError(data?.message ?? "Unable to send this message right now.");
       }
     } finally {
       setSending(false);
@@ -126,12 +131,20 @@ export default function MessageThread({
       {recipientId && (
         <form
           onSubmit={handleSubmit}
-          className="p-4 border-t border-[rgba(161,130,65,0.2)] bg-[#0F2035] flex gap-2"
+          className="p-4 border-t border-[rgba(161,130,65,0.2)] bg-[#0F2035] flex flex-wrap gap-2"
         >
+          {sendError && (
+            <p className="w-full text-xs text-red-300 -mt-1 mb-1">
+              {sendError}
+            </p>
+          )}
           <input
             type="text"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              setContent(e.target.value);
+              if (sendError) setSendError(null);
+            }}
             placeholder="Type a message…"
             className="flex-1 px-4 py-2 bg-white/5 border border-[rgba(161,130,65,0.25)] rounded-lg text-white placeholder-white/40 focus:ring-2 focus:ring-gold"
             maxLength={2000}

@@ -1,7 +1,87 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import type { OrderStatus } from "@prisma/client";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+
+const CONTACT_KEYWORDS = [
+  "call me",
+  "text me",
+  "whatsapp",
+  "telegram",
+  "contact me",
+  "phone number",
+  "mobile number",
+  "reach me",
+];
+
+const EMAIL_REGEX = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+const URL_REGEX = /\b(?:https?:\/\/|www\.)[^\s]+/i;
+const PHONE_TOKEN_REGEX = /(?:\+?\d[\d\s().-]{7,}\d)/g;
+const PRE_PAYMENT_ALLOWED_ORDER_STATUSES = [
+  "PAID",
+  "SHIPPED",
+  "DELIVERED",
+  "DISPUTED",
+  "DISPUTE_LOST",
+  "REFUNDED",
+  "REFUNDED_PARTIAL",
+  "REFUNDED_FULL",
+] as const satisfies OrderStatus[];
+
+function hasPhoneLikeValue(text: string): boolean {
+  const tokens = text.match(PHONE_TOKEN_REGEX) ?? [];
+  return tokens.some((token) => token.replace(/\D/g, "").length >= 8);
+}
+
+function containsOffPlatformContact(content: string): boolean {
+  const normalized = content.toLowerCase();
+  if (EMAIL_REGEX.test(content) || URL_REGEX.test(content) || hasPhoneLikeValue(content)) {
+    return true;
+  }
+  return CONTACT_KEYWORDS.some((keyword) => normalized.includes(keyword));
+}
+
+async function hasPaidOrderForThread(threadId: string): Promise<boolean> {
+  if (threadId.startsWith("listing_")) {
+    const parts = threadId.split("_");
+    if (parts.length < 4) return false;
+    const [, listingId, buyerId, sellerId] = parts;
+    const paidOrder = await prisma.order.findFirst({
+      where: {
+        listingId,
+        buyerId,
+        sellerId,
+        status: { in: PRE_PAYMENT_ALLOWED_ORDER_STATUSES },
+      },
+      select: { id: true },
+    });
+    return Boolean(paidOrder);
+  }
+
+  if (threadId.startsWith("wanted_")) {
+    const parts = threadId.split("_");
+    if (parts.length < 3) return false;
+    const [, wantedItemId, sellerId] = parts;
+    const wantedItem = await prisma.wantedItem.findUnique({
+      where: { id: wantedItemId },
+      select: { pharmacyId: true },
+    });
+    if (!wantedItem) return false;
+    const paidOrder = await prisma.order.findFirst({
+      where: {
+        buyerId: wantedItem.pharmacyId,
+        sellerId,
+        wantedOffer: { is: { wantedItemId } },
+        status: { in: PRE_PAYMENT_ALLOWED_ORDER_STATUSES },
+      },
+      select: { id: true },
+    });
+    return Boolean(paidOrder);
+  }
+
+  return false;
+}
 
 export async function GET(
   _req: Request,
@@ -82,6 +162,20 @@ export async function POST(
       { message: "recipientId required" },
       { status: 400 }
     );
+  }
+  const isContactInfoShared = containsOffPlatformContact(content);
+  if (isContactInfoShared) {
+    const paidOrderExists = await hasPaidOrderForThread(threadId);
+    if (!paidOrderExists) {
+      return NextResponse.json(
+        {
+          code: "CONTACT_INFO_BLOCKED",
+          message:
+            "Contact details can only be shared after payment is completed in-app for this trade.",
+        },
+        { status: 400 }
+      );
+    }
   }
   const message = await prisma.message.create({
     data: {

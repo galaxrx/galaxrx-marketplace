@@ -6,6 +6,33 @@ import { negotiateBodySchema } from "@/lib/validators";
 import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
 import { isPerUnitListing } from "@/lib/listing-price-display";
 
+const CONTACT_KEYWORDS = [
+  "call me",
+  "text me",
+  "whatsapp",
+  "telegram",
+  "contact me",
+  "phone number",
+  "mobile number",
+  "reach me",
+];
+const EMAIL_REGEX = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+const URL_REGEX = /\b(?:https?:\/\/|www\.)[^\s]+/i;
+const PHONE_TOKEN_REGEX = /(?:\+?\d[\d\s().-]{7,}\d)/g;
+
+function hasPhoneLikeValue(text: string): boolean {
+  const tokens = text.match(PHONE_TOKEN_REGEX) ?? [];
+  return tokens.some((token) => token.replace(/\D/g, "").length >= 8);
+}
+
+function containsOffPlatformContact(content: string): boolean {
+  const normalized = content.toLowerCase();
+  if (EMAIL_REGEX.test(content) || URL_REGEX.test(content) || hasPhoneLikeValue(content)) {
+    return true;
+  }
+  return CONTACT_KEYWORDS.some((keyword) => normalized.includes(keyword));
+}
+
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -32,6 +59,16 @@ export async function POST(
   }
   const { proposedPricePerPack, message: rawMessage } = parsed.data;
   const message = rawMessage?.trim().slice(0, 500);
+  if (message && containsOffPlatformContact(message)) {
+    return NextResponse.json(
+      {
+        code: "CONTACT_INFO_BLOCKED",
+        message:
+          "Contact details can only be shared after payment is completed in-app for this trade.",
+      },
+      { status: 400 }
+    );
+  }
 
   const listing = await prisma.listing.findUnique({
     where: { id: listingId },

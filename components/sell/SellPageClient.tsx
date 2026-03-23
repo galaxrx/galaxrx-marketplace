@@ -613,9 +613,9 @@ export default function SellPageClient({ repeatId, editId }: Props) {
       {selectedDrug && (
         <form onSubmit={handleSubmit} className="space-y-4 bg-mid-navy border border-[rgba(161,130,65,0.18)] rounded-xl p-6">
           <p className="text-white/60 text-sm -mt-1 mb-1">How are you listing stock?</p>
-          <p className="text-xs text-white/45 mb-3">
-            Choose one. Next, we&apos;ll ask <strong className="text-white/60">how many packs</strong> or{" "}
-            <strong className="text-white/60">how many units</strong> — that total is what buyers can purchase from this
+          <p className="text-xs text-slate-600 dark:text-white/45 mb-3">
+            Choose one. Next, we&apos;ll ask <strong className="text-slate-800 dark:text-white/60">how many packs</strong> or{" "}
+            <strong className="text-slate-800 dark:text-white/60">how many units</strong> — that total is what buyers can purchase from this
             listing.
           </p>
           <p className="text-xs text-amber-900 bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-4 dark:text-amber-200/90 dark:bg-amber-500/10 dark:border-amber-500/25">

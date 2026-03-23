@@ -45,7 +45,6 @@ export async function PATCH(
     return NextResponse.json({ message: "Only the listing seller can respond" }, { status: 403 });
   }
   const newStatus = body.action === "accept" ? "ACCEPTED" : "REJECTED";
-  const baseUrl = process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au";
   const buyerId = negotiation.buyerId;
   const threadId = `listing_${negotiation.listingId}_${buyerId}_${sellerId}`;
 
@@ -88,7 +87,7 @@ export async function PATCH(
             threadId,
             senderId: sellerId,
             recipientId: buyerId,
-            content: `Your offer of $${negotiation.proposedPricePerPack.toFixed(2)}/pack for "${negotiation.listing.productName}" was accepted. The agreed price applies at checkout for ${negotiationAcceptanceHoldHours()} hours — complete your purchase in that window. Proceed to buy: ${baseUrl}/listings/${negotiation.listingId}`,
+            content: `Your offer of $${negotiation.proposedPricePerPack.toFixed(2)}/pack for "${negotiation.listing.productName}" was accepted. The agreed price applies at checkout for ${negotiationAcceptanceHoldHours()} hours — complete your purchase in that window. Please check your dashboard.`,
           },
         });
       } else {
@@ -97,7 +96,7 @@ export async function PATCH(
             threadId,
             senderId: sellerId,
             recipientId: buyerId,
-            content: `Your offer on "${negotiation.listing.productName}" was rejected. You can still buy at the seller's listed price ($${negotiation.listing.pricePerPack.toFixed(2)}/pack). Buy now: ${baseUrl}/listings/${negotiation.listingId}`,
+            content: `Your offer on "${negotiation.listing.productName}" was rejected. You can still buy at the seller's listed price ($${negotiation.listing.pricePerPack.toFixed(2)}/pack). Please check your dashboard.`,
           },
         });
       }

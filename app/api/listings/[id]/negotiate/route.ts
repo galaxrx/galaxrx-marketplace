@@ -119,7 +119,6 @@ export async function POST(
       },
     });
 
-    const baseUrl = process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au";
     const threadId = `listing_${listingId}_${buyerId}_${sellerId}`;
     const buyerName = (await prisma.pharmacy.findUnique({
       where: { id: buyerId },
@@ -130,7 +129,7 @@ export async function POST(
         threadId,
         senderId: buyerId,
         recipientId: sellerId,
-        content: `${buyerName} has sent a price offer on "${listing.productName}": $${proposedPricePerPack.toFixed(2)} per ${isPerUnitListing(listing.packSize) ? "unit" : "pack"}${message ? ` — "${message}"` : ""}. View and respond in your Dashboard: ${baseUrl}/dashboard`,
+        content: `${buyerName} has sent a price offer on "${listing.productName}": $${proposedPricePerPack.toFixed(2)} per ${isPerUnitListing(listing.packSize) ? "unit" : "pack"}${message ? ` — "${message}"` : ""}. Please check your dashboard.`,
       },
     });
 

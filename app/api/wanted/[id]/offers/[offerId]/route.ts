@@ -61,7 +61,7 @@ export async function PATCH(
             threadId,
             senderId: item.pharmacyId,
             recipientId: offer.sellerId,
-            content: `I've decided to proceed at your offered price for "${offer.wantedItem.productName}" (${offerLine}). Proceed to payment: ${baseUrl}/wanted/offer/${offerId}/pay`,
+            content: `I've decided to proceed at your offered price for "${offer.wantedItem.productName}" (${offerLine}). Please check your dashboard.`,
           },
         });
       });
@@ -94,7 +94,7 @@ export async function PATCH(
             threadId,
             senderId: buyerId,
             recipientId: sellerId,
-            content: `Your offer on "${offer.wantedItem.productName}" (${offerLine}) was accepted. Proceed to payment: ${baseUrl}/wanted/offer/${offerId}/pay`,
+            content: `Your offer on "${offer.wantedItem.productName}" (${offerLine}) was accepted. Please check your dashboard.`,
           },
         });
       } else {

@@ -27,8 +27,16 @@ export default function ThreadList() {
       .then(setThreads)
       .catch(() => setThreads([]))
       .finally(() => setLoading(false));
-    // Fetch once on mount; pathname changes (e.g. opening a thread) don't need a full refetch
-  }, []);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!currentThreadId) return;
+    setThreads((prev) =>
+      prev.map((t) =>
+        t.threadId === currentThreadId ? { ...t, unread: 0 } : t
+      )
+    );
+  }, [currentThreadId]);
 
   if (loading) {
     return (

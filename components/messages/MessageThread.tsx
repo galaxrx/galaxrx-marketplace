@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useUnreadCount } from "@/components/dashboard/UnreadCountContext";
 
 type Message = {
   id: string;
@@ -20,6 +21,7 @@ export default function MessageThread({
   threadId: string;
   currentUserId: string;
 }) {
+  const { refresh } = useUnreadCount();
   const [messages, setMessages] = useState<Message[]>([]);
   const [content, setContent] = useState("");
   const [recipientId, setRecipientId] = useState<string | null>(null);
@@ -40,6 +42,9 @@ export default function MessageThread({
           const other = msgs.find((m) => m.senderId !== currentUserId);
           if (other) setRecipientId(other.senderId);
         }
+        // Opening/refetching a thread marks its incoming messages as read on the server.
+        // Refresh global unread badge immediately instead of waiting for poll interval.
+        refresh();
       })
       .catch(() => setMessages([]))
       .finally(() => setLoading(false));
@@ -91,13 +96,16 @@ export default function MessageThread({
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-[#0D1B2A]">
+    <div className="flex flex-col flex-1 min-h-0 h-full bg-[#0D1B2A]">
       <div className="md:hidden px-4 py-2 border-b border-[rgba(161,130,65,0.2)] bg-[#0F2035]">
         <Link href="/messages" className="text-sm text-gold hover:underline">
           ← Back to inbox
         </Link>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#0D1B2A]">
+      <div
+        className="flex-1 min-h-0 overflow-y-scroll overscroll-contain p-4 pb-24 md:pb-4 space-y-3 bg-[#0D1B2A]"
+        style={{ scrollbarGutter: "stable" }}
+      >
         {messages.length === 0 ? (
           <p className="text-white/70 text-sm">No messages in this thread.</p>
         ) : (

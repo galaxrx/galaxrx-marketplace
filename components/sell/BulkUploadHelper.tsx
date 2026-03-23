@@ -303,7 +303,7 @@ export default function BulkUploadHelper() {
         <p className="text-[11px] text-white/50 mt-2">
           Tip: download the minimal template first, then paste your rows. Invalid row numbers will appear below before submit.
         </p>
-        <p className="text-[11px] text-amber-200/80 mt-1">
+        <p className="text-[11px] text-white/60 mt-1">
           Excel note: set barcode column to Text (or prefix barcode with &apos;) to avoid scientific notation like 9.78014E+12.
         </p>
         {invalidRows.length > 0 && (

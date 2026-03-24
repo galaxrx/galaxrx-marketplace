@@ -13,7 +13,14 @@ const primaryTabs = [
   { href: "/cart", label: "Cart", icon: "🧺", showCart: true },
 ];
 
-const moreItemsBase = [
+type MoreNavItem = {
+  href: string;
+  label: string;
+  icon: string;
+  showUnread?: boolean;
+};
+
+const moreItemsBase: MoreNavItem[] = [
   { href: "/orders", label: "My Orders", icon: "🛍️" },
   { href: "/messages", label: "Messages", icon: "💬", showUnread: true },
   { href: "/account", label: "My Account", icon: "👤" },
@@ -27,7 +34,7 @@ const moreItemsBase = [
   { href: "/forum", label: "Community Forum", icon: "💭" },
 ];
 
-const adminMoreItem = { href: "/admin", label: "Admin", icon: "🛡️" };
+const adminMoreItem: MoreNavItem = { href: "/admin", label: "Admin", icon: "🛡️" };
 
 type Props = { isAdmin?: boolean };
 

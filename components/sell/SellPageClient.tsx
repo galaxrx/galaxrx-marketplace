@@ -613,17 +613,17 @@ export default function SellPageClient({ repeatId, editId }: Props) {
       {selectedDrug && (
         <form onSubmit={handleSubmit} className="space-y-4 bg-mid-navy border border-[rgba(161,130,65,0.18)] rounded-xl p-6">
           <p className="text-white/60 text-sm -mt-1 mb-1">How are you listing stock?</p>
-          <p className="text-xs text-slate-600 dark:!text-slate-100 mb-3">
-            Choose one. Next, we&apos;ll ask <strong className="text-slate-800 dark:!text-white">how many packs</strong> or{" "}
-            <strong className="text-slate-800 dark:!text-white">how many units</strong> — that total is what buyers can purchase from this
+          <p className="text-xs text-slate-600 dark:text-white mb-3">
+            Choose one. Next, we&apos;ll ask <strong className="text-slate-800 dark:text-white">how many packs</strong> or{" "}
+            <strong className="text-slate-800 dark:text-white">how many units</strong> — that total is what buyers can purchase from this
             listing.
           </p>
-          <p className="text-xs text-amber-900 bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-4 dark:!text-amber-100 dark:bg-amber-500/10 dark:border-amber-500/25">
-            <strong className="text-amber-950 dark:!text-amber-50">Buyer limit:</strong> buyers cannot purchase more than the total you list
+          <p className="text-xs text-amber-900 bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-4 dark:text-white dark:bg-amber-500/10 dark:border-amber-500/25">
+            <strong className="text-amber-950 dark:text-white">Buyer limit:</strong> buyers cannot purchase more than the total you list
             here (units still in stock after other sales/reservations). If they try a higher quantity, they&apos;ll see a
             clear &quot;not available&quot; message.
           </p>
-          <div className="flex flex-wrap gap-6 text-white/90 dark:!text-slate-50 mb-4">
+          <div className="flex flex-wrap gap-6 text-white/90 dark:text-white mb-4">
             <label className="flex items-start gap-2 cursor-pointer max-w-md">
               <input
                 type="radio"
@@ -633,10 +633,10 @@ export default function SellPageClient({ repeatId, editId }: Props) {
                 className="text-gold focus:ring-gold mt-1"
               />
               <span>
-                <span className="block font-medium text-slate-900 dark:!text-white">Sell by full pack</span>
-                <span className="block text-sm text-slate-600 dark:!text-slate-100 mt-0.5">
-                  You count <strong className="text-slate-800 dark:!text-white">how many sealed packs</strong> you have. Your price is{" "}
-                  <strong className="text-amber-700 dark:text-gold/90">per pack</strong> (one price for the whole pack).
+                <span className="block font-medium text-slate-900 dark:text-white">Sell by full pack</span>
+                <span className="block text-sm text-slate-600 dark:text-white mt-0.5">
+                  You count <strong className="text-slate-800 dark:text-white">how many sealed packs</strong> you have. Your price is{" "}
+                  <strong className="text-amber-700 dark:text-white">per pack</strong> (one price for the whole pack).
                 </span>
               </span>
             </label>
@@ -649,10 +649,10 @@ export default function SellPageClient({ repeatId, editId }: Props) {
                 className="text-gold focus:ring-gold mt-1"
               />
               <span>
-                <span className="block font-medium text-slate-900 dark:!text-white">Sell by unit</span>
-                <span className="block text-sm text-slate-600 dark:!text-slate-100 mt-0.5">
-                  You count <strong className="text-slate-800 dark:!text-white">how many individual units</strong> (e.g. tablets) buyers can
-                  buy. Your price is <strong className="text-amber-700 dark:text-gold/90">per unit</strong>.
+                <span className="block font-medium text-slate-900 dark:text-white">Sell by unit</span>
+                <span className="block text-sm text-slate-600 dark:text-white mt-0.5">
+                  You count <strong className="text-slate-800 dark:text-white">how many individual units</strong> (e.g. tablets) buyers can
+                  buy. Your price is <strong className="text-amber-700 dark:text-white">per unit</strong>.
                 </span>
               </span>
             </label>

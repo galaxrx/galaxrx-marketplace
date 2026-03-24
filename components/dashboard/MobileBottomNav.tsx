@@ -13,7 +13,7 @@ const primaryTabs = [
   { href: "/cart", label: "Cart", icon: "🧺", showCart: true },
 ];
 
-const moreItems = [
+const moreItemsBase = [
   { href: "/orders", label: "My Orders", icon: "🛍️" },
   { href: "/messages", label: "Messages", icon: "💬", showUnread: true },
   { href: "/account", label: "My Account", icon: "👤" },
@@ -27,11 +27,17 @@ const moreItems = [
   { href: "/forum", label: "Community Forum", icon: "💭" },
 ];
 
-export default function MobileBottomNav() {
+const adminMoreItem = { href: "/admin", label: "Admin", icon: "🛡️" };
+
+type Props = { isAdmin?: boolean };
+
+export default function MobileBottomNav({ isAdmin = false }: Props) {
   const pathname = usePathname();
   const { count: unreadCount } = useUnreadCount();
   const { itemCount: cartCount } = useCart();
   const [moreOpen, setMoreOpen] = useState(false);
+
+  const moreItems = isAdmin ? [adminMoreItem, ...moreItemsBase] : moreItemsBase;
 
   useEffect(() => {
     setMoreOpen(false);
@@ -58,12 +64,17 @@ export default function MobileBottomNav() {
             <div className="p-2">
               {moreItems.map(({ href, label, icon, showUnread }) => {
                 const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+                const isAdminLink = href === "/admin";
                 return (
                   <Link
                     key={href}
                     href={href}
                     className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm ${
-                      active ? "bg-gold/15 text-gold font-medium" : "text-white/80 hover:bg-white/5"
+                      active
+                        ? "bg-gold/15 text-gold font-medium"
+                        : isAdminLink
+                          ? "text-gold bg-gold/10 hover:bg-gold/15 font-medium"
+                          : "text-white/80 hover:bg-white/5"
                     }`}
                   >
                     <span className="text-base" aria-hidden>

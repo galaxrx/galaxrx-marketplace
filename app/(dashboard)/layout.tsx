@@ -74,7 +74,7 @@ export default async function DashboardLayout({
         </main>
       </div>
       <ClientOnly fallback={null}>
-        <MobileBottomNav />
+        <MobileBottomNav isAdmin={isAdmin} />
       </ClientOnly>
       </DashboardSidebarShell>
       </UnreadCountProvider>

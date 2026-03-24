@@ -618,8 +618,8 @@ export default function SellPageClient({ repeatId, editId }: Props) {
             <strong className="text-white">how many units</strong> — that total is what buyers can purchase from this
             listing.
           </p>
-          <p className="text-xs text-white bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-4 dark:bg-amber-500/10 dark:border-amber-500/25">
-            <strong className="text-white">Buyer limit:</strong> buyers cannot purchase more than the total you list
+          <p className="text-xs text-amber-950 bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-4 dark:bg-amber-500/10 dark:border-amber-500/25">
+            <strong className="text-amber-950">Buyer limit:</strong> buyers cannot purchase more than the total you list
             here (units still in stock after other sales/reservations). If they try a higher quantity, they&apos;ll see a
             clear &quot;not available&quot; message.
           </p>

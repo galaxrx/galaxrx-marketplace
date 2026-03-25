@@ -818,9 +818,9 @@ function BuyNowModalInner({
             If you buy another item from the same seller before they ship, you will have the option to add it to this shipment.
           </div>
 
-          {/* Purchase Shipping Label — buyer pays */}
+          {/* Shipping options — buyer chooses platform or direct freight arrangement */}
           <section className="border border-gray-200 rounded-lg p-4 bg-gray-50/50">
-            <h3 className="font-semibold text-gray-900 mb-1">Purchase Shipping Label</h3>
+            <h3 className="font-semibold text-gray-900 mb-1">Shipping options</h3>
             <p className="text-sm font-medium text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5 mb-3">
               Shipping cost is paid by you (the buyer).
             </p>
@@ -843,9 +843,10 @@ function BuyNowModalInner({
               Arrange freight directly with seller (outside platform)
             </label>
             {arrangeFreightDirectly && (
-              <p className="text-xs text-gray-600 mb-3">
-                Freight is not charged in checkout. Buyer and seller arrange shipment directly after payment.
-              </p>
+              <div className="mb-3 rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-900">
+                Shipping fee will be <strong>$0.00</strong> in checkout. Buyer and seller will receive each
+                other&apos;s contact details by email after payment to arrange freight directly.
+              </div>
             )}
 
             {primary.fulfillmentType === "NATIONAL_SHIPPING" && !sellerPostcodeValid && (
@@ -1030,12 +1031,6 @@ function BuyNowModalInner({
                     </span>
                   </label>
                 </div>
-                <button
-                  type="button"
-                  className="mt-3 px-3 py-1.5 text-sm font-medium rounded-md bg-amber-500 text-white hover:bg-amber-600"
-                >
-                  Add to Bundle
-                </button>
               </>
             )}
           </section>

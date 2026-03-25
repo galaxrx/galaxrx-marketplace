@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
-export type PurchaseEmailChannel = "SELLER_NEW_SALE" | "BUYER_PURCHASE_CONFIRMED";
+export type PurchaseEmailChannel =
+  | "SELLER_NEW_SALE"
+  | "BUYER_PURCHASE_CONFIRMED"
+  | "SELLER_DIRECT_SHIPPING_CONTACT"
+  | "BUYER_DIRECT_SHIPPING_CONTACT";
 
 type SendResult = { success: boolean };
 

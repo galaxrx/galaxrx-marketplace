@@ -88,6 +88,32 @@ export default function TermsPage() {
           <p>
             Everything you list must comply with Australian law, including therapeutic goods and pharmacy rules (e.g. TGA and state/territory legislation). If a buyer, GalaxRX, or a regulator asks, sellers must supply traceability or provenance as the law requires. Listings must accurately describe items and include any required identifiers. Buyers confirm they are allowed to buy and handle the products under applicable law. Sellers confirm the products are lawful and that they have not knowingly supplied suspect or illegitimate product. We may suspend or ban participants who breach these requirements or who are involved in relevant criminal or civil proceedings.
           </p>
+          <h3 className="text-base font-semibold text-gold/90 mt-6">Restricted and Prohibited Products</h3>
+          <p>
+            By listing, offering, purchasing, or transferring any product through GalaxRX, users confirm that they are authorised to deal in those goods and that all activity on the platform complies with applicable Australian laws, regulations, professional standards, and any storage, handling, transport, and record-keeping requirements.
+          </p>
+          <p>
+            Users must not list, sell, transfer, or seek to obtain any product that is prohibited from being supplied through the platform under law, regulatory restriction, manufacturer distribution controls, or GalaxRX policy. GalaxRX may remove any listing or suspend any account where a product is considered restricted, non-compliant, unsafe, or unsuitable for marketplace trading.
+          </p>
+          <p>
+            Users are solely responsible for ensuring that products listed or supplied through the platform are lawful to trade, correctly stored, properly packaged, in saleable condition, and handled in accordance with all applicable requirements. Extra care must be taken with products subject to special handling, monitoring, custody, or supply controls, including items requiring temperature control or heightened diversion safeguards.
+          </p>
+          <p>
+            Products supplied through the platform must be complete, legitimate, and in original compliant condition. GalaxRX may prohibit the listing of partial packs, sample packs, damaged goods, products outside approved supply channels, or any item that does not meet platform standards.
+          </p>
+          <p>
+            GalaxRX reserves the right, at its absolute discretion, to block, remove, review, or refuse any listing and to restrict platform access where it considers this necessary for legal, regulatory, operational, or safety reasons.
+          </p>
+          <h3 className="text-base font-semibold text-gold/90 mt-6">Examples of Non-Permitted Listings</h3>
+          <p>Without limitation, GalaxRX may prohibit listings involving:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>products subject to special regulatory supply restrictions;</li>
+            <li>items that cannot lawfully be transferred through a third-party marketplace;</li>
+            <li>doctor or clinic sample stock;</li>
+            <li>incomplete, broken, or repackaged sale units;</li>
+            <li>products with handling or storage issues;</li>
+            <li>items that present heightened compliance, diversion, or safety risk.</li>
+          </ul>
 
           <h2 className="text-lg font-semibold text-gold mt-8">12. Legal notice</h2>
           <p>

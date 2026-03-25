@@ -980,6 +980,9 @@ export default function SellPageClient({ repeatId, editId }: Props) {
           >
             {loading ? (editId ? "Updating…" : "Publishing…") : (editId ? "Update listing" : "Publish listing")}
           </button>
+          <p className="text-xs text-white/60">
+            By submitting a listing, you confirm that the product is lawfully tradable, eligible to be supplied through this platform, and compliant with all applicable legal and professional obligations.
+          </p>
         </form>
       )}
       </div>

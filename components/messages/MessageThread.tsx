@@ -48,7 +48,7 @@ export default function MessageThread({
       })
       .catch(() => setMessages([]))
       .finally(() => setLoading(false));
-  }, [threadId, currentUserId]);
+  }, [threadId, currentUserId, refresh]);
 
   useEffect(() => {
     fetchMessages();

@@ -228,6 +228,9 @@ export async function bookTransdirectForOrder(orderId: string): Promise<{
 
   if (!prep.ok) return prep;
   if ("alreadyBooked" in prep && prep.alreadyBooked) return prep;
+  if (!("order" in prep) || !prep.order || !prep.selected || !prep.pickupDate) {
+    return { ok: false, message: "Shipment is not approval-ready for booking.", code: "STATE_NOT_READY" };
+  }
   const order = prep.order;
   const selected = prep.selected;
   const pickupDate = prep.pickupDate;

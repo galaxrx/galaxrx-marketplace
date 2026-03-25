@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import ListingImage from "@/components/listings/ListingImage";
 import { format } from "date-fns";
 import { loadStripe } from "@stripe/stripe-js";
@@ -17,6 +17,7 @@ import { isPerUnitListing, listingPackContextLine } from "@/lib/listing-price-di
 import { isValidAustralianPostcodeForShipping } from "@/lib/australian-postcode";
 import { quoteSellerCart } from "@/lib/cart-checkout-quote";
 import { useAppTheme } from "@/components/providers/AppThemeProvider";
+import type { TransdirectQuoteOption } from "@/lib/transdirect";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -36,7 +37,7 @@ type Pharmacy = {
   approvalNumber?: string | null;
 };
 
-type AusPostRate = { code: string; name: string; price: number };
+type AusPostRate = TransdirectQuoteOption;
 
 type Listing = {
   id: string;
@@ -181,6 +182,41 @@ function getShippingOptions(deliveryFee: number) {
   return { standard, express };
 }
 
+const COURIER_LABELS: Record<string, string> = {
+  aramex: "Aramex",
+  couriers_please: "Couriers Please",
+  allied: "Allied",
+  mainfreight: "Mainfreight",
+  northline: "Northline",
+  toll: "Toll",
+  toll_priority: "Toll Priority",
+  toll_priority_overnight: "Toll Priority Overnight",
+  toll_priority_sameday: "Toll Priority Same Day",
+  tnt_nine_express: "TNT 9AM",
+  tnt_ten_express: "TNT 10AM",
+  tnt_twelve_express: "TNT 12PM",
+  tnt_overnight_express: "TNT Overnight Express",
+  tnt_road_express: "TNT Road Express",
+  direct_couriers_regular: "Direct Couriers Regular",
+  direct_couriers_elite: "Direct Couriers Elite",
+  go_people: "Go People",
+  capital_transport: "Capital Transport",
+  capital_transport_express: "Capital Transport Express",
+  hunter_road_freight: "Hunter Road Freight",
+  direct_couriers: "Direct Couriers",
+  direct_couriers_express: "Direct Couriers Express",
+};
+
+function formatCourierName(raw?: string): string {
+  if (!raw) return "Courier";
+  return (
+    COURIER_LABELS[raw] ??
+    raw
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+  );
+}
+
 function BuyNowModalInner({
   onClose,
   listing,
@@ -190,9 +226,13 @@ function BuyNowModalInner({
 }: Props) {
   const { theme } = useAppTheme();
   const isCartCheckout = Boolean(cartLines && cartLines.length > 0);
-  const rows = isCartCheckout
-    ? cartLines!
-    : [{ listing: listing!, quantity, acceptedPricePerPack }];
+  const rows = useMemo(
+    () =>
+      isCartCheckout
+        ? cartLines!
+        : [{ listing: listing!, quantity, acceptedPricePerPack }],
+    [isCartCheckout, cartLines, listing, quantity, acceptedPricePerPack]
+  );
   const primary = rows[0].listing;
   const cartConfigError =
     isCartCheckout &&
@@ -229,7 +269,7 @@ function BuyNowModalInner({
   const { standard: standardFee, express: expressFee } = getShippingOptions(baseDeliveryFee);
   const deliveryFeeFromListing = shippingTier === "express" ? expressFee : standardFee;
   const deliveryFeeExGst = useAustraliaPost
-    ? (selectedAusPostRate?.price ?? 0)
+    ? (selectedAusPostRate?.totalPrice ?? 0)
     : deliveryFeeFromListing;
 
   const allowCustomDelivery = Boolean(
@@ -300,6 +340,16 @@ function BuyNowModalInner({
       ? singleQuoteResult.quote
       : singleQuoteResult.quoteForDisplay;
 
+  const visibleTransdirectRates = (() => {
+    if (!Array.isArray(auspostRates) || auspostRates.length === 0) return [];
+    const sorted = [...auspostRates].sort((a, b) => a.totalPrice - b.totalPrice);
+    const cheapest = sorted[0]?.totalPrice ?? 0;
+    const outlierCap = cheapest > 0 ? cheapest * 3 : Number.POSITIVE_INFINITY;
+    const withinRange = sorted.filter((r) => r.totalPrice <= outlierCap);
+    const capped = (withinRange.length > 0 ? withinRange : sorted).slice(0, 6);
+    return capped;
+  })();
+
   const { totalCharged, gstAmount: gst, platformFee, netToSeller: sellerReceives, rateLabel } =
     quote;
   const delivery = getDeliveryOption(primary.fulfillmentType);
@@ -363,18 +413,30 @@ function BuyNowModalInner({
       setAuspostRates([]);
       setSelectedAusPostRate(null);
       try {
-        const params = new URLSearchParams({
-          from_postcode: from,
-          to_postcode: to,
+        const res = await fetch("/api/transdirect/quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal,
+          body: JSON.stringify({
+            senderPostcode: from,
+            senderSuburb: primary.pharmacy.suburb,
+            senderState: primary.pharmacy.state,
+            senderBuildingType: "commercial",
+            receiverPostcode: to,
+            receiverSuburb: buyerDeliverySuburb ?? undefined,
+            receiverState: buyerDeliveryState ?? undefined,
+            receiverBuildingType: "commercial",
+            parcels: [{ weightKg: 1, lengthCm: 22, widthCm: 16, heightCm: 7 }],
+            reference: primary.id,
+          }),
         });
-        const res = await fetch(`/api/auspost/calculate?${params}`, { signal });
         const data = await res.json().catch(() => ({}));
         if (signal?.aborted || auspostRequestId.current !== reqId) return;
         if (!res.ok) {
-          setAuspostError(data.message ?? "Could not get Australia Post rates.");
+          setAuspostError(data.message ?? "Could not get Transdirect rates.");
           return;
         }
-        const services = Array.isArray(data.services) ? data.services : [];
+        const services = Array.isArray(data.options) ? data.options : [];
         setAuspostRates(services);
         if (services.length > 0) setSelectedAusPostRate(services[0]);
       } catch (e) {
@@ -385,7 +447,7 @@ function BuyNowModalInner({
         if (auspostRequestId.current === reqId) setAuspostLoading(false);
       }
     },
-    [sellerPostcode, buyerPostcode]
+    [sellerPostcode, buyerPostcode, primary.id, primary.pharmacy.suburb, primary.pharmacy.state, buyerDeliverySuburb, buyerDeliveryState]
   );
 
   /** When Australia Post is on, auto-fetch using seller + buyer account postcodes. */
@@ -441,6 +503,17 @@ function BuyNowModalInner({
               deliveryFee: deliveryFeeExGst,
               shippingTier,
               useAustraliaPost: allowCustomDelivery && useAustraliaPost,
+              selectedShippingOption:
+                allowCustomDelivery && useAustraliaPost && selectedAusPostRate
+                  ? {
+                      provider: "transdirect",
+                      serviceName: selectedAusPostRate.serviceName,
+                      courierName: selectedAusPostRate.courierName,
+                      totalPrice: selectedAusPostRate.totalPrice,
+                      currency: selectedAusPostRate.currency,
+                      quoteReference: selectedAusPostRate.quoteReference,
+                    }
+                  : undefined,
             }),
           });
           const data = await res.json();
@@ -460,6 +533,17 @@ function BuyNowModalInner({
               quantity: rows[0].quantity,
               deliveryFee: deliveryFeeExGst,
               idempotencyKey,
+              selectedShippingOption:
+                allowCustomDelivery && useAustraliaPost && selectedAusPostRate
+                  ? {
+                      provider: "transdirect",
+                      serviceName: selectedAusPostRate.serviceName,
+                      courierName: selectedAusPostRate.courierName,
+                      totalPrice: selectedAusPostRate.totalPrice,
+                      currency: selectedAusPostRate.currency,
+                      quoteReference: selectedAusPostRate.quoteReference,
+                    }
+                  : undefined,
             }),
           });
           const data = await res.json();
@@ -482,14 +566,15 @@ function BuyNowModalInner({
     isCartCheckout,
     primary.pharmacyId,
     primary.id,
+    rows,
     cartItemsKey,
     deliveryFeeExGst,
     checkoutBlocked,
     shippingTier,
     useAustraliaPost,
     allowCustomDelivery,
-    selectedAusPostRate?.price,
-    selectedAusPostRate?.code,
+    selectedAusPostRate?.totalPrice,
+    selectedAusPostRate?.quoteReference,
     auspostLoading,
   ]);
 
@@ -775,7 +860,7 @@ function BuyNowModalInner({
                     }}
                     className="rounded text-[#c9a84c] focus:ring-[#c9a84c]"
                   />
-                  <span className="font-medium text-black">Use Australia Post (live rates)</span>
+                  <span className="font-medium text-black">Use Transdirect (live courier rates)</span>
                 </label>
                 {useAustraliaPost && (
                   <div className="mt-2 space-y-2">
@@ -843,7 +928,7 @@ function BuyNowModalInner({
                       </div>
                     )}
                     {buyerPostcode.length >= 4 && auspostLoading && (
-                      <p className="text-sm text-sky-800">Fetching Australia Post rates…</p>
+                      <p className="text-sm text-sky-800">Fetching Transdirect rates…</p>
                     )}
                     {buyerPostcode.length >= 4 && !auspostLoading && auspostRates.length === 0 && !auspostError && (
                       <button
@@ -860,20 +945,33 @@ function BuyNowModalInner({
                     {auspostRates.length > 0 && (
                       <div className="space-y-1.5 pt-1">
                         <p className="text-sm font-medium text-black">Select service:</p>
-                        {auspostRates.map((rate) => (
-                          <label key={rate.code} className="flex items-center gap-3 cursor-pointer text-black">
+                        {visibleTransdirectRates.map((rate) => (
+                          <label
+                            key={rate.quoteReference ?? `${rate.courierName ?? "courier"}-${rate.serviceName}`}
+                            className="flex items-center gap-3 cursor-pointer text-black"
+                          >
                             <input
                               type="radio"
                               name="auspost-service"
-                              checked={selectedAusPostRate?.code === rate.code}
+                              checked={
+                                (selectedAusPostRate?.quoteReference &&
+                                  selectedAusPostRate.quoteReference === rate.quoteReference) ||
+                                selectedAusPostRate?.serviceName === rate.serviceName
+                              }
                               onChange={() => setSelectedAusPostRate(rate)}
                               className="text-[#c9a84c] focus:ring-[#c9a84c]"
                             />
                             <span className="text-black">
-                              {rate.name} – ${rate.price.toFixed(2)}
+                              {rate.courierName ? `${formatCourierName(rate.courierName)} · ` : ""}
+                              {rate.serviceName} – ${rate.totalPrice.toFixed(2)}
                             </span>
                           </label>
                         ))}
+                        {auspostRates.length > visibleTransdirectRates.length && (
+                          <p className="text-xs text-sky-900">
+                            Showing the most practical options (lowest priced and non-outlier services).
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>

@@ -87,7 +87,7 @@ export async function PATCH(
             threadId,
             senderId: sellerId,
             recipientId: buyerId,
-            content: `Your offer of $${negotiation.proposedPricePerPack.toFixed(2)}/pack for "${negotiation.listing.productName}" was accepted. The agreed price applies at checkout for ${negotiationAcceptanceHoldHours()} hours — complete your purchase in that window. Please check your dashboard.`,
+            content: `Your offer for ${negotiation.listing.productName} at $${negotiation.proposedPricePerPack.toFixed(2)}/pack was accepted. The agreed price applies at checkout for ${negotiationAcceptanceHoldHours()} hours, so please complete your purchase within that window. Please check your dashboard.`,
           },
         });
       } else {
@@ -96,7 +96,7 @@ export async function PATCH(
             threadId,
             senderId: sellerId,
             recipientId: buyerId,
-            content: `Your offer on "${negotiation.listing.productName}" was rejected. You can still buy at the seller's listed price ($${negotiation.listing.pricePerPack.toFixed(2)}/pack). Please check your dashboard.`,
+            content: `Your offer for ${negotiation.listing.productName} was not accepted. You can still buy at the seller's listed price ($${negotiation.listing.pricePerPack.toFixed(2)}/pack). Please check your dashboard.`,
           },
         });
       }

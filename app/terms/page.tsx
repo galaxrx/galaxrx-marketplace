@@ -201,6 +201,67 @@ export default function TermsPage() {
             This Agreement and the Privacy Policy (and any other documents we refer to) form the whole agreement between you and GalaxRX. Section headings are for reference only. If a court finds any part invalid, the rest remains in force. We do not waive a right by failing to enforce it. We may send you notices by email or through the Website; you agree to receive them in electronic form. We can change this Agreement by posting an updated version on the Website; your continued use means you accept the changes. We may suspend or end your access at any time without notice and have no liability to you or anyone else for doing so.
           </p>
 
+          <h2 className="text-lg font-semibold text-gold mt-8">25. GalaxRX Regulated Products and Marketplace Role Policy</h2>
+          <p>
+            This section sets out additional, specific rules for regulated products. It applies in addition to all other terms in this Agreement and does not limit any broader obligation already stated elsewhere.
+          </p>
+          <ol className="list-decimal pl-6 space-y-4">
+            <li>
+              <strong>Marketplace role.</strong> GalaxRX operates as a business-to-business software marketplace connecting verified pharmacies and other approved authorised trading entities. GalaxRX provides technology and marketplace services only. Unless expressly stated otherwise in writing, GalaxRX does not manufacture, purchase, own, take title to, store, warehouse, handle, pack, repack, relabel, dispense, transport, or deliver products listed on the platform, and is not the seller or supplier of user-listed products.
+            </li>
+            <li>
+              <strong>Pharmacy-only and authorised-user access.</strong> Access to regulated product trading is restricted to verified pharmacy businesses and other trading entities approved by GalaxRX in its discretion. Each user must hold and maintain all required licences, registrations, approvals, permits, and authorities; provide accurate business and licensing information; and promptly notify GalaxRX of any suspension, expiry, cancellation, restriction, or investigation affecting legal authority to trade. GalaxRX may request verification documents at any time and may suspend, restrict, or terminate access where verification is incomplete, unsatisfactory, or outdated.
+            </li>
+            <li>
+              <strong>Seller remains the supplier.</strong> For each transaction, the seller remains solely responsible for the product and its supply, including legality of listing and supply, listing accuracy, product quality and authenticity, condition and pack integrity, expiry accuracy, storage history and transport suitability, legal and professional compliance, and direct supply to the buyer. Unless expressly stated otherwise in writing, the seller remains the legal supplier and GalaxRX does not assume that role.
+            </li>
+            <li>
+              <strong>Direct seller-to-buyer supply.</strong> All products traded through GalaxRX must be supplied directly by the seller to the buyer. GalaxRX does not take possession of products and is not part of the physical supply chain. Users must not use the platform in any way that causes GalaxRX to become holder, warehouse operator, consignor, shipper, distributor, or supplier of listed goods.
+            </li>
+            <li>
+              <strong>Regulated products.</strong> Prescription medicines, pharmacist-only medicines, pharmacy medicines, and other regulated therapeutic goods may only be listed, offered, bought, or sold where the transaction is lawful, the user is properly authorised, the listing complies with GalaxRX policies, and all applicable storage, handling, transport, and record-keeping obligations are met. GalaxRX may prohibit, restrict, review, or condition listing of any regulated product category at any time.
+            </li>
+            <li>
+              <strong>Prohibited and restricted products.</strong> Users must not list, offer, buy, or sell through GalaxRX any product that is unlawful; outside the user&apos;s legal authority; counterfeit, falsified, stolen, diverted, or illegally imported; recalled, expired, adulterated, contaminated, damaged, tampered with, or otherwise unsuitable for lawful supply; improperly stored (including compromised cold-chain products); missing required packaging, labelling, batch, or traceability information where applicable; or subject to manufacturer, regulatory, or legal restrictions preventing lawful resale or transfer. GalaxRX may remove or block any listing it reasonably considers non-compliant, unsafe, misleading, unverifiable, or otherwise inappropriate.
+            </li>
+            <li>
+              <strong>Schedule 8 and high-risk categories.</strong> Schedule 8 medicines and other high-risk, controlled, or specially regulated products are prohibited unless GalaxRX has expressly enabled that category in writing and all additional approval, verification, legal, and operational requirements are met. GalaxRX may impose enhanced restrictions, documentary requirements, geographic limitations, or outright bans for high-risk products.
+            </li>
+            <li>
+              <strong>Cold-chain and storage-sensitive items.</strong> Where products require refrigeration, freezing, controlled temperature, sterile handling, hazardous handling, or other special conditions, the seller must ensure and warrants that storage has been appropriate at all relevant times, special conditions have not been compromised, listing representations are accurate, and supply will occur in accordance with legal, professional, and manufacturer requirements. The seller bears sole responsibility for the accuracy of these representations.
+            </li>
+            <li>
+              <strong>Listing accuracy and seller disclosures.</strong> Sellers must provide complete, accurate, and non-misleading listing information, including where applicable product name, brand or generic name, strength, dosage form, pack size, quantity available, expiry date, storage requirements, condition of packaging and labelling, and any material restriction affecting supply, collection, delivery, or lawful resale. Misleading, incomplete, deceptive, duplicated, or manipulated listings are prohibited.
+            </li>
+            <li>
+              <strong>Buyer responsibility.</strong> Each buyer is solely responsible for confirming that it is legally permitted to acquire listed products and that each proposed purchase complies with legal, professional, operational, and commercial requirements applicable to that buyer. Buyers must conduct their own review of listing details, product suitability, expiry, storage requirements, and supply conditions before proceeding.
+            </li>
+            <li>
+              <strong>No regulatory approval or legal advice.</strong> Account verification, listing approval, listing visibility, payment processing, or any other GalaxRX action does not constitute legal advice or regulatory approval, does not confirm product lawfulness or user compliance, and does not shift responsibility for compliance away from users.
+            </li>
+            <li>
+              <strong>Platform fee only.</strong> Any fee charged by GalaxRX is a marketplace, software, service, transaction, or facilitation fee for platform access and use. No GalaxRX fee makes GalaxRX the seller, supplier, owner, consignor, carrier, warehouse operator, or legal transferor of products.
+            </li>
+            <li>
+              <strong>Audit, evidence, and compliance cooperation.</strong> GalaxRX may request licences, registrations, permits, invoices, storage records, batch details, product images, proof of authority, business information, shipping records, or other compliance evidence at any time. Users must promptly provide requested information and cooperate with compliance reviews, investigations, and audits. GalaxRX may remove listings, pause transactions, restrict feature access, suspend accounts, or terminate users where further review is reasonably required.
+            </li>
+            <li>
+              <strong>Compliance override.</strong> GalaxRX may at any time and without liability to the user refuse, remove, restrict, suspend, cancel, or reverse any listing, account, feature, or transaction where GalaxRX reasonably considers there may be legal, regulatory, safety, fraud, sanctions, reputational, operational, or policy risk.
+            </li>
+            <li>
+              <strong>User warranties.</strong> Each user represents and warrants on an ongoing basis that it is duly established and authorised to use the platform, holds all required licences and approvals, provides information that is true, current, and complete, deals lawfully with any product listed or acquired through the platform, and does not use the platform in a way that causes GalaxRX to breach law or regulatory requirement.
+            </li>
+            <li>
+              <strong>Indemnity.</strong> Each user indemnifies and must keep indemnified GalaxRX, its officers, employees, contractors, and affiliates against all claims, liabilities, losses, damages, penalties, costs, and expenses arising out of or in connection with the user&apos;s breach of these terms; unlawful listing, acquisition, transfer, or supply of products; inaccurate or misleading listings or representations; failure to hold required licences or authorities; product defects, storage failures, transport failures, expiry issues, or compliance breaches; and claims that GalaxRX is responsible for acts or omissions that are the user&apos;s responsibility.
+            </li>
+            <li>
+              <strong>Geographic and operational restrictions.</strong> GalaxRX may apply restrictions by product type, location, delivery method, transaction value, user class, risk level, or other criteria. Users must comply with all geographic, operational, and category restrictions imposed by GalaxRX from time to time.
+            </li>
+            <li>
+              <strong>Reservation of rights.</strong> GalaxRX reserves the right to amend, expand, narrow, or replace this policy at any time to reflect legal, regulatory, operational, or risk-management requirements.
+            </li>
+          </ol>
+
           <h2 className="text-lg font-semibold text-gold mt-8">Contact</h2>
           <p>
             For questions about these terms, contact GalaxRX using the details on the Website or the address we give for legal notices in Australia.

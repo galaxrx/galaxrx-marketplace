@@ -129,7 +129,7 @@ export async function POST(
         threadId,
         senderId: buyerId,
         recipientId: sellerId,
-        content: `${buyerName} has sent a price offer on "${listing.productName}": $${proposedPricePerPack.toFixed(2)} per ${isPerUnitListing(listing.packSize) ? "unit" : "pack"}${message ? ` — "${message}"` : ""}. Please check your dashboard.`,
+        content: `${buyerName} sent an offer for ${listing.productName}: $${proposedPricePerPack.toFixed(2)} per ${isPerUnitListing(listing.packSize) ? "unit" : "pack"}${message ? ` — Note: "${message}"` : ""}. Please check your dashboard.`,
       },
     });
 

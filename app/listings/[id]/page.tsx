@@ -8,6 +8,7 @@ import { authOptions } from "@/lib/auth";
 import { differenceInDays } from "date-fns";
 import ListingDetailView from "@/components/listings/ListingDetailView";
 import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
+import { getPendingListingIdSet } from "@/lib/listing-pending";
 
 type ListingDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -120,10 +121,14 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
     },
   });
 
-  const acceptedOffersCount = await prisma.listingNegotiation.count({
-    where: { listingId: id, ...activeAcceptedListingNegotiationWhere() },
-  });
-  const isPending = acceptedOffersCount > 0;
+  const pendingIds = await getPendingListingIdSet([
+    {
+      id,
+      quantityUnits: listing.quantityUnits,
+      reservedUnits: listing.reservedUnits,
+    },
+  ]);
+  const isPending = pendingIds.has(id);
 
   let acceptedPricePerPack: number | undefined;
   if (session?.user && (session.user as { id: string }).id !== listing.pharmacyId) {

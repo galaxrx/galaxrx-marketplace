@@ -42,6 +42,13 @@ export async function PUT(
     if (order.status !== "PAID") {
       return NextResponse.json({ message: "Order must be PAID before marking shipped" }, { status: 400 });
     }
+    const deadline = new Date(order.createdAt).getTime() + 3 * 24 * 60 * 60 * 1000;
+    if (Date.now() > deadline) {
+      return NextResponse.json(
+        { message: "This order is outside the 3-day shipping window. Contact support." },
+        { status: 400 }
+      );
+    }
   } else if (status === "DELIVERED") {
     if (order.buyerId !== pharmacyId) {
       return NextResponse.json({ message: "Only buyer can mark as delivered" }, { status: 403 });

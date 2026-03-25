@@ -19,6 +19,7 @@ import {
   SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE,
   stripeDestinationErrorResponse,
 } from "@/lib/stripe-account-errors";
+import type { TransdirectQuoteOption } from "@/lib/transdirect";
 
 const LISTING_RESERVATION_EXPIRY_MINUTES = CHECKOUT_RESERVATION_MINUTES;
 const CART_IDEMPOTENCY_BUCKET_MS = CHECKOUT_RESERVATION_MINUTES * 60 * 1000;
@@ -56,13 +57,17 @@ export async function POST(req: Request) {
       items: rawItems,
       deliveryFee,
       shippingTier = "standard",
+      arrangeFreightDirectly = false,
       useAustraliaPost = false,
+      selectedShippingOption,
     } = body as {
       sellerId?: string;
       items?: { listingId: string; quantity: number }[];
       deliveryFee?: number;
       shippingTier?: "standard" | "express";
+      arrangeFreightDirectly?: boolean;
       useAustraliaPost?: boolean;
+      selectedShippingOption?: Partial<TransdirectQuoteOption> & { provider?: string };
     };
 
     if (!sellerId || !Array.isArray(rawItems) || rawItems.length === 0) {
@@ -329,6 +334,12 @@ export async function POST(req: Request) {
           netToSeller: String(quote.netToSeller),
           transferToSeller: String(destAmounts.transferToSellerCents / 100),
           taxClassification: quote.taxClassification,
+          shippingProvider: selectedShippingOption?.provider === "transdirect" ? "transdirect" : "",
+          shippingArrangement: arrangeFreightDirectly ? "direct_contact" : "platform",
+          shippingServiceName: selectedShippingOption?.serviceName ?? "",
+          shippingCourierName: selectedShippingOption?.courierName ?? "",
+          shippingQuoteReference: selectedShippingOption?.quoteReference ?? "",
+          shippingTotalPrice: String(selectedShippingOption?.totalPrice ?? ""),
         },
       };
 

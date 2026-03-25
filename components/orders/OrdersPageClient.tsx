@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import OrderCard from "@/components/orders/OrderCard";
 import { useCart } from "@/components/providers/CartContext";
+import { parseOrderShippingMeta } from "@/lib/order-shipping";
 
 type Order = {
   id: string;
@@ -20,6 +21,7 @@ type Order = {
   fulfillmentType: string;
   trackingNumber: string | null;
   courierName: string | null;
+  sellerNotes?: string | null;
   createdAt: string;
   listing: { productName: string; strength: string | null; packSize?: number } | null;
   wantedOffer?: { wantedItem: { productName: string; strength: string | null } } | null;
@@ -38,6 +40,7 @@ export default function OrdersPageClient({ success }: Props) {
   const [sales, setSales] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"purchases" | "sales">("purchases");
+  const [shippingFilter, setShippingFilter] = useState<"all" | "platform" | "direct">("all");
 
   const loadOrders = useCallback(async () => {
     setLoading(true);
@@ -114,6 +117,12 @@ export default function OrdersPageClient({ success }: Props) {
   }, [success, clearCart, removeItems, loadOrders]);
 
   const orders = tab === "purchases" ? purchases : sales;
+  const visibleOrders = orders.filter((order) => {
+    if (shippingFilter === "all") return true;
+    const meta = parseOrderShippingMeta(order.sellerNotes ?? null);
+    const isDirect = meta.shippingArrangement === "direct_contact";
+    return shippingFilter === "direct" ? isDirect : !isDirect;
+  });
 
   return (
     <div className="p-4 md:p-6">
@@ -147,6 +156,41 @@ export default function OrdersPageClient({ success }: Props) {
           📦 Sales
         </button>
       </div>
+      <div className="mb-5 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setShippingFilter("all")}
+          className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
+            shippingFilter === "all"
+              ? "border-gold/60 bg-gold/15 text-gold"
+              : "border-white/20 text-white/70 hover:text-white/90"
+          }`}
+        >
+          All shipping
+        </button>
+        <button
+          type="button"
+          onClick={() => setShippingFilter("platform")}
+          className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
+            shippingFilter === "platform"
+              ? "border-gold/60 bg-gold/15 text-gold"
+              : "border-white/20 text-white/70 hover:text-white/90"
+          }`}
+        >
+          Platform shipping
+        </button>
+        <button
+          type="button"
+          onClick={() => setShippingFilter("direct")}
+          className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
+            shippingFilter === "direct"
+              ? "border-gold/60 bg-gold/15 text-gold"
+              : "border-white/20 text-white/70 hover:text-white/90"
+          }`}
+        >
+          Direct shipping
+        </button>
+      </div>
 
       {loading ? (
         <div className="space-y-4">
@@ -158,13 +202,17 @@ export default function OrdersPageClient({ success }: Props) {
             </div>
           ))}
         </div>
-      ) : orders.length === 0 ? (
+      ) : visibleOrders.length === 0 ? (
         <p className="text-white/70">
-          {tab === "purchases" ? "You haven't placed any orders yet." : "You have no sales yet."}
+          {shippingFilter === "all"
+            ? tab === "purchases"
+              ? "You haven't placed any orders yet."
+              : "You have no sales yet."
+            : "No orders match this shipping filter."}
         </p>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => (
+          {visibleOrders.map((order) => (
             <OrderCard
               key={order.id}
               order={order}

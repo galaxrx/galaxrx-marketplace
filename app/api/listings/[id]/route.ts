@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
+import { getPendingListingIdSet } from "@/lib/listing-pending";
 
 export async function GET(
   req: Request,
@@ -71,10 +72,14 @@ export async function GET(
     viewCount: isOwner ? listing.viewCount : listing.viewCount + 1,
   };
   if (isOwner) {
-    const acceptedCount = await prisma.listingNegotiation.count({
-      where: { listingId: id, ...activeAcceptedListingNegotiationWhere() },
-    });
-    (payload as Record<string, boolean>).isPending = acceptedCount > 0;
+    const pendingIds = await getPendingListingIdSet([
+      {
+        id,
+        quantityUnits: listing.quantityUnits,
+        reservedUnits: listing.reservedUnits,
+      },
+    ]);
+    (payload as Record<string, boolean>).isPending = pendingIds.has(id);
   }
   return NextResponse.json(payload);
 }

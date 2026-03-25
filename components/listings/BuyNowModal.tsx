@@ -251,6 +251,7 @@ function BuyNowModalInner({
   const [error, setError] = useState<string | null>(null);
   const [shipByDate, setShipByDate] = useState<string>("");
   const [shippingTier, setShippingTier] = useState<ShippingTier>("standard");
+  const [arrangeFreightDirectly, setArrangeFreightDirectly] = useState(false);
   const [useAustraliaPost, setUseAustraliaPost] = useState(false);
   /** Buyer delivery postcode — filled from account (seller → buyer lane). */
   const [buyerPostcode, setBuyerPostcode] = useState("");
@@ -268,7 +269,9 @@ function BuyNowModalInner({
     : primary.deliveryFee ?? 0;
   const { standard: standardFee, express: expressFee } = getShippingOptions(baseDeliveryFee);
   const deliveryFeeFromListing = shippingTier === "express" ? expressFee : standardFee;
-  const deliveryFeeExGst = useAustraliaPost
+  const deliveryFeeExGst = arrangeFreightDirectly
+    ? 0
+    : useAustraliaPost
     ? (selectedAusPostRate?.totalPrice ?? 0)
     : deliveryFeeFromListing;
 
@@ -502,6 +505,7 @@ function BuyNowModalInner({
               })),
               deliveryFee: deliveryFeeExGst,
               shippingTier,
+              arrangeFreightDirectly,
               useAustraliaPost: allowCustomDelivery && useAustraliaPost,
               selectedShippingOption:
                 allowCustomDelivery && useAustraliaPost && selectedAusPostRate
@@ -533,6 +537,7 @@ function BuyNowModalInner({
               quantity: rows[0].quantity,
               deliveryFee: deliveryFeeExGst,
               idempotencyKey,
+              arrangeFreightDirectly,
               selectedShippingOption:
                 allowCustomDelivery && useAustraliaPost && selectedAusPostRate
                   ? {
@@ -819,13 +824,29 @@ function BuyNowModalInner({
             <p className="text-sm font-medium text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5 mb-3">
               Shipping cost is paid by you (the buyer).
             </p>
-            <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              className="text-sm text-[#c9a84c] hover:underline mb-3 inline-block"
-            >
-              Use your own shipping
-            </a>
+            <label className="flex items-center gap-2 cursor-pointer mb-3 text-sm text-gray-800">
+              <input
+                type="checkbox"
+                checked={arrangeFreightDirectly}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setArrangeFreightDirectly(checked);
+                  if (checked) {
+                    setUseAustraliaPost(false);
+                    setSelectedAusPostRate(null);
+                    setAuspostRates([]);
+                    setAuspostError(null);
+                  }
+                }}
+                className="rounded text-[#c9a84c] focus:ring-[#c9a84c]"
+              />
+              Arrange freight directly with seller (outside platform)
+            </label>
+            {arrangeFreightDirectly && (
+              <p className="text-xs text-gray-600 mb-3">
+                Freight is not charged in checkout. Buyer and seller arrange shipment directly after payment.
+              </p>
+            )}
 
             {primary.fulfillmentType === "NATIONAL_SHIPPING" && !sellerPostcodeValid && (
               <div className="mb-4 p-3 rounded-lg border border-amber-300 bg-amber-50 text-amber-950 text-sm">
@@ -979,7 +1000,7 @@ function BuyNowModalInner({
               </div>
             )}
 
-            {!useAustraliaPost && (
+            {!arrangeFreightDirectly && !useAustraliaPost && (
               <>
                 <div className="space-y-2">
                   <label className="flex items-center gap-3 cursor-pointer">

@@ -44,8 +44,9 @@ export async function POST(req: Request) {
       );
     }
     const data = parsed.data;
-    const existing = await prisma.pharmacy.findUnique({
-      where: { email: data.email },
+    const emailLower = data.email.trim().toLowerCase();
+    const existing = await prisma.pharmacy.findFirst({
+      where: { email: { equals: emailLower, mode: "insensitive" } },
     });
     if (existing) {
       return NextResponse.json(
@@ -62,7 +63,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const emailLower = data.email.trim().toLowerCase();
     const verified = await prisma.emailVerification.findFirst({
       where: { email: emailLower, verifiedAt: { not: null } },
       orderBy: { verifiedAt: "desc" },
@@ -100,14 +100,14 @@ export async function POST(req: Request) {
         longitude: data.longitude ?? null,
         phone: data.phone,
         mobile: data.mobile ?? null,
-        email: data.email,
+        email: emailLower,
         passwordHash,
         verificationDocs: data.verificationDocs,
         isVerified: false, // Admin must approve before they can list or buy
         role: "PHARMACY",
       },
     });
-    await sendRegistrationReceived(data.email, data.name);
+    await sendRegistrationReceived(emailLower, data.name);
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error(e);

@@ -5,6 +5,7 @@ import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
+  debug: process.env.NODE_ENV === "development",
   pages: {
     signIn: "/login",
     error: "/login",
@@ -21,8 +22,9 @@ export const authOptions: NextAuthOptions = {
         const email = credentials.email.trim().toLowerCase();
         // Select only fields needed for login so auth works even if newer DB columns
         // (e.g. stripeChargesEnabled, stripePayoutsEnabled) are not yet migrated.
-        const pharmacy = await prisma.pharmacy.findUnique({
-          where: { email },
+        const pharmacies = await prisma.pharmacy.findMany({
+          where: { email: { equals: email, mode: "insensitive" } },
+          orderBy: { createdAt: "desc" },
           select: {
             id: true,
             email: true,
@@ -32,9 +34,31 @@ export const authOptions: NextAuthOptions = {
             role: true,
           },
         });
-        if (!pharmacy || !pharmacy.passwordHash) return null;
-        const valid = await compare(credentials.password, pharmacy.passwordHash);
-        if (!valid) return null;
+        let pharmacy = null as (typeof pharmacies)[number] | null;
+        for (const candidate of pharmacies) {
+          if (!candidate.passwordHash) continue;
+          const valid = await compare(credentials.password, candidate.passwordHash);
+          if (valid) {
+            pharmacy = candidate;
+            break;
+          }
+        }
+        if (!pharmacy) {
+          if (process.env.NODE_ENV === "development") {
+            console.warn("[Auth] Credentials rejected", {
+              reason: "no_matching_email_or_password",
+              email,
+              candidateCount: pharmacies.length,
+            });
+          }
+          return null;
+        }
+        if (process.env.NODE_ENV === "development") {
+          console.log("[Auth] Credentials accepted", {
+            email,
+            userId: pharmacy.id,
+          });
+        }
         return {
           id: pharmacy.id,
           email: pharmacy.email,

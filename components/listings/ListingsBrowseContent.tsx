@@ -9,7 +9,7 @@ import ClientOnly from "@/components/ClientOnly";
 import ListingsSearch from "@/components/listings/ListingsSearch";
 import ListingFilters from "@/components/listings/ListingFilters";
 import ListingsPagination from "@/components/listings/ListingsPagination";
-import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
+import { getPendingListingIdSet } from "@/lib/listing-pending";
 
 const PAGE_SIZE = 10;
 
@@ -122,15 +122,12 @@ export default async function ListingsBrowseContent({
   let totalPages: number;
   let paginationTotalCount: number;
 
-  const negotiationsInclude = {
-    negotiations: { where: activeAcceptedListingNegotiationWhere(), select: { id: true } },
-  };
   if (needsMemorySort) {
     let fullListings = await prisma.listing.findMany({
       where,
       orderBy: sortNearest ? { createdAt: "desc" } : orderBy,
       take: 2000,
-      include: { pharmacy: { select: pharmacySelect }, ...negotiationsInclude },
+      include: { pharmacy: { select: pharmacySelect } },
     });
     if (sort === "discount") {
       fullListings = fullListings.filter((l) => l.originalRRP != null).sort((a, b) => {
@@ -156,9 +153,16 @@ export default async function ListingsBrowseContent({
     totalPages = Math.max(1, Math.ceil(paginationTotalCount / PAGE_SIZE));
     const memPage = Math.max(1, Math.min(clampedPage, totalPages));
     const sliced = fullListings.slice((memPage - 1) * PAGE_SIZE, memPage * PAGE_SIZE);
-    listings = sliced.map(({ negotiations, ...l }) => ({
+    const pendingSet = await getPendingListingIdSet(
+      sliced.map((l) => ({
+        id: l.id,
+        quantityUnits: l.quantityUnits,
+        reservedUnits: l.reservedUnits,
+      }))
+    );
+    listings = sliced.map((l) => ({
       ...l,
-      isPending: negotiations.length > 0,
+      isPending: pendingSet.has(l.id),
       availableUnits: Math.max(0, l.quantityUnits - (l.reservedUnits ?? 0)),
     }));
   } else {
@@ -169,11 +173,18 @@ export default async function ListingsBrowseContent({
       orderBy,
       skip: (clampedPage - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
-      include: { pharmacy: { select: pharmacySelect }, ...negotiationsInclude },
+      include: { pharmacy: { select: pharmacySelect } },
     });
-    listings = raw.map(({ negotiations, ...l }) => ({
+    const pendingSet = await getPendingListingIdSet(
+      raw.map((l) => ({
+        id: l.id,
+        quantityUnits: l.quantityUnits,
+        reservedUnits: l.reservedUnits,
+      }))
+    );
+    listings = raw.map((l) => ({
       ...l,
-      isPending: negotiations.length > 0,
+      isPending: pendingSet.has(l.id),
       availableUnits: Math.max(0, l.quantityUnits - (l.reservedUnits ?? 0)),
     }));
   }

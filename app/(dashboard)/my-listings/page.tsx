@@ -7,8 +7,8 @@ import { format, differenceInDays } from "date-fns";
 import ListingRowActions from "@/components/my-listings/ListingRowActions";
 import ClearListingHoldsButton from "@/components/my-listings/ClearListingHoldsButton";
 import { reconcileListingReservedUnits } from "@/lib/listing-reservation";
-import { activeAcceptedListingNegotiationWhere } from "@/lib/listing-negotiation-hold";
 import { isPerUnitListing } from "@/lib/listing-price-display";
+import { getPendingListingIdSet } from "@/lib/listing-pending";
 
 export default async function MyListingsPage({
   searchParams,
@@ -23,13 +23,9 @@ export default async function MyListingsPage({
   const now = new Date();
   const ninetyDays = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
 
-  const includeNegotiations = {
-    negotiations: { where: activeAcceptedListingNegotiationWhere(), select: { id: true } },
-  };
   let all = await prisma.listing.findMany({
     where: { pharmacyId },
     orderBy: { createdAt: "desc" },
-    include: includeNegotiations,
   });
   const stuckIds = all.filter((l) => l.reservedUnits > 0).map((l) => l.id);
   if (stuckIds.length > 0) {
@@ -37,11 +33,17 @@ export default async function MyListingsPage({
     all = await prisma.listing.findMany({
       where: { pharmacyId },
       orderBy: { createdAt: "desc" },
-      include: includeNegotiations,
     });
   }
 
-  const listings = all.map(({ negotiations, ...l }) => ({ ...l, isPending: negotiations.length > 0 })).filter((l) => {
+  const pendingSet = await getPendingListingIdSet(
+    all.map((l) => ({
+      id: l.id,
+      quantityUnits: l.quantityUnits,
+      reservedUnits: l.reservedUnits,
+    }))
+  );
+  const listings = all.map((l) => ({ ...l, isPending: pendingSet.has(l.id) })).filter((l) => {
     const exp = new Date(l.expiryDate);
     const isExpired = exp < now;
     const isExpiringSoon = exp >= now && exp <= ninetyDays && l.isActive;

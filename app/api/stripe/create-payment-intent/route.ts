@@ -34,6 +34,7 @@ import {
   SELLER_STRIPE_ACCOUNT_INVALID_MESSAGE,
   stripeDestinationErrorResponse,
 } from "@/lib/stripe-account-errors";
+import type { TransdirectQuoteOption } from "@/lib/transdirect";
 
 const LISTING_RESERVATION_EXPIRY_MINUTES = CHECKOUT_RESERVATION_MINUTES;
 /** Align with reservation window so retries stay on the same PaymentIntent bucket. */
@@ -275,12 +276,14 @@ export async function POST(req: Request) {
   }
   try {
     const body = await req.json();
-    const { listingId, quantity, deliveryFee: deliveryFeeOverride, wantedOfferId } = body as {
+    const { listingId, quantity, deliveryFee: deliveryFeeOverride, wantedOfferId, selectedShippingOption, arrangeFreightDirectly } = body as {
       listingId?: string;
       quantity?: number;
       deliveryFee?: number;
       wantedOfferId?: string;
       idempotencyKey?: string;
+      selectedShippingOption?: Partial<TransdirectQuoteOption> & { provider?: string };
+      arrangeFreightDirectly?: boolean;
     };
     // Listing and wanted-offer flows both use server-derived idempotency keys (see deriveListingIdempotencyKey / deriveWantedOfferIdempotencyKey).
 
@@ -456,6 +459,12 @@ export async function POST(req: Request) {
             netToSeller: String(netToSeller),
             transferToSeller: String(destAmounts.transferToSellerCents / 100),
             taxClassification: taxResult.classification,
+            shippingProvider: selectedShippingOption?.provider === "transdirect" ? "transdirect" : "",
+            shippingArrangement: arrangeFreightDirectly ? "direct_contact" : "platform",
+            shippingServiceName: selectedShippingOption?.serviceName ?? "",
+            shippingCourierName: selectedShippingOption?.courierName ?? "",
+            shippingQuoteReference: selectedShippingOption?.quoteReference ?? "",
+            shippingTotalPrice: String(selectedShippingOption?.totalPrice ?? ""),
           },
         };
 
@@ -829,6 +838,12 @@ export async function POST(req: Request) {
           transferToSeller: String(destAmounts.transferToSellerCents / 100),
           reservedAt: new Date().toISOString(),
           taxClassification,
+          shippingProvider: selectedShippingOption?.provider === "transdirect" ? "transdirect" : "",
+          shippingArrangement: arrangeFreightDirectly ? "direct_contact" : "platform",
+          shippingServiceName: selectedShippingOption?.serviceName ?? "",
+          shippingCourierName: selectedShippingOption?.courierName ?? "",
+          shippingQuoteReference: selectedShippingOption?.quoteReference ?? "",
+          shippingTotalPrice: String(selectedShippingOption?.totalPrice ?? ""),
         },
       };
 

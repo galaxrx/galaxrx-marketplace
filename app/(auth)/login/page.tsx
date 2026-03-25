@@ -24,7 +24,11 @@ function LoginForm() {
     });
     setLoading(false);
     if (res?.error) {
-      setError("Invalid email or password.");
+      setError(
+        res.error === "CredentialsSignin"
+          ? "Invalid email or password."
+          : `Sign in failed (${res.error}).`
+      );
       return;
     }
     if (res?.ok && res.url) {

@@ -1,4 +1,5 @@
 export type StoredShippingMeta = {
+  shippingArrangement?: "platform" | "direct_contact";
   transdirect?: {
     provider?: "transdirect";
     shipmentState?:

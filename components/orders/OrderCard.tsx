@@ -6,6 +6,12 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { getDeliveryOption } from "@/lib/deliveryOptions";
 import { formatOrderQuantityLabel } from "@/lib/listing-units";
+import {
+  hasTransdirectBookedArtifacts,
+  normalizeTransdirectShipmentState,
+  parseOrderShippingMeta,
+  normalizeTransdirectTrackingStatus,
+} from "@/lib/order-shipping";
 
 const STATUS_STYLES: Record<string, string> = {
   PENDING: "bg-amber-500/20 text-amber-400",
@@ -38,6 +44,7 @@ type Order = {
   fulfillmentType: string;
   trackingNumber: string | null;
   courierName: string | null;
+  sellerNotes?: string | null;
   createdAt: string;
   listing: { productName: string; strength: string | null; packSize?: number } | null;
   wantedOffer?: { wantedItem: { productName: string; strength: string | null } } | null;
@@ -60,6 +67,8 @@ export default function OrderCard({ order, viewAs }: Props) {
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [trackingRefreshLoading, setTrackingRefreshLoading] = useState(false);
+  const [bookingApprovalLoading, setBookingApprovalLoading] = useState(false);
 
   const otherParty = viewAs === "buyer" ? order.seller : order.buyer;
   const threadId = order.listingId
@@ -70,6 +79,9 @@ export default function OrderCard({ order, viewAs }: Props) {
   const productName = order.listing?.productName ?? order.wantedOffer?.wantedItem?.productName ?? "Product";
   const productSub = order.listing?.strength ?? order.wantedOffer?.wantedItem?.strength;
   const statusStyle = STATUS_STYLES[order.status] ?? "bg-white/10 text-white/80";
+  const shippingMeta = parseOrderShippingMeta(order.sellerNotes ?? null);
+  const transdirectMeta = shippingMeta?.transdirect;
+  const isDirectShipmentArrangement = shippingMeta?.shippingArrangement === "direct_contact";
 
   async function saveTracking() {
     setSavingTracking(true);
@@ -154,12 +166,110 @@ export default function OrderCard({ order, viewAs }: Props) {
     }
   }
 
+  async function refreshTracking() {
+    setTrackingRefreshLoading(true);
+    try {
+      const res = await fetch(`/api/transdirect/tracking?orderId=${encodeURIComponent(order.id)}`, {
+        cache: "no-store",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(data.message ?? "Failed to refresh tracking");
+        setTrackingRefreshLoading(false);
+        return;
+      }
+      toast.success("Tracking refreshed.");
+      window.location.reload();
+    } catch {
+      toast.error("Failed to refresh tracking");
+    } finally {
+      setTrackingRefreshLoading(false);
+    }
+  }
+
+  async function approveAndBookCourier() {
+    setBookingApprovalLoading(true);
+    try {
+      const res = await fetch("/api/transdirect/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(data.message ?? "Failed to book shipment");
+        setBookingApprovalLoading(false);
+        return;
+      }
+      toast.success("Shipment approved and courier booking started.");
+      window.location.reload();
+    } catch {
+      toast.error("Failed to book shipment");
+    } finally {
+      setBookingApprovalLoading(false);
+    }
+  }
+
   const isSeller = viewAs === "seller";
   const buyerRatedSeller = order.reviews?.some((r) => r.reviewerId === order.buyer.id);
   const canEnterTracking = isSeller && order.status === "PAID";
   const canMarkDelivered = !isSeller && order.status === "SHIPPED";
   const canRateSeller =
     !isSeller && BUYER_CAN_RATE_STATUSES.has(order.status) && !buyerRatedSeller;
+  const normalizedShipmentState = normalizeTransdirectShipmentState(transdirectMeta);
+  const hasBookedArtifact = hasTransdirectBookedArtifacts(transdirectMeta);
+  const isBookedLikeState =
+    normalizedShipmentState === "booked" ||
+    normalizedShipmentState === "in_transit" ||
+    normalizedShipmentState === "delivered";
+  const isBookingInProgress = normalizedShipmentState === "booking_in_progress";
+  const needsSellerApprovalForBooking =
+    isSeller &&
+    order.status === "PAID" &&
+    Boolean(transdirectMeta) &&
+    normalizedShipmentState === "ready_to_book" &&
+    !isBookingInProgress &&
+    !isBookedLikeState &&
+    !hasBookedArtifact;
+  const shipDeadlineLabel = (() => {
+    const d = new Date(new Date(order.createdAt).getTime() + 3 * 24 * 60 * 60 * 1000);
+    return Number.isFinite(d.getTime()) ? d.toLocaleDateString("en-AU") : "";
+  })();
+  const pickupDateValue = transdirectMeta?.pickupDate
+    ? String(transdirectMeta.pickupDate).slice(0, 10)
+    : "";
+  const shipmentStateLabel = (() => {
+    switch (normalizedShipmentState) {
+      case "booking_in_progress":
+        return "booking in progress";
+      case "ready_to_book":
+        return "ready to book";
+      case "in_transit":
+        return "in transit";
+      case "out_for_delivery":
+        return "out for delivery";
+      case "delivered":
+        return "delivered";
+      case "cancelled":
+        return "cancelled";
+      case "returned":
+        return "returned";
+      case "exception":
+        return "delivery exception";
+      case "failed":
+        return "failed";
+      case "booked":
+        return "booked";
+      default:
+        return normalizedShipmentState ? normalizedShipmentState.replace(/_/g, " ") : "awaiting seller approval";
+    }
+  })();
+  const latestTrackingLabel = transdirectMeta?.lastTrackingStatusRaw
+    ? normalizeTransdirectTrackingStatus(transdirectMeta.lastTrackingStatusRaw).replace(/_/g, " ")
+    : transdirectMeta?.lastTrackingStatus
+      ? normalizeTransdirectTrackingStatus(transdirectMeta.lastTrackingStatus).replace(/_/g, " ")
+      : "";
+  const showAttentionState = normalizedShipmentState === "exception" || normalizedShipmentState === "returned" || normalizedShipmentState === "cancelled" || Boolean(transdirectMeta?.needsAttention);
 
   const inputClass = "bg-white/5 border border-[rgba(161,130,65,0.25)] rounded-lg px-3 py-2 text-sm text-white placeholder-white/40 focus:ring-2 focus:ring-gold flex-1 min-w-[10rem] max-w-xs";
 
@@ -185,6 +295,11 @@ export default function OrderCard({ order, viewAs }: Props) {
         {viewAs === "buyer" ? "Seller" : "Buyer"}: {otherParty.name}
         {otherParty.isVerified && " ✓"}
       </p>
+      {isDirectShipmentArrangement && (
+        <p className="text-xs text-amber-300">
+          Shipment arrangement: Buyer and seller will organise freight directly.
+        </p>
+      )}
       <p className="text-sm text-white/70">
         ${order.grossAmount.toFixed(2)} ex GST
         {(order.deliveryFee ?? 0) > 0 && ` · Delivery $${(order.deliveryFee ?? 0).toFixed(2)}`}
@@ -198,6 +313,61 @@ export default function OrderCard({ order, viewAs }: Props) {
       <p className="text-sm text-white/70">Delivery: {getDeliveryOption(order.fulfillmentType).label}</p>
       {order.trackingNumber && (
         <p className="text-sm text-white/80">Tracking: {order.trackingNumber} {order.courierName && `(${order.courierName})`}</p>
+      )}
+      {transdirectMeta && (
+        <p className={`text-sm ${showAttentionState ? "text-amber-300" : "text-white/70"}`}>
+          Shipment status: {shipmentStateLabel}
+        </p>
+      )}
+      {isSeller && order.status === "PAID" && transdirectMeta && (
+        <div className="border-t border-[rgba(161,130,65,0.2)] pt-3 space-y-2">
+          <p className="text-sm font-medium text-white/80">Shipping details</p>
+          <p className="text-xs text-white/60">
+            Must ship within 3 days. Deadline: <span className="text-white/75">{shipDeadlineLabel}</span>
+          </p>
+          <div className="flex flex-wrap gap-2 items-center">
+            <input
+              type="date"
+              value={pickupDateValue}
+              onChange={async (e) => {
+                const v = e.target.value;
+                if (!v) return;
+                const res = await fetch(`/api/orders/${order.id}/shipping`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    pickupDate: new Date(v).toISOString(),
+                    selectedCourierName: transdirectMeta.selectedCourierName,
+                    selectedServiceName: transdirectMeta.selectedServiceName,
+                  }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                  toast.error(data.message ?? "Failed to save shipping date");
+                  return;
+                }
+                toast.success("Shipping date saved. Buyer notified.");
+                window.location.reload();
+              }}
+              className={inputClass + " max-w-[12rem]"}
+            />
+            <span className="text-xs text-white/55">
+              Set pickup/shipping date before booking courier.
+            </span>
+          </div>
+        </div>
+      )}
+      {latestTrackingLabel && (
+        <p className={`text-sm ${showAttentionState ? "text-amber-300" : "text-white/70"}`}>
+          Latest tracking: {latestTrackingLabel}
+        </p>
+      )}
+      {isSeller && transdirectMeta?.labelUrl && (
+        <p className="text-sm">
+          <a href={`/api/orders/${order.id}/shipping-label`} target="_blank" rel="noreferrer" className="text-gold hover:underline">
+            Open shipping label
+          </a>
+        </p>
       )}
 
       {canEnterTracking && (
@@ -238,6 +408,26 @@ export default function OrderCard({ order, viewAs }: Props) {
           >
             Message {viewAs === "buyer" ? "Seller" : "Buyer"}
           </Link>
+        )}
+        {needsSellerApprovalForBooking && (
+          <button
+            type="button"
+            onClick={approveAndBookCourier}
+            disabled={bookingApprovalLoading || !transdirectMeta?.pickupDate}
+            className="text-sm bg-gradient-to-r from-gold-muted to-gold text-[#0D1B2A] px-3 py-1.5 rounded-lg font-bold hover:opacity-90 disabled:opacity-50"
+          >
+            {bookingApprovalLoading ? "Approving…" : "Approve & Book Courier"}
+          </button>
+        )}
+        {transdirectMeta && (
+          <button
+            type="button"
+            onClick={refreshTracking}
+            disabled={trackingRefreshLoading}
+            className="text-sm border border-[rgba(161,130,65,0.35)] text-white/85 px-3 py-1.5 rounded hover:bg-white/5 disabled:opacity-50"
+          >
+            {trackingRefreshLoading ? "Refreshing…" : "Refresh tracking"}
+          </button>
         )}
         {canMarkDelivered && (
           <button

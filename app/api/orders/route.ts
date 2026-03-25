@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { calculatePlatformFee, GST_RATE } from "@/lib/stripe";
 import { unitPriceExGstFromPackPrice } from "@/lib/listing-units";
 import { revalidateMarketplaceAfterPurchase } from "@/lib/revalidate-marketplace";
+import { mergeOrderShippingMeta, parseOrderShippingMeta } from "@/lib/order-shipping";
 
 const orderInclude = {
   listing: { select: { productName: true, strength: true, packSize: true } },
@@ -16,6 +17,20 @@ const orderInclude = {
 
 const ORDERS_ALL_CACHE_MS = 8_000;
 const ordersAllCache = new Map<string, { data: { purchases: unknown[]; sales: unknown[] }; until: number }>();
+
+function redactLabelForBuyer<T extends { sellerNotes?: string | null }>(order: T): T {
+  if (!order.sellerNotes) return order;
+  const meta = parseOrderShippingMeta(order.sellerNotes);
+  if (!meta.transdirect?.labelUrl) return order;
+  return {
+    ...order,
+    sellerNotes: mergeOrderShippingMeta(order.sellerNotes, {
+      transdirect: {
+        labelUrl: undefined,
+      },
+    }),
+  };
+}
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -44,7 +59,7 @@ export async function GET(req: Request) {
         include: orderInclude,
       }),
     ]);
-    const data = { purchases, sales };
+    const data = { purchases: purchases.map(redactLabelForBuyer), sales };
     ordersAllCache.set(pharmacyId, { data, until: now + ORDERS_ALL_CACHE_MS });
     return NextResponse.json(data);
   }
@@ -55,7 +70,7 @@ export async function GET(req: Request) {
     orderBy: { createdAt: "desc" },
     include: orderInclude,
   });
-  return NextResponse.json(orders);
+  return NextResponse.json(type === "purchases" ? orders.map(redactLabelForBuyer) : orders);
 }
 
 /**

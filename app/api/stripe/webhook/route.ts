@@ -8,6 +8,7 @@ import { releaseCartCheckoutReservations } from "@/lib/cart-checkout-reservation
 import {
   sendNewSale,
   sendPurchaseConfirmed,
+  sendDirectShipmentContactEmail,
   type InvoiceEmailSummary,
 } from "@/lib/resend";
 import { runOncePerPaymentIntentEmail } from "@/lib/purchase-email-dedup";
@@ -16,6 +17,7 @@ import { revalidateMarketplaceAfterPurchase } from "@/lib/revalidate-marketplace
 import { generateInvoicePDF } from "@/lib/invoice-pdf-server";
 import { syncPharmacyFromStripeAccount } from "@/lib/stripe-connect";
 import type { Prisma } from "@prisma/client";
+import { mergeOrderShippingMeta } from "@/lib/order-shipping";
 
 type BuyerNotifyRow = {
   email: string | null;
@@ -78,6 +80,147 @@ type ParsedPayment = {
   gstAmount: number;
   netAmount: number;
 };
+
+type ShippingSelectionMeta = {
+  provider?: string;
+  serviceName?: string;
+  courierName?: string;
+  quoteReference?: string;
+  totalPrice?: number;
+};
+
+function shippingSelectionFromPi(pi: Stripe.PaymentIntent): ShippingSelectionMeta | null {
+  const m = pi.metadata || {};
+  if (m.shippingProvider !== "transdirect") return null;
+  const totalPrice = Number(m.shippingTotalPrice ?? "");
+  return {
+    provider: "transdirect",
+    serviceName: m.shippingServiceName || undefined,
+    courierName: m.shippingCourierName || undefined,
+    quoteReference: m.shippingQuoteReference || undefined,
+    totalPrice: Number.isFinite(totalPrice) ? totalPrice : undefined,
+  };
+}
+
+async function persistShippingSelectionOnOrders(orderIds: string[], selection: ShippingSelectionMeta | null) {
+  if (!selection || selection.provider !== "transdirect" || orderIds.length === 0) return;
+  for (const orderId of orderIds) {
+    const current = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: { sellerNotes: true, courierName: true },
+    });
+    if (!current) continue;
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        courierName:
+          [selection.courierName, selection.serviceName].filter(Boolean).join(" - ") ||
+          current.courierName ||
+          "Transdirect",
+        sellerNotes: mergeOrderShippingMeta(current.sellerNotes, {
+          transdirect: {
+            provider: "transdirect",
+            selectedPrice: selection.totalPrice,
+            selectedServiceName: selection.serviceName,
+            selectedCourierName: selection.courierName,
+            quoteReference: selection.quoteReference,
+            bookingStatus: "awaiting_seller_approval",
+          },
+        }),
+      },
+    });
+  }
+}
+
+async function persistShippingArrangementOnOrders(
+  orderIds: string[],
+  arrangement: "platform" | "direct_contact"
+) {
+  if (orderIds.length === 0) return;
+  for (const orderId of orderIds) {
+    const current = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: { sellerNotes: true },
+    });
+    if (!current) continue;
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        sellerNotes: mergeOrderShippingMeta(current.sellerNotes, {
+          shippingArrangement: arrangement,
+        }),
+      },
+    });
+  }
+}
+
+async function sendDirectShipmentContactExchangeEmails(
+  paymentIntentId: string,
+  orderId: string,
+  productLabel: string
+) {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: {
+      buyer: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+          address: true,
+          suburb: true,
+          state: true,
+          postcode: true,
+        },
+      },
+      seller: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+          address: true,
+          suburb: true,
+          state: true,
+          postcode: true,
+        },
+      },
+    },
+  });
+  if (!order?.buyer?.email || !order?.seller?.email) return;
+
+  const orderRef = `GX-${order.id.slice(-5).toUpperCase()}`;
+  const buyerAddress = [order.buyer.address, order.buyer.suburb, order.buyer.state, order.buyer.postcode]
+    .filter(Boolean)
+    .join(", ");
+  const sellerAddress = [order.seller.address, order.seller.suburb, order.seller.state, order.seller.postcode]
+    .filter(Boolean)
+    .join(", ");
+
+  await runOncePerPaymentIntentEmail(paymentIntentId, "SELLER_DIRECT_SHIPPING_CONTACT", () =>
+    sendDirectShipmentContactEmail({
+      to: order.seller.email,
+      role: "seller",
+      orderRef,
+      productLabel,
+      counterpartyName: order.buyer.name ?? "Buyer",
+      counterpartyEmail: order.buyer.email,
+      counterpartyPhone: order.buyer.phone,
+      counterpartyAddress: buyerAddress || null,
+    })
+  );
+  await runOncePerPaymentIntentEmail(paymentIntentId, "BUYER_DIRECT_SHIPPING_CONTACT", () =>
+    sendDirectShipmentContactEmail({
+      to: order.buyer.email,
+      role: "buyer",
+      orderRef,
+      productLabel,
+      counterpartyName: order.seller.name ?? "Seller",
+      counterpartyEmail: order.seller.email,
+      counterpartyPhone: order.seller.phone,
+      counterpartyAddress: sellerAddress || null,
+    })
+  );
+}
 
 /** Result of successful listing payment processing (for post-commit notifications) */
 type ListingPaymentResult = {
@@ -790,6 +933,17 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
         failEvent("Cart checkout attempt not found or PaymentIntent mismatch");
       }
       if (!cartResult.alreadyProcessed) {
+        const arrangement =
+          metadata.shippingArrangement === "direct_contact" ? "direct_contact" : "platform";
+        await persistShippingArrangementOnOrders(
+          cartResult.orders.map((o) => o.id),
+          arrangement
+        );
+        const selection = shippingSelectionFromPi(pi);
+        await persistShippingSelectionOnOrders(
+          cartResult.orders.map((o) => o.id),
+          selection
+        );
         revalidateMarketplaceAfterPurchase();
         try {
           const buyerIdMeta = metadata.buyerId as string | undefined;
@@ -922,6 +1076,13 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
                     : "unknown",
               });
             }
+            if (metadata.shippingArrangement === "direct_contact") {
+              await sendDirectShipmentContactExchangeEmails(
+                piId,
+                cartResult.orders[0].id,
+                `${cartResult.orders.length} items`
+              );
+            }
           }
         } catch (e) {
           console.error("[GalaxRX] Post-commit notification failed (cart):", e);
@@ -980,6 +1141,11 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
       try {
         const result = await processSuccessfulListingPayment(event.id, piId, singleAttempt.listingId, parsed, listingChargeModel, singleAttempt.totalChargedCents);
         if (!result.alreadyProcessed) {
+          const arrangement =
+            metadata.shippingArrangement === "direct_contact" ? "direct_contact" : "platform";
+          await persistShippingArrangementOnOrders([result.order.id], arrangement);
+          const selection = shippingSelectionFromPi(pi);
+          await persistShippingSelectionOnOrders([result.order.id], selection);
           revalidateMarketplaceAfterPurchase();
           try {
             const orderIdShort = `GX-${result.order.id.slice(-5).toUpperCase()}`;
@@ -1054,6 +1220,13 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
                     : "unknown",
               });
             }
+            if (metadata.shippingArrangement === "direct_contact") {
+              await sendDirectShipmentContactExchangeEmails(
+                piId,
+                result.order.id,
+                result.productName
+              );
+            }
           } catch (e) {
             console.error("[GalaxRX] Post-commit notification failed (listing):", e);
           }
@@ -1082,6 +1255,11 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
             fromMeta.totalChargedCents
           );
           if (!result.alreadyProcessed) {
+            const arrangement =
+              metadata.shippingArrangement === "direct_contact" ? "direct_contact" : "platform";
+            await persistShippingArrangementOnOrders([result.order.id], arrangement);
+            const selection = shippingSelectionFromPi(pi);
+            await persistShippingSelectionOnOrders([result.order.id], selection);
             revalidateMarketplaceAfterPurchase();
             try {
               const orderIdShort = `GX-${result.order.id.slice(-5).toUpperCase()}`;
@@ -1159,6 +1337,13 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
                       : "unknown",
                 });
               }
+              if (metadata.shippingArrangement === "direct_contact") {
+                await sendDirectShipmentContactExchangeEmails(
+                  piId,
+                  result.order.id,
+                  result.productName
+                );
+              }
             } catch (e) {
               console.error("[GalaxRX] Post-commit failed (listing metadata path):", e);
             }
@@ -1186,6 +1371,11 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
       try {
         const result = await processSuccessfulWantedOfferPayment(event.id, piId, wantedOfferId, parsed, wantedOfferChargeModel, wantedOfferTotalChargedCents);
         if (!result.alreadyProcessed) {
+          const arrangement =
+            metadata.shippingArrangement === "direct_contact" ? "direct_contact" : "platform";
+          await persistShippingArrangementOnOrders([result.order.id], arrangement);
+          const selection = shippingSelectionFromPi(pi);
+          await persistShippingSelectionOnOrders([result.order.id], selection);
           revalidateMarketplaceAfterPurchase();
           try {
             const orderIdShort = `GX-${result.order.id.slice(-5).toUpperCase()}`;
@@ -1273,6 +1463,13 @@ export async function processStripeEventPayload(event: Stripe.Event): Promise<vo
                     ? "notify_purchase_disabled"
                     : "unknown",
               });
+            }
+            if (metadata.shippingArrangement === "direct_contact") {
+              await sendDirectShipmentContactExchangeEmails(
+                piId,
+                result.order.id,
+                result.productName
+              );
             }
           } catch (e) {
             console.error("[GalaxRX] Post-commit notification failed (wanted offer):", e);

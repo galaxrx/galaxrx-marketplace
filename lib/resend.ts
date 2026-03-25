@@ -338,6 +338,28 @@ export async function sendOrderShipped(email: string, orderId: string, trackingN
   );
 }
 
+export async function sendShippingScheduled(email: string, orderId: string, pickupDateIso: string) {
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au";
+  const dateLabel = (() => {
+    const d = new Date(pickupDateIso);
+    return Number.isFinite(d.getTime()) ? d.toLocaleDateString("en-AU") : pickupDateIso;
+  })();
+  return sendEmail(
+    email,
+    "Your delivery has been scheduled",
+    `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #1A6FC4;">GalaxRX</h2>
+      <p>Your order <strong>#${orderId}</strong> has been scheduled for dispatch.</p>
+      <p><strong>Estimated pickup/shipping date:</strong> ${escHtml(dateLabel)}</p>
+      <p>You will receive another update when the seller marks the order as shipped and tracking is available.</p>
+      <p><a href="${baseUrl}/orders" style="color: #1A6FC4;">View orders</a></p>
+      <p>— The GalaxRX team</p>
+    </div>
+    `
+  );
+}
+
 export async function sendOfferAccepted(
   email: string,
   acceptorName: string,
@@ -411,6 +433,40 @@ export async function sendPasswordReset(email: string, pharmacyName: string, res
       <p>You requested a password reset. Click the link below to set a new password (valid for 1 hour):</p>
       <p><a href="${resetUrl}" style="color: #1A6FC4;">Reset password</a></p>
       <p>If you didn't request this, you can ignore this email.</p>
+      <p>— The GalaxRX team</p>
+    </div>
+    `
+  );
+}
+
+export async function sendDirectShipmentContactEmail(input: {
+  to: string;
+  role: "buyer" | "seller";
+  orderRef: string;
+  productLabel: string;
+  counterpartyName: string;
+  counterpartyEmail: string;
+  counterpartyPhone?: string | null;
+  counterpartyAddress?: string | null;
+}) {
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au";
+  const roleLabel = input.role === "buyer" ? "seller" : "buyer";
+  return sendEmail(
+    input.to,
+    `Direct shipment details — ${input.orderRef}`,
+    `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #1A6FC4;">GalaxRX</h2>
+      <p>You chose to arrange shipment directly for <strong>${escHtml(input.productLabel)}</strong>.</p>
+      <p><strong>Order reference:</strong> ${escHtml(input.orderRef)}</p>
+      <p><strong>${escHtml(input.counterpartyName)}</strong> (${roleLabel}) contact details:</p>
+      <p>
+        Email: ${escHtml(input.counterpartyEmail)}<br/>
+        Phone: ${escHtml(input.counterpartyPhone?.trim() || "Not provided")}<br/>
+        Address: ${escHtml(input.counterpartyAddress?.trim() || "Not provided")}
+      </p>
+      <p>Please contact each other directly to arrange shipment.</p>
+      <p><a href="${baseUrl}/orders" style="color: #1A6FC4;">View orders</a></p>
       <p>— The GalaxRX team</p>
     </div>
     `

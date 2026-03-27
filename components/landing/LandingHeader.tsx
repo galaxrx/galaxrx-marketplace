@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 const NAV_LINKS = [
-  { href: "#what-we-do", label: "What we do" },
+  { href: "#how-it-works", label: "How it works" },
   { href: "/solutions", label: "Solutions" },
   { href: "/why-galaxrx", label: "Why GalaxRX" },
   { href: "/about", label: "About" },
@@ -32,7 +32,7 @@ export default function LandingHeader() {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3 sm:py-4 border-b border-[rgba(161,130,65,0.15)] bg-[#0D1B2A]/90 backdrop-blur-md">
+    <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3.5 sm:py-4 border-b border-white/[0.08] bg-[#0D1B2A]/92 backdrop-blur-xl shadow-[0_8px_32px_-20px_rgba(0,0,0,0.45)]">
       <Link href="/" className="flex items-center gap-2 sm:gap-3 min-h-[3rem] min-w-0">
         <div className="relative h-9 w-24 sm:h-10 sm:w-28 md:h-14 md:w-36 shrink-0">
           <Image

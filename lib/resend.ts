@@ -4,7 +4,8 @@ import { PLATFORM } from "@/lib/platform";
 const resendApiKey = process.env.RESEND_API_KEY;
 export const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "GalaxRX <onboarding@resend.dev>";
+/** Verified in Resend; use RESEND_FROM_EMAIL=GalaxRX <onboarding@resend.dev> locally if domain not verified yet. */
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "GalaxRX <noreply@galaxrx.com.au>";
 
 export type SendEmailOptions = {
   replyTo?: string;
@@ -20,12 +21,16 @@ export async function sendEmail(
     console.warn("Resend not configured; email not sent:", { to, subject });
     return { success: false, error: { message: "RESEND_API_KEY not set" } };
   }
+  const replyTo =
+    options?.replyTo != null && String(options.replyTo).trim() !== ""
+      ? options.replyTo
+      : PLATFORM.supportEmail;
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
     to: [to],
     subject,
     html,
-    ...(options?.replyTo ? { replyTo: options.replyTo } : {}),
+    replyTo,
   });
   if (error) {
     console.error("Resend error:", error);
@@ -42,14 +47,19 @@ function escHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Public website enquiry form → team inbox (default PLATFORM.email). Reply-To = submitter. */
+function transactionalEmailFooter(): string {
+  const s = escHtml(PLATFORM.supportEmail);
+  return `<p style="margin:20px 0 0;font-size:12px;color:#64748b;">Questions? Contact us at <a href="mailto:${s}" style="color:#1A6FC4;">${s}</a>.</p><p style="margin:8px 0 0;">— The GalaxRX team</p>`;
+}
+
+/** Public website enquiry form → support inbox (default). Reply-To = submitter. */
 export async function sendPublicEnquiryEmail(input: {
   fromName: string;
   fromEmail: string;
   topic: "general" | "advertising";
   message: string;
 }) {
-  const inbox = process.env.CONTACT_ENQUIRY_TO?.trim() || PLATFORM.email;
+  const inbox = process.env.CONTACT_ENQUIRY_TO?.trim() || PLATFORM.supportEmail;
   const topicLabel = input.topic === "advertising" ? "Advertising" : "General enquiry";
   const subject = `[GalaxRX] ${topicLabel} — ${input.fromName}`.slice(0, 998);
   const html = `
@@ -77,8 +87,7 @@ export async function sendRegistrationReceived(email: string, pharmacyName: stri
       <h2 style="color: #1A6FC4;">GalaxRX</h2>
       <p>Hi ${pharmacyName},</p>
       <p>We've received your pharmacy registration. We verify accounts within 24 hours. You'll receive an email when approved.</p>
-      <p>If you have questions, contact ${PLATFORM.email}</p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -94,7 +103,7 @@ export async function sendVerificationApproved(email: string, pharmacyName: stri
       <p>Hi ${pharmacyName},</p>
       <p><strong>Welcome to GalaxRX.</strong> Your pharmacy has been verified. You can now list stock and buy from other verified pharmacies.</p>
       <p><a href="${process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au"}/dashboard" style="color: #1A6FC4;">Go to Dashboard</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -110,8 +119,7 @@ export async function sendVerificationRejected(email: string, pharmacyName: stri
       <p>Hi ${pharmacyName},</p>
       <p>Unfortunately we couldn't approve your application at this time.</p>
       <p><strong>Reason:</strong> ${reason}</p>
-      <p>Please contact ${PLATFORM.email} if you have questions or wish to reapply.</p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -126,7 +134,7 @@ export async function sendListingPublished(email: string, productName: string) {
       <h2 style="color: #1A6FC4;">GalaxRX</h2>
       <p>Your listing &quot;${productName}&quot; is now visible to verified pharmacies.</p>
       <p><a href="${process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au"}/my-listings" style="color: #1A6FC4;">View my listings</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -211,7 +219,7 @@ export async function sendNewSale(
           : ""
       }
       <p><a href="${baseUrl}/orders" style="color: #1A6FC4;">View orders</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
   `;
   if (!resend) {
@@ -232,6 +240,7 @@ export async function sendNewSale(
     to: [email],
     subject,
     html,
+    replyTo: PLATFORM.supportEmail,
     attachments,
   });
   if (error) {
@@ -277,7 +286,7 @@ export async function sendPurchaseConfirmed(
           : "<p>You can view order details in My Orders.</p>"
       }
       <p><a href="${baseUrl}/orders" style="color: #1A6FC4;">View orders</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
   `;
   if (!resend) {
@@ -298,6 +307,7 @@ export async function sendPurchaseConfirmed(
     to: [email],
     subject,
     html,
+    replyTo: PLATFORM.supportEmail,
     attachments,
   });
   if (error) {
@@ -316,7 +326,7 @@ export async function sendNewMessage(email: string, senderName: string) {
       <h2 style="color: #1A6FC4;">GalaxRX</h2>
       <p>You have a new message from ${senderName}.</p>
       <p><a href="${process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au"}/messages" style="color: #1A6FC4;">View messages</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -332,7 +342,7 @@ export async function sendOrderShipped(email: string, orderId: string, trackingN
       <p>Your order #${orderId} has been shipped.</p>
       <p><strong>Tracking:</strong> ${trackingNumber}</p>
       <p><a href="${process.env.NEXTAUTH_URL ?? "https://galaxrx.com.au"}/orders" style="color: #1A6FC4;">View orders</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -354,7 +364,7 @@ export async function sendShippingScheduled(email: string, orderId: string, pick
       <p><strong>Estimated pickup/shipping date:</strong> ${escHtml(dateLabel)}</p>
       <p>You will receive another update when the seller marks the order as shipped and tracking is available.</p>
       <p><a href="${baseUrl}/orders" style="color: #1A6FC4;">View orders</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -377,7 +387,7 @@ export async function sendOfferAccepted(
       <p><strong>Product:</strong> ${productName}<br><strong>Agreed:</strong> ${priceSummary}</p>
       <p>They can now proceed to pay at this price. You’ll see the order in My Orders once payment is complete.</p>
       <p><a href="${offersPageUrl}" style="color: #1A6FC4;">View Wanted items</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -399,7 +409,7 @@ export async function sendWantedMatch(
       <p>Good news — an item you wanted is now available.</p>
       <p><strong>${productName}</strong> has been listed by ${listerName}.</p>
       <p><a href="${listingUrl}" style="color: #1A6FC4;">View listing</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -416,7 +426,7 @@ export async function sendEmailVerificationCode(email: string, code: string) {
       <p>Your verification code is:</p>
       <p style="font-size: 28px; font-weight: bold; letter-spacing: 4px; color: #1A6FC4;">${code}</p>
       <p>This code expires in 15 minutes. If you didn't request this, you can ignore this email.</p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -433,7 +443,7 @@ export async function sendPasswordReset(email: string, pharmacyName: string, res
       <p>You requested a password reset. Click the link below to set a new password (valid for 1 hour):</p>
       <p><a href="${resetUrl}" style="color: #1A6FC4;">Reset password</a></p>
       <p>If you didn't request this, you can ignore this email.</p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );
@@ -467,7 +477,7 @@ export async function sendDirectShipmentContactEmail(input: {
       </p>
       <p>Please contact each other directly to arrange shipment.</p>
       <p><a href="${baseUrl}/orders" style="color: #1A6FC4;">View orders</a></p>
-      <p>— The GalaxRX team</p>
+      ${transactionalEmailFooter()}
     </div>
     `
   );

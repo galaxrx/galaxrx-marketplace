@@ -742,7 +742,7 @@ export default function HomePage() {
                     </a>
                   ) : (
                     <a
-                      href={`mailto:${PLATFORM.email}?subject=${encodeURIComponent("Phone enquiry — GalaxRX")}`}
+                      href={`mailto:${PLATFORM.supportEmail}?subject=${encodeURIComponent("Phone enquiry — GalaxRX")}`}
                       className="inline-flex h-10 items-center gap-2 rounded-xl border border-white/[0.08] px-3 text-sm text-white/55 transition-colors hover:border-gold/30 hover:text-gold"
                       aria-label="Request phone number by email"
                     >
@@ -760,12 +760,12 @@ export default function HomePage() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gold/90">Enquiry</p>
               <p className="mb-6 text-sm leading-relaxed text-white/60">
                 For general enquiries and advertising, contact us at{" "}
-                <a href={`mailto:${PLATFORM.email}`} className="text-gold hover:text-gold/90 hover:underline">
-                  {PLATFORM.email}
+                <a href={`mailto:${PLATFORM.supportEmail}`} className="text-gold hover:text-gold/90 hover:underline">
+                  {PLATFORM.supportEmail}
                 </a>
                 , or use the form below — we&apos;ll email you back.
               </p>
-              <FooterEnquiryForm contactEmail={PLATFORM.email} />
+              <FooterEnquiryForm contactEmail={PLATFORM.supportEmail} />
             </div>
 
             <div className="flex flex-wrap gap-12 text-sm lg:col-span-4 lg:justify-end">

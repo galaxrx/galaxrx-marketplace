@@ -22,8 +22,8 @@ export default async function PendingPage() {
         </p>
         <p className="mt-2 text-sm text-white/60">
           Questions?{" "}
-          <a href={`mailto:${PLATFORM.email}`} className="text-gold hover:underline">
-            {PLATFORM.email}
+          <a href={`mailto:${PLATFORM.supportEmail}`} className="text-gold hover:underline">
+            {PLATFORM.supportEmail}
           </a>
         </p>
         <form action="/api/auth/signout" method="POST" className="mt-8">

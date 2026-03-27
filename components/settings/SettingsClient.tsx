@@ -239,7 +239,7 @@ export default function SettingsClient({ pharmacy }: Props) {
             <strong className="text-white">Street address:</strong> {[pharmacy.address, pharmacy.suburb, pharmacy.state].filter(Boolean).join(", ")}
           </p>
           <p className="text-xs text-white/60 italic mb-3">
-            To update pharmacy name, ABN or full street address, email {PLATFORM.email}
+            To update pharmacy name, ABN or full street address, email {PLATFORM.supportEmail}
           </p>
           <div>
             <label className="block text-sm font-medium text-white/80 mb-1">

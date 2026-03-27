@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { resend } from "@/lib/resend";
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "GalaxRX <onboarding@resend.dev>";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "GalaxRX <noreply@galaxrx.com.au>";
 
 /**
  * GET /api/admin/check-email

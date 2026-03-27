@@ -49,7 +49,8 @@ export default function EmailConfigCheck() {
           </p>
           {result.configured && result.fromEmail && (
             <p className="text-xs text-white/50">
-              Sending from: {result.fromEmail}. If approval emails still fail, Resend may be rejecting this address — remove RESEND_FROM_EMAIL from .env to use onboarding@resend.dev until your domain is verified.
+              Sending from: {result.fromEmail}. If sends fail before the domain is verified in Resend, set{" "}
+              <code className="text-xs bg-white/10 px-1 rounded">RESEND_FROM_EMAIL=GalaxRX &lt;onboarding@resend.dev&gt;</code> locally until DNS verification completes.
             </p>
           )}
         </div>

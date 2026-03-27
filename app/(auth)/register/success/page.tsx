@@ -11,8 +11,8 @@ export default function RegisterSuccessPage() {
         </p>
         <p className="mt-2 text-sm text-white/60">
           Questions?{" "}
-          <a href={`mailto:${PLATFORM.email}`} className="text-gold hover:underline">
-            {PLATFORM.email}
+          <a href={`mailto:${PLATFORM.supportEmail}`} className="text-gold hover:underline">
+            {PLATFORM.supportEmail}
           </a>
         </p>
         <Link

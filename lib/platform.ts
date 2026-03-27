@@ -9,6 +9,8 @@ export const PLATFORM = {
   /** Display / contact number; override via NEXT_PUBLIC_PLATFORM_PHONE. E.164 +61402098652. */
   phone: process.env.NEXT_PUBLIC_PLATFORM_PHONE ?? "+61 402 098 652",
   email: process.env.NEXT_PUBLIC_PLATFORM_EMAIL ?? "team@galaxrx.com.au",
+  /** Support / operational contact (transactional Reply-To, invoices, seller help). */
+  supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "support@galaxrx.com.au",
   website: process.env.NEXT_PUBLIC_PLATFORM_WEBSITE ?? "www.galaxrx.com.au",
   /** @galaxrx on Instagram */
   instagramUrl:

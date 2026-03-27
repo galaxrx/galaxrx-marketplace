@@ -305,7 +305,7 @@ export default function ListingDetailView({
         <p className="mt-8 text-center text-sm text-white/60">
           See something wrong?{" "}
           <a
-            href={`mailto:${PLATFORM.email}?subject=Report listing ${id}`}
+            href={`mailto:${PLATFORM.supportEmail}?subject=Report listing ${id}`}
             className="text-gold hover:underline"
           >
             Report this listing

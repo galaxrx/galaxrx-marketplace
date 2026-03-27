@@ -321,7 +321,7 @@ export default async function AccountPage() {
         <p className="text-white/60 text-sm">
           {PLATFORM.legalName}
           {PLATFORM.address && ` · ${PLATFORM.address}`}
-          {PLATFORM.email && ` · ${PLATFORM.email}`}
+          {PLATFORM.supportEmail && ` · ${PLATFORM.supportEmail}`}
           {PLATFORM.website && ` · ${PLATFORM.website}`}
         </p>
       </section>

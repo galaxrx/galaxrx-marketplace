@@ -216,7 +216,7 @@ export async function generateInvoicePDF(order: OrderForInvoice): Promise<Buffer
       "GalaxRX facilitates this sale. The seller named above supplied the goods. GST shown per Australian marketplace rules.",
       { continued: false }
     );
-    doc.text(`${PLATFORM.email} · ${PLATFORM.website}`, { continued: false });
+    doc.text(`${PLATFORM.supportEmail} · ${PLATFORM.website}`, { continued: false });
 
     doc.end();
   });

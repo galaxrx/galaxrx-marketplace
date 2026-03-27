@@ -453,10 +453,6 @@ export default function HomePage() {
                   without the noise.
                 </span>
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 lg:mx-0">
-                One place to list clearance, discover verified stock, and close with confidence — so your team spends
-                less time chasing buyers and more time on patient care.
-              </p>
               <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center lg:justify-start">
                 <Link
                   href="/register"

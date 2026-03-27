@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { PLATFORM } from "@/lib/platform";
 
 export default async function PendingPage() {
   const session = await getServerSession(authOptions);
@@ -21,8 +22,8 @@ export default async function PendingPage() {
         </p>
         <p className="mt-2 text-sm text-white/60">
           Questions?{" "}
-          <a href="mailto:galaxrx.team@gmail.com" className="text-gold hover:underline">
-            galaxrx.team@gmail.com
+          <a href={`mailto:${PLATFORM.email}`} className="text-gold hover:underline">
+            {PLATFORM.email}
           </a>
         </p>
         <form action="/api/auth/signout" method="POST" className="mt-8">

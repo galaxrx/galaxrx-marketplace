@@ -11,7 +11,7 @@ async function main() {
   const email = process.argv[2]?.trim()?.toLowerCase();
   if (!email) {
     console.error("Usage: npx ts-node -P tsconfig.scripts.json scripts/delete-pharmacy.ts <email>");
-    console.error("Example: npm run db:delete-pharmacy -- galaxrx.team@gmail.com");
+    console.error("Example: npm run db:delete-pharmacy -- team@galaxrx.com.au");
     process.exit(1);
   }
 

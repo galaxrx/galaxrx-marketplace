@@ -8,7 +8,7 @@ export const PLATFORM = {
   address: process.env.NEXT_PUBLIC_PLATFORM_ADDRESS ?? "Sydney NSW",
   /** Display / contact number; override via NEXT_PUBLIC_PLATFORM_PHONE. E.164 +61402098652. */
   phone: process.env.NEXT_PUBLIC_PLATFORM_PHONE ?? "+61 402 098 652",
-  email: process.env.NEXT_PUBLIC_PLATFORM_EMAIL ?? "galaxrx.team@gmail.com",
+  email: process.env.NEXT_PUBLIC_PLATFORM_EMAIL ?? "team@galaxrx.com.au",
   website: process.env.NEXT_PUBLIC_PLATFORM_WEBSITE ?? "www.galaxrx.com.au",
   /** @galaxrx on Instagram */
   instagramUrl:

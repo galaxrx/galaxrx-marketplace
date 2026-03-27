@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import LogoUpload from "./LogoUpload";
 import SellerPayoutTimingNotice from "@/components/account/SellerPayoutTimingNotice";
+import { PLATFORM } from "@/lib/platform";
 
 type Pharmacy = {
   name: string;
@@ -238,7 +239,7 @@ export default function SettingsClient({ pharmacy }: Props) {
             <strong className="text-white">Street address:</strong> {[pharmacy.address, pharmacy.suburb, pharmacy.state].filter(Boolean).join(", ")}
           </p>
           <p className="text-xs text-white/60 italic mb-3">
-            To update pharmacy name, ABN or full street address, email galaxrx.team@gmail.com
+            To update pharmacy name, ABN or full street address, email {PLATFORM.email}
           </p>
           <div>
             <label className="block text-sm font-medium text-white/80 mb-1">

@@ -3,6 +3,7 @@
  * Includes product image (when URL returns JPEG/PNG), qty, unit price, totals, parties.
  */
 import PDFDocument from "pdfkit";
+import { PLATFORM } from "@/lib/platform";
 
 export type OrderForInvoice = {
   id: string;
@@ -215,7 +216,7 @@ export async function generateInvoicePDF(order: OrderForInvoice): Promise<Buffer
       "GalaxRX facilitates this sale. The seller named above supplied the goods. GST shown per Australian marketplace rules.",
       { continued: false }
     );
-    doc.text("galaxrx.team@gmail.com · galaxrx.com.au", { continued: false });
+    doc.text(`${PLATFORM.email} · ${PLATFORM.website}`, { continued: false });
 
     doc.end();
   });

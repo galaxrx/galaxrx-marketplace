@@ -77,7 +77,7 @@ export async function sendRegistrationReceived(email: string, pharmacyName: stri
       <h2 style="color: #1A6FC4;">GalaxRX</h2>
       <p>Hi ${pharmacyName},</p>
       <p>We've received your pharmacy registration. We verify accounts within 24 hours. You'll receive an email when approved.</p>
-      <p>If you have questions, contact galaxrx.team@gmail.com</p>
+      <p>If you have questions, contact ${PLATFORM.email}</p>
       <p>— The GalaxRX team</p>
     </div>
     `
@@ -110,7 +110,7 @@ export async function sendVerificationRejected(email: string, pharmacyName: stri
       <p>Hi ${pharmacyName},</p>
       <p>Unfortunately we couldn't approve your application at this time.</p>
       <p><strong>Reason:</strong> ${reason}</p>
-      <p>Please contact galaxrx.team@gmail.com if you have questions or wish to reapply.</p>
+      <p>Please contact ${PLATFORM.email} if you have questions or wish to reapply.</p>
       <p>— The GalaxRX team</p>
     </div>
     `

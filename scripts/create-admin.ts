@@ -17,7 +17,7 @@ async function main() {
 
   if (!email || !password) {
     console.error("Usage: npx ts-node -P tsconfig.scripts.json scripts/create-admin.ts <email> <password>");
-    console.error("Example: npm run db:create-admin -- galaxrx.team@gmail.com MySecurePass123");
+    console.error("Example: npm run db:create-admin -- team@galaxrx.com.au MySecurePass123");
     process.exit(1);
   }
 

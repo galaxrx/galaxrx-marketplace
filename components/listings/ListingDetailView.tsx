@@ -13,6 +13,7 @@ import {
   listingBuyerAvailabilityLine,
   listingPrimaryPriceExGstLabel,
 } from "@/lib/listing-price-display";
+import { PLATFORM } from "@/lib/platform";
 
 function ExpiryBadge({ date }: { date: Date }) {
   const days = differenceInDays(date, new Date());
@@ -304,7 +305,7 @@ export default function ListingDetailView({
         <p className="mt-8 text-center text-sm text-white/60">
           See something wrong?{" "}
           <a
-            href={`mailto:galaxrx.team@gmail.com?subject=Report listing ${id}`}
+            href={`mailto:${PLATFORM.email}?subject=Report listing ${id}`}
             className="text-gold hover:underline"
           >
             Report this listing

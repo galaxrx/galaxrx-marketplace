@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PLATFORM } from "@/lib/platform";
 
 export default function RegisterSuccessPage() {
   return (
@@ -10,8 +11,8 @@ export default function RegisterSuccessPage() {
         </p>
         <p className="mt-2 text-sm text-white/60">
           Questions?{" "}
-          <a href="mailto:galaxrx.team@gmail.com" className="text-gold hover:underline">
-            galaxrx.team@gmail.com
+          <a href={`mailto:${PLATFORM.email}`} className="text-gold hover:underline">
+            {PLATFORM.email}
           </a>
         </p>
         <Link

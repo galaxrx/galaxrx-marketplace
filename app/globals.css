@@ -221,7 +221,7 @@ details > p {
   }
 }
 
-/* App-only theme (dashboard): dark (unchanged) vs light white + magenta */
+/* App-only theme (dashboard): dark (unchanged) vs light white + brand accent */
 .app-theme {
   --app-bg: #0D1B2A;
   --app-nav-bg: #0d1b2a;
@@ -239,13 +239,13 @@ details > p {
   --app-bg: #ffffff;
   --app-nav-bg: #ffffff;
   --app-nav-text: #171717;
-  --app-nav-hover: rgba(192, 38, 211, 0.08);
-  --app-nav-hover-text: #a21caf;
+  --app-nav-hover: rgba(0, 97, 95, 0.08);
+  --app-nav-hover-text: #00615f;
   --app-header-bg: #ffffff;
   --app-header-border: #e5e7eb;
   --app-text: #171717;
   --app-text-muted: #525252;
-  --app-primary: #c026d3;
+  --app-primary: #00615f;
   --app-border: #e5e7eb;
 }
 .app-theme .app-theme-inner {
@@ -269,22 +269,22 @@ details > p {
   color: var(--app-nav-hover-text) !important;
 }
 .app-theme.app-light .app-nav .bg-gold\/15 {
-  background-color: rgba(192, 38, 211, 0.1) !important;
+  background-color: rgba(0, 97, 95, 0.1) !important;
 }
 .app-theme.app-light .app-nav .bg-gold\/20 {
-  background-color: rgba(192, 38, 211, 0.12) !important;
+  background-color: rgba(0, 97, 95, 0.12) !important;
 }
 .app-theme.app-light .app-nav .shadow-gold,
 .app-theme.app-light .app-nav .shadow-gold\/80 {
-  --tw-shadow-color: #c026d3 !important;
-  box-shadow: inset 3px 0 0 0 #c026d3 !important;
+  --tw-shadow-color: #00615f !important;
+  box-shadow: inset 3px 0 0 0 #00615f !important;
 }
 .app-theme.app-light .app-nav .text-gold {
   color: var(--app-primary) !important;
 }
 .app-theme.app-light .app-nav .bg-white\/10,
 .app-theme.app-light .app-nav .bg-white\/5 {
-  background-color: rgba(192, 38, 211, 0.06) !important;
+  background-color: rgba(0, 97, 95, 0.06) !important;
 }
 .app-theme.app-light .app-nav .text-white\/35,
 .app-theme.app-light .app-nav .text-white\/40 {
@@ -346,7 +346,7 @@ details > p {
 .app-theme.app-light main .bg-gold\/20,
 .app-theme.app-light main .bg-gold\/25,
 .app-theme.app-light main .bg-gold\/30 {
-  background-color: rgba(192, 38, 211, 0.08) !important;
+  background-color: rgba(0, 97, 95, 0.08) !important;
   color: var(--app-text) !important;
 }
 .app-theme.app-light main .border-gold\/50,
@@ -355,15 +355,15 @@ details > p {
 .app-theme.app-light main .border-gold\/25,
 .app-theme.app-light main .border-gold\/15,
 .app-theme.app-light main .border-\[rgba\(161\,130\,65\] {
-  border-color: rgba(192, 38, 211, 0.35) !important;
+  border-color: rgba(0, 97, 95, 0.35) !important;
 }
 .app-theme.app-light main [class*="border-[rgba(161,130,65"] {
-  border-color: rgba(192, 38, 211, 0.22) !important;
+  border-color: rgba(0, 97, 95, 0.22) !important;
 }
 .app-theme.app-light .app-mobile-nav {
   background-color: #ffffff !important;
   border-color: var(--app-border) !important;
-  box-shadow: 0 -1px 0 rgba(192, 38, 211, 0.12);
+  box-shadow: 0 -1px 0 rgba(0, 97, 95, 0.12);
 }
 .app-theme.app-light .app-mobile-nav [class*="text-white"],
 .app-theme.app-light .app-mobile-nav .text-gold {
@@ -409,25 +409,25 @@ details > p {
 }
 .app-theme.app-light main .hover\:bg-gold\/90:hover,
 .app-theme.app-light main .hover\:bg-gold\/92:hover {
-  background-color: #a21caf !important;
+  background-color: #00514f !important;
 }
 .app-theme.app-light main .text-success,
 .app-theme.app-light main .text-success\/90 {
-  color: #86198f !important;
+  color: #00615f !important;
 }
 .app-theme.app-light main .bg-emerald-500\/10,
 .app-theme.app-light main .bg-emerald-500\/20,
 .app-theme.app-light main .border-emerald-500\/30,
 .app-theme.app-light main .border-emerald-500\/35 {
-  background-color: rgba(192, 38, 211, 0.06) !important;
-  border-color: rgba(192, 38, 211, 0.28) !important;
+  background-color: rgba(0, 97, 95, 0.06) !important;
+  border-color: rgba(0, 97, 95, 0.28) !important;
 }
 .app-theme.app-light main .text-emerald-100,
 .app-theme.app-light main .text-emerald-200,
 .app-theme.app-light main .text-emerald-300,
 .app-theme.app-light main .text-emerald-400,
 .app-theme.app-light main .text-emerald-50 {
-  color: #86198f !important;
+  color: #00615f !important;
 }
 .app-theme.app-light main .bg-amber-500\/10,
 .app-theme.app-light main .bg-amber-500\/15,
@@ -436,8 +436,8 @@ details > p {
 .app-theme.app-light main .border-amber-500\/40,
 .app-theme.app-light main .border-warning\/30,
 .app-theme.app-light main .border-warning\/40 {
-  background-color: rgba(192, 38, 211, 0.06) !important;
-  border-color: rgba(192, 38, 211, 0.28) !important;
+  background-color: rgba(0, 97, 95, 0.06) !important;
+  border-color: rgba(0, 97, 95, 0.28) !important;
 }
 .app-theme.app-light main .text-amber-50,
 .app-theme.app-light main .text-amber-100,
@@ -445,14 +445,14 @@ details > p {
 .app-theme.app-light main .text-amber-400,
 .app-theme.app-light main .text-warning,
 .app-theme.app-light main .text-warning\/90 {
-  color: #4a044e !important;
+  color: #00615f !important;
 }
 .app-theme.app-light main .bg-white\/5.rounded-lg,
 .app-theme.app-light main dl.bg-white\/5 {
   background-color: #fafafa !important;
 }
 
-/* Filters panel: white + magenta accents in light mode */
+/* Filters panel: white + brand accent in light mode */
 .app-theme.app-light .listing-filters-panel {
   background-color: #ffffff !important;
   border-color: #e5e7eb !important;
@@ -471,14 +471,14 @@ details > p {
 }
 .app-theme.app-light .listing-filters-panel .listing-filter-select:hover,
 .app-theme.app-light .listing-filters-panel .listing-filter-input:hover {
-  border-color: #c026d3 !important;
+  border-color: #00615f !important;
   background-color: #ffffff !important;
 }
 .app-theme.app-light .listing-filters-panel .listing-filter-select:focus,
 .app-theme.app-light .listing-filters-panel .listing-filter-input:focus {
-  border-color: #c026d3 !important;
+  border-color: #00615f !important;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(192, 38, 211, 0.22);
+  box-shadow: 0 0 0 2px rgba(0, 97, 95, 0.22);
 }
 .app-theme.app-light .listing-filters-panel .listing-filter-select option {
   background-color: #ffffff !important;

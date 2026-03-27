@@ -143,7 +143,7 @@ function PaymentForm({
             disabled={!stripe || !elements || loading}
             className={
               theme === "light"
-                ? "px-4 py-2 bg-[#c026d3] text-white rounded-md font-medium hover:opacity-90 disabled:opacity-50"
+                ? "px-4 py-2 bg-[#00615F] text-white rounded-md font-medium hover:opacity-90 disabled:opacity-50"
                 : "px-4 py-2 bg-[#c9a84c] text-[#0d1b2a] rounded-md font-medium hover:opacity-90 disabled:opacity-50"
             }
           >
@@ -588,7 +588,7 @@ function BuyNowModalInner({
       ? {
           theme: "stripe" as const,
           variables: {
-            colorPrimary: "#c026d3",
+            colorPrimary: "#00615F",
             colorBackground: "#ffffff",
             colorText: "#171717",
             colorTextSecondary: "#525252",

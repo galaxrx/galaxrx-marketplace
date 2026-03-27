@@ -213,7 +213,7 @@ export default function HomePage() {
                 </span>
               </h1>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:mx-0 lg:max-w-none">
-                GalaxRX is where licensed Australian pharmacies recover capital on excess inventory and source verified stock.
+                Don’t Let Stock Sit. Turn It Into Cash
               </p>
 
               <div className="mt-7 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:max-w-lg sm:flex-row sm:justify-center lg:mx-0 lg:max-w-none lg:justify-start">

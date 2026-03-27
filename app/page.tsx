@@ -31,6 +31,13 @@ const LandingSlideshow = dynamic(
   { ssr: true }
 );
 
+const InstructionVideoCard = dynamic(
+  () => import("@/components/landing/InstructionVideoCard").then((m) => m.default),
+  { ssr: false }
+);
+
+const INSTRUCTION_VIDEO_ID = "51L-eDszLqI";
+
 const FAQ_LANDING = [
   {
     q: "Who can use GalaxRX?",
@@ -444,6 +451,23 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* Instruction video */}
+        <ScrollReveal
+          as="section"
+          className="relative overflow-hidden border-t border-white/[0.06] bg-[#0a111a] px-4 py-14 sm:px-6 sm:py-20 lg:px-10"
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_0%,rgba(201,168,76,0.08),transparent_60%)]" aria-hidden />
+          <div className="relative mx-auto max-w-5xl">
+            <div className="mb-8 text-center sm:mb-10">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-gold/90 sm:text-xs">Instruction video</p>
+              <h2 className="mt-3 font-heading text-2xl font-bold text-white sm:text-3xl md:text-4xl md:tracking-tight">
+                See GalaxRX flow in one quick video
+              </h2>
+            </div>
+            <InstructionVideoCard videoId={INSTRUCTION_VIDEO_ID} title="GalaxRX marketplace instruction video" />
+          </div>
+        </ScrollReveal>
 
         {/* Trust */}
         <ScrollReveal

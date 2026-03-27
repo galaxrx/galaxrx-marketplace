@@ -103,8 +103,16 @@ body {
 .marquee-category-track:hover {
   animation-play-state: paused;
 }
+/* Second rail — opposite direction for kinetic energy */
+.marquee-category-track-reverse {
+  animation: marquee 64s linear infinite reverse;
+}
+.marquee-category-track-reverse:hover {
+  animation-play-state: paused;
+}
 @media (prefers-reduced-motion: reduce) {
-  .marquee-category-track {
+  .marquee-category-track,
+  .marquee-category-track-reverse {
     animation: none;
     flex-wrap: wrap;
     justify-content: center;

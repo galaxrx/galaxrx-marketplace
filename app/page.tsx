@@ -10,7 +10,7 @@ import FooterEnquiryForm from "@/components/landing/FooterEnquiryForm";
 export const metadata: Metadata = {
   title: "GalaxRX — Verified B2B marketplace for Australian pharmacies",
   description:
-    "Trade pharmacy surplus and clearance with verified peers. List in minutes, browse verified stock, settle with Stripe. 3.5% on completed sales only — no subscription.",
+    "Surplus and clearance between licensed pharmacies. List in minutes, buy verified stock, settle through Stripe with funds held until delivery. 3.5% on completed sales only.",
 };
 
 const CONTACT_PHONE_RAW = PLATFORM.phone.trim();
@@ -56,74 +56,101 @@ const FAQ_LANDING = [
 
 const VALUE_PROP = [
   {
-    title: "Recover capital",
-    desc: "Move clearance and short-dated lines before they become write-offs.",
+    title: "Recover capital before write-offs",
+    desc: "Move clearance and short-dated lines while they still have recoverable value.",
     icon: "capital" as const,
   },
   {
-    title: "Buy verified stock",
-    desc: "Source surplus from licensed pharmacies — not the open internet.",
+    title: "Buy from verified pharmacies",
+    desc: "Source surplus from licensed peers — not anonymous marketplaces or grey channels.",
     icon: "verified" as const,
   },
   {
-    title: "Secure checkout",
-    desc: "Stripe holds funds until delivery is confirmed, then releases payment.",
+    title: "Settlement you can explain",
+    desc: "Stripe holds buyer funds until delivery is confirmed, then releases to the seller.",
     icon: "checkout" as const,
   },
   {
-    title: "No subscription",
-    desc: "Join free. Pay 3.5% only when a sale completes — nothing else.",
+    title: "No subscription economics",
+    desc: "Join free. GalaxRX earns 3.5% only when a sale completes — aligned incentives.",
     icon: "fee" as const,
   },
 ];
 
 const HOW_STEPS = [
   {
-    title: "List surplus",
-    desc: "Scan a barcode or search by name, set quantity, price, and expiry, and publish in minutes — without long forms.",
+    title: "List in minutes",
+    desc: "Scan a barcode or search by product, set quantity, price, and expiry — publish without a procurement-style workflow.",
     img: "/LIST.png",
     alt: "List surplus pharmacy stock quickly",
+    stepIcon: "list" as const,
   },
   {
-    title: "Get discovered",
-    desc: "Clearance and short-dated lines surface to buyers who are actively sourcing — so surplus does not sit unseen.",
+    title: "Surface to active buyers",
+    desc: "Clearance and short-dated lines appear where buyers search — so surplus is seen before it ages out.",
     img: "/Verified%20stock.png",
     alt: "Verified pharmacy listings",
+    stepIcon: "radar" as const,
   },
   {
-    title: "Trade securely",
-    desc: "Stripe-powered checkout with funds held until delivery confirms — payment certainty for both sides.",
+    title: "Checkout with certainty",
+    desc: "Stripe-powered payment: funds held until delivery confirms, then released — clarity for buyer and seller.",
     img: "/Secure%20payment.png",
     alt: "Secure Stripe payments between pharmacies",
+    stepIcon: "lock" as const,
   },
   {
-    title: "Move surplus faster",
-    desc: "Every counterparty is a verified Australian pharmacy — peer-to-peer trading you can stand behind.",
+    title: "Close with peers",
+    desc: "Every counterparty is a verified Australian pharmacy — B2B trading you can stand behind commercially.",
     img: "/Verified%20network.png",
     alt: "Verified pharmacy trading network",
+    stepIcon: "peers" as const,
   },
 ];
 
-const TRUST_POINTS = [
+const TRUST_ARCHITECTURE = [
   {
-    title: "Licensed pharmacies only",
-    desc: "Onboarding checks that you are a legitimate Australian pharmacy before you can trade.",
+    title: "Pharmacy & business verification",
+    desc: "Manual checks on Australian pharmacy licensing and legitimacy before anyone can list or purchase.",
   },
   {
-    title: "Verified network",
-    desc: "Buy and sell knowing both sides are peers — not consumers or anonymous accounts.",
+    title: "Stripe settlement path",
+    desc: "Card payments with funds held until delivery is confirmed — a release flow you can trace in Stripe.",
   },
   {
-    title: "Expiry & clearance visibility",
-    desc: "Short-dated and clearance stock is easy to find when buyers need to fill gaps affordably.",
+    title: "Expiry surfaced on listings",
+    desc: "Short-dated and clearance stock is visible where buyers compare dates and price with intent.",
   },
   {
-    title: "Stripe-backed settlement",
-    desc: "Card payments and held funds give a clear audit trail from checkout to release.",
+    title: "Audit-friendly money movement",
+    desc: "From checkout to payout, the flow is designed for reconciliation — not opaque wallet balances.",
+  },
+  {
+    title: "Logistics stay pharmacy-led",
+    desc: "You arrange courier or pickup with the other pharmacy; GalaxRX handles discovery, verification, and payment.",
   },
 ];
 
-const TRUST_BADGES = ["Verified pharmacies only", "B2B marketplace", "Stripe-secured payments"] as const;
+const MARKET_PROOF = [
+  {
+    title: "What moves on the platform",
+    desc: "Clearance batches, short-dated lines, and OTC surplus — listed with expiry in view when it matters to the trade.",
+  },
+  {
+    title: "Who is allowed to trade",
+    desc: "Licensed Australian pharmacies only. No retail accounts, no anonymous buyers — peers dealing with peers.",
+  },
+  {
+    title: "How capital is released",
+    desc: "Buyer pays through Stripe; funds stay held until delivery confirms, then settle to the seller — operational, not theoretical.",
+  },
+] as const;
+
+const HERO_PROOF_SIGNALS = [
+  { label: "Manual verify · typically <24h", sub: "Before first trade" },
+  { label: "Funds held in Stripe", sub: "Until delivery confirms" },
+  { label: "Dispatch: pharmacy-led", sub: "You set courier or pickup" },
+] as const;
 
 function ShieldCheckIcon({ className }: { className?: string }) {
   return (
@@ -184,6 +211,46 @@ function ValuePropIcon({ name }: { name: (typeof VALUE_PROP)[number]["icon"] }) 
   }
 }
 
+function HowStepGlyph({ kind }: { kind: (typeof HOW_STEPS)[number]["stepIcon"] }) {
+  const c = "h-5 w-5 text-gold";
+  const sw = 1.5;
+  switch (kind) {
+    case "list":
+      return (
+        <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12M8 12h12M8 17h5" />
+          <rect x="3" y="5" width="3" height="14" rx="1" />
+        </svg>
+      );
+    case "radar":
+      return (
+        <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <circle cx="12" cy="12" r="3" />
+          <path strokeLinecap="round" d="M12 3v2M12 19v2M3 12h2M19 12h2" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <rect x="5" y="11" width="14" height="10" rx="2" />
+          <path strokeLinecap="round" d="M8 11V8a4 4 0 0 1 8 0v3" />
+          <circle cx="12" cy="15" r="1.25" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case "peers":
+      return (
+        <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <circle cx="9" cy="9" r="2.5" />
+          <circle cx="16" cy="9" r="2.5" />
+          <path strokeLinecap="round" d="M4 20v-1a5 5 0 0 1 5-5h1M15 14h1a5 5 0 0 1 5 5v1" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export default function HomePage() {
   return (
     <div className="flex min-h-screen w-full max-w-[100vw] flex-col overflow-x-hidden text-white">
@@ -192,55 +259,61 @@ export default function HomePage() {
         <LandingHeader />
 
         {/* Hero — text + framed photo (not full-bleed background) */}
-        <section className="relative z-10 overflow-hidden px-4 pb-14 pt-8 sm:px-6 sm:pb-16 sm:pt-10 lg:px-10 xl:px-14 2xl:px-16">
+        <section className="relative z-10 overflow-hidden px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10 lg:px-10 xl:px-14 2xl:px-16">
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
             <div className="landing-hero-orb-primary absolute -top-40 left-[5%] h-[min(28rem,80vw)] w-[min(28rem,80vw)] rounded-full bg-gold/18 blur-[100px]" />
             <div className="landing-hero-orb-secondary absolute top-0 -right-20 h-[min(22rem,70vw)] w-[min(22rem,70vw)] rounded-full bg-[#3d6fb8]/22 blur-[90px]" />
             <div className="absolute bottom-0 left-1/2 h-56 w-[130%] -translate-x-1/2 bg-gradient-to-t from-[#0D1B2A] via-transparent to-transparent opacity-95" />
           </div>
 
-          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] items-center gap-10 lg:grid-cols-2 lg:items-center lg:gap-12 xl:max-w-[min(100%,1400px)] xl:gap-16 2xl:gap-20">
-            <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-[26rem] lg:text-left xl:max-w-[28rem] 2xl:max-w-[32rem]">
-              <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
-                Verified B2B marketplace
+          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] items-center gap-12 lg:grid-cols-2 lg:items-center lg:gap-14 xl:max-w-[min(100%,1400px)] xl:gap-16 2xl:gap-20">
+            <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-[28rem] lg:text-left xl:max-w-[30rem] 2xl:max-w-[34rem]">
+              <p className="mb-5 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
+                Verified B2B marketplace · Australia
               </p>
-              <h1 className="font-heading text-[1.85rem] font-bold leading-[1.12] tracking-tight text-balance sm:text-4xl md:text-5xl lg:text-[3.15rem] xl:text-[3.35rem]">
+              <h1 className="font-heading text-[1.95rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-4xl md:text-[2.75rem] lg:text-[3.1rem] xl:text-[3.35rem]">
                 <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
-                  Surplus and clearance,
+                  Turn surplus stock into cash
                 </span>
-                <span className="mt-2 block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)]">
-                  traded between pharmacies.
+                <span className="mt-4 block max-w-xl bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text text-[1.125rem] font-semibold leading-snug text-transparent sm:text-xl md:text-2xl lg:mx-0 lg:text-[1.75rem] lg:leading-[1.2]">
+                  Before it expires — between verified pharmacies, not anonymous buyers.
                 </span>
               </h1>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:mx-0 lg:max-w-none">
-                Don’t Let Stock Sit. Turn It Into Cash
+              <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/58 sm:text-[1.0625rem] lg:mx-0 lg:max-w-none">
+                GalaxRX is the B2B layer for pharmacy surplus: list in minutes, discover verified stock, settle through Stripe.
+                No retail storefronts — licensed peers only.
               </p>
 
-              <div className="mt-7 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:max-w-lg sm:flex-row sm:justify-center lg:mx-0 lg:max-w-none lg:justify-start">
+              <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:max-w-lg sm:flex-row sm:justify-center lg:mx-0 lg:max-w-none lg:justify-start">
                 <Link
                   href="/register"
                   aria-label="Join GalaxRX — register as a verified pharmacy"
-                  className="inline-flex items-center justify-center rounded-2xl bg-gold px-7 py-4 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[0_10px_32px_-8px_rgba(201,168,76,0.55)] transition-all duration-300 hover:bg-gold/92 hover:shadow-[0_14px_40px_-8px_rgba(201,168,76,0.65)] hover:-translate-y-0.5 active:translate-y-0 sm:text-sm"
+                  className="inline-flex min-h-[3rem] items-center justify-center rounded-2xl bg-gold px-8 py-4 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[0_10px_32px_-8px_rgba(201,168,76,0.55)] transition-all duration-300 hover:bg-gold/92 hover:shadow-[0_14px_40px_-8px_rgba(201,168,76,0.65)] hover:-translate-y-0.5 active:translate-y-0 sm:text-sm"
                 >
-                  Join now
+                  Join GalaxRX
                 </Link>
                 <Link
                   href="/listings"
                   aria-label="Browse pharmacy stock listings"
-                  className="inline-flex items-center justify-center rounded-2xl border border-gold/45 bg-white/[0.04] px-7 py-4 font-heading text-xs font-semibold uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/60 hover:bg-white/[0.09] hover:shadow-[0_0_28px_-10px_rgba(201,168,76,0.25)] sm:text-sm"
+                  className="inline-flex min-h-[3rem] items-center justify-center rounded-2xl border border-gold/45 bg-white/[0.04] px-8 py-4 font-heading text-xs font-semibold uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/60 hover:bg-white/[0.09] hover:shadow-[0_0_28px_-10px_rgba(201,168,76,0.25)] sm:text-sm"
                 >
                   Browse listings
                 </Link>
               </div>
 
-              <ul className="mt-8 flex flex-wrap justify-center gap-2 lg:justify-start" aria-label="Trust signals">
-                {TRUST_BADGES.map((b) => (
+              <ul className="mt-10 grid gap-2.5 sm:max-w-lg sm:grid-cols-1 sm:justify-items-center lg:max-w-none lg:justify-items-start" aria-label="How GalaxRX operates">
+                {HERO_PROOF_SIGNALS.map((s) => (
                   <li
-                    key={b}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-black/20 px-3 py-1.5 text-[0.7rem] font-medium text-white/75 backdrop-blur-sm sm:text-xs"
+                    key={s.label}
+                    className="flex w-full items-start gap-3 rounded-2xl border border-white/[0.08] bg-black/25 px-4 py-3 text-left backdrop-blur-sm transition-colors hover:border-gold/20 sm:items-center sm:py-3.5"
                   >
-                    <ShieldCheckIcon className="h-3.5 w-3.5 shrink-0 text-gold" />
-                    {b}
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08] sm:mt-0">
+                      <ShieldCheckIcon className="h-4 w-4 text-gold" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[0.8125rem] font-semibold tracking-wide text-white/90 sm:text-sm">{s.label}</span>
+                      <span className="mt-0.5 block text-[0.7rem] text-white/45 sm:text-xs">{s.sub}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -251,23 +324,34 @@ export default function HomePage() {
                 className="pointer-events-none absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-gold/35 via-white/10 to-transparent opacity-80 blur-[2px]"
                 aria-hidden
               />
-              <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[5/4]">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[1.35rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_32px_72px_-32px_rgba(0,0,0,0.88),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[1/1] xl:aspect-[5/4]">
                 <Image
                   src="/up.png"
                   alt="Pharmacy professional reviewing inventory — representing verified B2B surplus trading on GalaxRX"
                   fill
                   priority
-                  className="object-cover object-[center_22%] sm:object-center"
+                  className="object-cover object-[center_22%] sm:object-[center_30%] lg:object-[center_28%]"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/95 via-[#0D1B2A]/25 to-transparent sm:from-[#0D1B2A]/90"
+                  className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/95 via-[#0D1B2A]/25 to-transparent sm:from-[#0D1B2A]/88"
                   aria-hidden
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                  <p className="font-heading text-sm font-semibold uppercase tracking-[0.2em] text-gold/95">Built for pharmacies</p>
-                  <p className="mt-1 max-w-sm text-sm leading-relaxed text-white/85">
-                    Commercial trading — not retail. Every account is verified before anyone buys or sells.
+                <div className="absolute bottom-0 left-0 right-0 border-t border-white/[0.06] bg-[#0D1B2A]/55 p-4 backdrop-blur-md sm:p-5">
+                  <div className="flex flex-wrap gap-2 sm:gap-2.5">
+                    <span className="rounded-full border border-gold/25 bg-black/30 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-gold/95 sm:text-xs">
+                      Proof at a glance
+                    </span>
+                    <span className="rounded-full border border-white/[0.1] bg-black/25 px-3 py-1 text-[0.65rem] font-medium text-white/75 sm:text-xs">
+                      B2B · not retail
+                    </span>
+                    <span className="rounded-full border border-white/[0.1] bg-black/25 px-3 py-1 text-[0.65rem] font-medium text-white/75 sm:text-xs">
+                      Stripe settlement
+                    </span>
+                  </div>
+                  <p className="mt-3 font-heading text-sm font-semibold text-white sm:text-base">Built for dispensary owners</p>
+                  <p className="mt-1 max-w-md text-sm leading-relaxed text-white/75">
+                    Every account is verified before anyone buys or sells — commercial trading with a clear counterparty.
                   </p>
                 </div>
               </div>
@@ -280,7 +364,7 @@ export default function HomePage() {
         {/* Value proposition */}
         <ScrollReveal
           as="section"
-          className="relative border-t border-white/[0.06] bg-[#0a111a] px-4 py-14 sm:px-6 sm:py-16 lg:px-10"
+          className="relative border-t border-white/[0.06] bg-[#0a111a] px-4 py-16 sm:px-6 sm:py-20 lg:px-10"
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_50%_0%,rgba(201,168,76,0.07),transparent_60%)]" aria-hidden />
           <div className="relative mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
@@ -310,17 +394,17 @@ export default function HomePage() {
         </ScrollReveal>
 
         {/* Welcome offer */}
-        <ScrollReveal as="section" className="border-t border-white/[0.06] bg-[#0D1B2A] px-4 py-10 sm:px-6 lg:px-10">
+        <ScrollReveal as="section" className="border-t border-white/[0.06] bg-[#0D1B2A] px-4 py-12 sm:px-6 sm:py-14 lg:px-10">
           <div className="mx-auto max-w-3xl">
-            <div className="relative overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.12] via-[#0c1828]/95 to-[#0a1522] px-5 py-5 shadow-[0_24px_56px_-28px_rgba(201,168,76,0.22)] sm:px-6 sm:py-6">
+            <div className="relative overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.12] via-[#0c1828]/95 to-[#0a1522] px-5 py-6 shadow-[0_24px_56px_-28px_rgba(201,168,76,0.22)] sm:px-7 sm:py-7">
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" aria-hidden />
               <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-gold/95 sm:text-xs">Limited welcome offer</p>
               <p className="mt-2 font-heading text-lg font-semibold leading-snug text-white text-balance sm:text-xl md:text-2xl">
-                Your first 30 days: zero GalaxRX transaction fees
+                First 30 days: 0% GalaxRX fees on completed sales
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-white/50">
-                New pharmacies pay <span className="font-medium text-white/75">0% platform fees</span> for 30 days from signup
-                — then our standard <span className="text-white/70">3.5%</span> on completed sales only.
+              <p className="mt-3 text-sm leading-relaxed text-white/50 sm:text-[0.9375rem]">
+                New pharmacies pay <span className="font-medium text-white/80">no platform fee</span> for 30 days from signup — then{" "}
+                <span className="font-medium text-gold/90">3.5%</span> on completed sales only. Buyers still pay no GalaxRX fee.
               </p>
             </div>
           </div>
@@ -331,22 +415,24 @@ export default function HomePage() {
         {/* How it works */}
         <section
           id="how-it-works"
-          className="relative overflow-hidden border-t border-white/[0.06] bg-[#0D1B2A] px-4 py-14 sm:px-6 sm:py-20 lg:px-10"
+          className="relative overflow-hidden border-t border-white/[0.06] bg-[#070f16] px-4 py-16 sm:px-6 sm:py-24 lg:px-10"
         >
           <div
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(201,168,76,0.04)_0%,transparent_40%)]"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(201,168,76,0.05)_0%,transparent_45%)]"
             aria-hidden
           />
-          <ScrollReveal as="div" className="relative mb-12 text-center">
-            <h2 className="font-heading text-2xl font-bold uppercase tracking-[0.14em] text-white sm:text-3xl md:text-4xl">
-              How GalaxRX works
+          <ScrollReveal as="div" className="relative mb-14 text-center sm:mb-16">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-gold/90 sm:text-xs">How it works</p>
+            <h2 className="mt-3 font-heading text-2xl font-bold text-white sm:text-3xl md:text-4xl md:tracking-tight">
+              One pipeline from shelf to settled payment
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-white/55">
-              From listing to settlement — built for pharmacy owners and buyers who need speed and certainty.
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/52 sm:text-[1.0625rem]">
+              List, surface, pay, and close — four steps built for owners who cannot afford slow or opaque trades between
+              pharmacies.
             </p>
-            <div className="mx-auto mt-6 h-px w-20 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
+            <div className="mx-auto mt-8 h-px w-24 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
           </ScrollReveal>
-          <div className="relative mx-auto grid max-w-6xl gap-7 sm:grid-cols-2 sm:gap-8 lg:gap-10">
+          <div className="relative mx-auto grid max-w-6xl gap-8 sm:grid-cols-2 sm:gap-9 lg:gap-10">
             {HOW_STEPS.map((item, i) => (
               <ScrollReveal key={item.title} as="div" delay={i * 0.08} xOffset={i % 2 === 0 ? -16 : 16}>
                 <div
@@ -354,8 +440,11 @@ export default function HomePage() {
                 >
                   <div className="relative overflow-hidden rounded-[1.3rem] bg-[#0a1522]">
                     <div className="relative aspect-[16/10] w-full overflow-hidden">
-                      <span className="absolute left-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[#0D1B2A]/90 font-heading text-sm font-bold tabular-nums text-gold shadow-lg ring-1 ring-gold/35 backdrop-blur-sm sm:left-4 sm:top-4">
-                        {String(i + 1).padStart(2, "0")}
+                      <span className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-full border border-gold/25 bg-[#0D1B2A]/92 py-1.5 pl-1.5 pr-3 shadow-lg ring-1 ring-gold/25 backdrop-blur-sm sm:left-4 sm:top-4 sm:py-2 sm:pl-2 sm:pr-4">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold/[0.12] font-heading text-xs font-bold tabular-nums text-gold sm:h-10 sm:w-10 sm:text-sm">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <HowStepGlyph kind={item.stepIcon} />
                       </span>
                       <Image
                         src={item.img}
@@ -373,11 +462,11 @@ export default function HomePage() {
                         aria-hidden
                       />
                     </div>
-                    <div className="relative px-5 pb-6 pt-5 sm:px-7 sm:pb-7 sm:pt-6">
+                    <div className="relative px-5 pb-7 pt-5 sm:px-8 sm:pb-8 sm:pt-6">
                       <h3 className="font-heading text-xl font-bold text-white transition-colors duration-300 group-hover:text-gold/95 sm:text-2xl">
                         {item.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-white/55 sm:text-[0.95rem]">{item.desc}</p>
+                      <p className="mt-3 text-sm leading-relaxed text-white/55 sm:text-[0.95rem]">{item.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -390,24 +479,41 @@ export default function HomePage() {
         <ScrollReveal
           as="section"
           id="trust"
-          className="relative overflow-hidden border-t border-white/[0.06] bg-[#0a111a] px-4 py-14 sm:px-6 sm:py-20 lg:px-10"
+          className="relative overflow-hidden border-t border-white/[0.06] bg-[#0a111a] px-4 py-16 sm:px-6 sm:py-24 lg:px-10"
         >
           <div className="pointer-events-none absolute right-0 top-1/4 h-72 w-72 rounded-full bg-gold/[0.05] blur-[90px]" aria-hidden />
           <div className="relative mx-auto max-w-6xl">
-            <div className="mb-10 text-center sm:mb-12">
-              <h2 className="font-heading text-2xl font-bold text-white sm:text-3xl md:text-4xl">Why pharmacies trust GalaxRX</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base text-white/55">
-                Verification, transparency, and payments you can explain to your accountant — not a consumer app bolted
-                onto wholesale.
+            <div className="mb-12 text-center sm:mb-14">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-gold/90 sm:text-xs">Trust architecture</p>
+              <h2 className="mt-3 font-heading text-2xl font-bold text-white sm:text-3xl md:text-4xl md:tracking-tight">
+                Operational signals, not slogans
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/52 sm:text-[1.0625rem]">
+                Verification, settlement, expiry visibility, and logistics responsibility — packaged the way a pharmacy
+                owner actually runs the business.
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-              {TRUST_POINTS.map((t) => (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+              {TRUST_ARCHITECTURE.slice(0, 3).map((t) => (
                 <div
                   key={t.title}
-                  className="rounded-2xl border border-white/[0.08] bg-[#0e1623]/95 p-5 shadow-[0_12px_36px_-24px_rgba(0,0,0,0.5)] transition-colors hover:border-gold/15"
+                  className="rounded-2xl border border-white/[0.08] bg-[#0e1623]/95 p-6 shadow-[0_12px_36px_-24px_rgba(0,0,0,0.5)] transition-colors hover:border-gold/15"
                 >
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08] text-gold">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08] text-gold">
+                    <ShieldCheckIcon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-heading text-base font-bold text-white sm:text-lg">{t.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/50">{t.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:mt-5 lg:grid-cols-2 lg:gap-5">
+              {TRUST_ARCHITECTURE.slice(3).map((t) => (
+                <div
+                  key={t.title}
+                  className="rounded-2xl border border-white/[0.08] bg-[#0e1623]/95 p-6 shadow-[0_12px_36px_-24px_rgba(0,0,0,0.5)] transition-colors hover:border-gold/15 sm:min-h-[11rem]"
+                >
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08] text-gold">
                     <ShieldCheckIcon className="h-5 w-5" />
                   </div>
                   <h3 className="font-heading text-base font-bold text-white sm:text-lg">{t.title}</h3>
@@ -418,27 +524,96 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
+        {/* Market proof — confidence without invented metrics */}
+        <ScrollReveal
+          as="section"
+          className="relative overflow-hidden border-t border-white/[0.06] bg-[#050a12] px-4 py-16 sm:px-6 sm:py-24 lg:px-10"
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(201,168,76,0.06),transparent_55%)]" aria-hidden />
+          <div className="relative mx-auto max-w-6xl">
+            <div className="mb-12 text-center sm:mb-14">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-gold/90 sm:text-xs">Market signal</p>
+              <h2 className="mt-3 font-heading text-2xl font-bold text-white sm:text-3xl md:text-4xl md:tracking-tight">
+                Built for inventory that cannot wait
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/52 sm:text-[1.0625rem]">
+                The model is transparent: what trades, who is allowed in, and how money moves — so confidence comes from
+                mechanics, not hype.
+              </p>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3 md:gap-6">
+              {MARKET_PROOF.map((p) => (
+                <div
+                  key={p.title}
+                  className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-b from-[#101a28]/98 to-[#0a1018] p-6 shadow-[0_20px_48px_-28px_rgba(0,0,0,0.55)] sm:p-7"
+                >
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" aria-hidden />
+                  <h3 className="font-heading text-lg font-bold text-white sm:text-xl">{p.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-white/52 sm:text-[0.9375rem]">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+
         {/* Fee model */}
         <ScrollReveal
           as="section"
-          className="relative overflow-hidden border-t border-white/[0.06] bg-[#0D1B2A] px-4 py-14 sm:py-20 lg:px-10"
+          className="relative overflow-hidden border-t border-white/[0.06] bg-[#0D1B2A] px-4 py-16 sm:py-24 lg:px-10"
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_55%_at_50%_45%,rgba(201,168,76,0.1),transparent_65%)]" aria-hidden />
           <div className="landing-fee-glow pointer-events-none absolute left-1/2 top-1/2 h-[min(32rem,90vw)] w-[min(32rem,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/12 blur-[100px]" aria-hidden />
-          <div className="relative z-[1] mx-auto max-w-2xl text-center">
-            <p className="font-heading text-xs font-semibold uppercase tracking-[0.28em] text-gold/90">Simple economics</p>
-            <p className="mt-4 font-heading text-5xl font-bold leading-none tracking-tight text-gold [text-shadow:0_0_48px_rgba(201,168,76,0.35)] sm:text-6xl md:text-7xl">
-              3.5%
-            </p>
-            <p className="mt-4 font-heading text-base font-semibold uppercase tracking-[0.18em] text-white sm:text-lg">
-              On completed sales only
-            </p>
-            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/55 sm:text-base">
-              No monthly fee. No listing charges. Buyers pay no GalaxRX fee — the platform succeeds when your trades do.
-            </p>
-            <div className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-white/[0.1] bg-white/[0.04] px-5 py-3 text-sm text-white/80 backdrop-blur-sm">
-              <ShieldCheckIcon className="h-5 w-5 shrink-0 text-gold" />
-              <span>Payments processed securely with Stripe</span>
+          <div className="relative z-[1] mx-auto max-w-4xl">
+            <p className="text-center font-heading text-xs font-semibold uppercase tracking-[0.28em] text-gold/90">Pricing</p>
+            <div className="mt-8 overflow-hidden rounded-[1.75rem] border border-gold/25 bg-gradient-to-br from-[#142236]/95 via-[#0c1828] to-[#0a1522] p-[1px] shadow-[0_32px_64px_-36px_rgba(201,168,76,0.2)]">
+              <div className="relative rounded-[1.7rem] bg-[#0D1B2A]/95 px-6 py-10 sm:px-10 sm:py-12">
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/45 to-transparent" aria-hidden />
+                <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+                  <div className="text-center lg:text-left">
+                    <p className="font-heading text-[clamp(3.5rem,12vw,5.5rem)] font-bold leading-none tracking-tight text-gold [text-shadow:0_0_48px_rgba(201,168,76,0.35)]">
+                      3.5%
+                    </p>
+                    <p className="mt-3 font-heading text-base font-semibold uppercase tracking-[0.2em] text-white sm:text-lg">
+                      On completed sales only
+                    </p>
+                    <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-white/50 lg:mx-0 sm:text-base">
+                      The anchor to remember: GalaxRX earns when your trade clears — not when you list or browse.
+                    </p>
+                  </div>
+                  <ul className="mx-auto w-full max-w-md space-y-3.5 text-left text-sm text-white/75 sm:text-[0.9375rem] lg:mx-0 lg:max-w-sm">
+                    <li className="flex gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80" aria-hidden />
+                      <span>
+                        <span className="font-semibold text-white">No subscription</span> — join and list without a monthly
+                        platform charge.
+                      </span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80" aria-hidden />
+                      <span>
+                        <span className="font-semibold text-white">Buyers pay $0</span> GalaxRX fee — discovery stays on the
+                        buy side without a platform uplift.
+                      </span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80" aria-hidden />
+                      <span>
+                        <span className="font-semibold text-white">Stripe at checkout</span> — card payments with a
+                        settlement path you can point finance at.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-3 border-t border-white/[0.06] pt-8 lg:justify-start">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.04] px-4 py-2.5 text-xs font-medium text-white/80 backdrop-blur-sm sm:text-sm">
+                    <ShieldCheckIcon className="h-4 w-4 shrink-0 text-gold" />
+                    Payments processed with Stripe
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-gold/20 bg-gold/[0.06] px-4 py-2.5 text-xs font-medium text-gold/95 sm:text-sm">
+                    First 30 days: 0% platform fee for new pharmacies
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </ScrollReveal>
@@ -458,7 +633,7 @@ export default function HomePage() {
                   href="/register"
                   className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl bg-gold px-8 py-3.5 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-lg transition-all hover:bg-gold/92 sm:text-sm"
                 >
-                  Join now
+                  Join GalaxRX
                 </Link>
                 <Link
                   href="/listings"
@@ -516,18 +691,18 @@ export default function HomePage() {
         >
           <div className="relative z-[1] mx-auto w-full max-w-2xl">
             <h2 className="mb-3 font-heading text-2xl font-bold uppercase tracking-wide text-[#1a1408] sm:text-3xl [text-shadow:0_1px_0_rgba(255,255,255,0.2)]">
-              Ready to trade smarter?
+              Ready to move surplus with certainty?
             </h2>
             <p className="mb-10 text-sm leading-relaxed text-[#2c2415] sm:text-base">
-              Register your pharmacy, pass verification, then list or buy surplus alongside peers — pay only when you
-              sell.
+              Register your pharmacy, clear verification, then list or buy alongside peers — GalaxRX is paid only when a
+              sale completes.
             </p>
             <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Link
                 href="/register"
                 className="inline-flex items-center justify-center rounded-2xl bg-[#1e160c] px-10 py-4 font-heading text-xs font-bold uppercase tracking-wide text-gold shadow-[0_10px_28px_-8px_rgba(0,0,0,0.45)] transition-all hover:bg-[#2a2114] hover:-translate-y-0.5 sm:text-sm"
               >
-                Join now
+                Join GalaxRX
               </Link>
               <Link
                 href="/listings"
@@ -636,7 +811,7 @@ export default function HomePage() {
                   Browse listings
                 </Link>
                 <Link href="/register" className="mb-2 block text-white/50 transition-colors hover:text-white">
-                  Join now
+                  Join GalaxRX
                 </Link>
                 <Link href="/login" className="block text-white/50 transition-colors hover:text-white">
                   Sign in

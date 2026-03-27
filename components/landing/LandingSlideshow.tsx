@@ -5,6 +5,10 @@ import { useState, useEffect, useCallback, type ReactNode } from "react";
 const SLIDE_IMAGES = ["/slides/1.png.png", "/slides/2.png.png", "/slides/3.png.png", "/slides/4.jpg.jpg"];
 const INTERVAL_MS = 6000;
 
+/** Responsive height: comfortable on phone; desktop uses vh (capped) so more of each slide is visible. */
+const FULL_BLEED_MIN_H =
+  "min-h-[20rem] sm:min-h-[22rem] md:min-h-[min(44vh,32rem)] lg:min-h-[min(58vh,44rem)] xl:min-h-[min(62vh,50rem)] 2xl:min-h-[min(66vh,56rem)]";
+
 type Variant = "default" | "fullBleed";
 
 export default function LandingSlideshow({
@@ -48,7 +52,11 @@ export default function LandingSlideshow({
           <img
             src={src}
             alt={variant === "fullBleed" ? "" : `Slide ${index + 1}`}
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className={
+              variant === "fullBleed"
+                ? "absolute inset-0 h-full w-full object-cover object-[center_40%] sm:object-center"
+                : "absolute inset-0 h-full w-full object-cover object-center"
+            }
             loading={index === 0 ? "eager" : "lazy"}
             aria-hidden={variant === "fullBleed" ? true : undefined}
           />
@@ -97,7 +105,7 @@ export default function LandingSlideshow({
   if (variant === "fullBleed") {
     return (
       <div
-        className={`group/slides relative min-h-[320px] w-full overflow-hidden sm:min-h-[380px] lg:min-h-[420px] ${className}`}
+        className={`group/slides relative w-full overflow-hidden ${FULL_BLEED_MIN_H} ${className}`}
         aria-label="Platform screenshots"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
@@ -108,7 +116,9 @@ export default function LandingSlideshow({
           className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/72 to-[#0D1B2A]/35"
           aria-hidden
         />
-        <div className="relative z-[3] flex min-h-[320px] flex-col justify-center px-4 py-14 sm:min-h-[380px] sm:px-8 lg:min-h-[420px] lg:px-14 xl:px-16 2xl:px-20">
+        <div
+          className={`relative z-[3] flex flex-col justify-center px-4 py-12 sm:px-8 sm:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 2xl:px-20 ${FULL_BLEED_MIN_H}`}
+        >
           {children}
         </div>
         {dots}

@@ -58,18 +58,22 @@ const VALUE_PROP = [
   {
     title: "Recover capital",
     desc: "Move clearance and short-dated lines before they become write-offs.",
+    icon: "capital" as const,
   },
   {
     title: "Buy verified stock",
     desc: "Source surplus from licensed pharmacies — not the open internet.",
+    icon: "verified" as const,
   },
   {
     title: "Secure checkout",
     desc: "Stripe holds funds until delivery is confirmed, then releases payment.",
+    icon: "checkout" as const,
   },
   {
     title: "No subscription",
     desc: "Join free. Pay 3.5% only when a sale completes — nothing else.",
+    icon: "fee" as const,
   },
 ];
 
@@ -132,6 +136,52 @@ function ShieldCheckIcon({ className }: { className?: string }) {
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
     </svg>
   );
+}
+
+function ValuePropIcon({ name }: { name: (typeof VALUE_PROP)[number]["icon"] }) {
+  const common = "h-6 w-6 text-gold";
+  const sw = 1.5;
+  switch (name) {
+    case "capital":
+      /* Stacked coins — recovered value */
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <ellipse cx="12" cy="17" rx="6.5" ry="2.3" />
+          <ellipse cx="12" cy="13.5" rx="5.5" ry="2" />
+          <ellipse cx="12" cy="10" rx="4.5" ry="1.8" />
+        </svg>
+      );
+    case "verified":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 3.5l7 3.2v5.4c0 4.5-3 8.7-7 9.8-4-1.1-7-5.3-7-9.8V6.7l7-3.2z"
+          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
+        </svg>
+      );
+    case "checkout":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <path strokeLinecap="round" d="M2 10h20" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 15h2M10 15h4" />
+        </svg>
+      );
+    case "fee":
+      /* Percent — pay only on sales */
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
+          <circle cx="8" cy="9" r="2" />
+          <circle cx="16" cy="15" r="2" />
+          <path strokeLinecap="round" d="M15 8L9 16" />
+        </svg>
+      );
+    default:
+      return null;
+  }
 }
 
 export default function HomePage() {
@@ -234,14 +284,27 @@ export default function HomePage() {
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_50%_0%,rgba(201,168,76,0.07),transparent_60%)]" aria-hidden />
           <div className="relative mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-            {VALUE_PROP.map((v) => (
-              <div
-                key={v.title}
-                className="rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/90 to-[#0c1522] p-5 shadow-[0_16px_40px_-28px_rgba(0,0,0,0.55)] transition-all duration-300 hover:border-gold/20 hover:shadow-[0_20px_48px_-24px_rgba(201,168,76,0.12)]"
-              >
-                <p className="font-heading text-base font-bold text-white sm:text-lg">{v.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-white/55">{v.desc}</p>
-              </div>
+            {VALUE_PROP.map((v, i) => (
+              <ScrollReveal key={v.title} as="div" delay={i * 0.06}>
+                <div className="group relative h-full overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/95 to-[#0a1018] p-5 shadow-[0_16px_44px_-28px_rgba(0,0,0,0.6)] transition-all duration-500 hover:-translate-y-1.5 hover:border-gold/25 hover:shadow-[0_28px_56px_-24px_rgba(201,168,76,0.16)] sm:p-6">
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    aria-hidden
+                  >
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_80%_at_50%_-20%,rgba(201,168,76,0.12),transparent_55%)]" />
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+                  </div>
+                  <div className="relative">
+                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08] text-gold shadow-[0_8px_24px_-12px_rgba(201,168,76,0.35)] ring-1 ring-white/[0.06] transition-transform duration-500 group-hover:scale-105 group-hover:border-gold/35 group-hover:bg-gold/[0.12]">
+                      <ValuePropIcon name={v.icon} />
+                    </div>
+                    <p className="font-heading text-base font-bold text-white sm:text-lg">{v.title}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-white/55 transition-colors duration-300 group-hover:text-white/65">
+                      {v.desc}
+                    </p>
+                  </div>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </ScrollReveal>

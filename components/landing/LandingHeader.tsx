@@ -32,19 +32,19 @@ export default function LandingHeader() {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3.5 sm:py-4 border-b border-white/[0.08] bg-[#0D1B2A]/92 backdrop-blur-xl shadow-[0_8px_32px_-20px_rgba(0,0,0,0.45)]">
-      <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 min-h-[3.25rem] sm:min-h-[3.75rem] min-w-0">
-        <div className="relative h-12 w-32 sm:h-14 sm:w-40 md:h-16 md:w-48 lg:h-[4.5rem] lg:w-[13.5rem] shrink-0">
+    <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-2 sm:py-2.5 border-b border-white/[0.08] bg-[#0D1B2A]/92 backdrop-blur-xl shadow-[0_8px_32px_-20px_rgba(0,0,0,0.45)]">
+      <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div className="relative h-9 w-24 sm:h-10 sm:w-28 md:h-11 md:w-32 lg:h-12 lg:w-36 shrink-0">
           <Image
             src="/logo.png"
             alt=""
             fill
             className="object-contain object-left"
             priority
-            sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, (max-width: 1024px) 192px, 216px"
+            sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
           />
         </div>
-        <span className="font-heading font-bold text-xl sm:text-2xl md:text-3xl tracking-tight text-gold truncate">
+        <span className="font-heading font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-gold truncate">
           GalaxRX
         </span>
       </Link>
@@ -77,7 +77,7 @@ export default function LandingHeader() {
         <Link
           href="/register"
           aria-label="Join GalaxRX free"
-          className="bg-gradient-to-r from-gold-muted to-gold text-[#0D1B2A] px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm font-bold font-heading shadow-lg shadow-gold-muted/25 hover:shadow-gold/40 hover:scale-105 transition-all duration-200 whitespace-nowrap"
+          className="bg-gradient-to-r from-gold-muted to-gold text-[#0D1B2A] px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm font-bold font-heading shadow-lg shadow-gold-muted/25 hover:shadow-gold/40 hover:scale-105 transition-all duration-200 whitespace-nowrap"
         >
           Join now →
         </Link>
@@ -91,7 +91,7 @@ export default function LandingHeader() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label="Toggle menu"
-          className="p-2.5 rounded-md border border-gold/45 text-gold hover:bg-white/[0.06] transition-colors"
+          className="p-2 rounded-md border border-gold/45 text-gold hover:bg-white/[0.06] transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
             {mobileOpen ? (
@@ -119,7 +119,7 @@ export default function LandingHeader() {
               onClick={() => setMobileOpen(false)}
             />
             <nav
-              className="relative z-10 mt-14 sm:mt-[3.75rem] flex-1 min-h-0 overflow-y-auto bg-[#0F2035] border-t border-[rgba(161,130,65,0.35)] shadow-[0_-8px_32px_rgba(0,0,0,0.45)] flex flex-col pt-4 pb-8 px-4"
+              className="relative z-10 mt-12 sm:mt-14 flex-1 min-h-0 overflow-y-auto bg-[#0F2035] border-t border-[rgba(161,130,65,0.35)] shadow-[0_-8px_32px_rgba(0,0,0,0.45)] flex flex-col pt-4 pb-8 px-4"
               aria-label="Mobile navigation"
             >
               <Link

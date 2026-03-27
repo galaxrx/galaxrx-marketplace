@@ -146,12 +146,6 @@ const MARKET_PROOF = [
   },
 ] as const;
 
-const HERO_PROOF_SIGNALS = [
-  { label: "Verify <24h", sub: "Before first trade" },
-  { label: "Funds held", sub: "Released after delivery" },
-  { label: "Pharmacy dispatch", sub: "Courier or pickup" },
-] as const;
-
 function ShieldCheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
@@ -334,25 +328,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Hero proof signals (separate from hero copy) */}
-        <section className="relative z-10 border-t border-white/[0.06] bg-[#07121e]/70 px-4 py-6 sm:px-6 sm:py-7 lg:px-10">
-          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] gap-2.5 sm:grid-cols-3 sm:gap-3">
-            {HERO_PROOF_SIGNALS.map((s) => (
-              <div
-                key={s.label}
-                className="flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-black/25 px-4 py-3 text-left backdrop-blur-sm transition-colors hover:border-gold/20 sm:py-3.5"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08]">
-                  <ShieldCheckIcon className="h-4 w-4 text-gold" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[0.8125rem] font-semibold tracking-wide text-white/90 sm:text-sm">{s.label}</span>
-                  <span className="mt-0.5 block text-[0.7rem] text-white/45 sm:text-xs">{s.sub}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
       </div>
 
       <main className="flex-1">

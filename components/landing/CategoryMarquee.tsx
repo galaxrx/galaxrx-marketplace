@@ -8,7 +8,6 @@ const CATEGORIES = [
   "Oral Care",
   "Personal Care",
   "Medicines",
-  "Medical Supplies",
   "First Aid",
   "Sport & Fitness",
   "Home & Pet",
@@ -20,7 +19,6 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
 
   switch (label) {
     case "Vitamins & Supplements":
-      /* Two pill capsules */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
           <rect x="3" y="9" width="8" height="6" rx="3" />
@@ -29,27 +27,27 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
       );
 
     case "Pregnancy & Baby":
-      /* Baby bottle */
+      /* Baby — round face, eyes, smile */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M10 4h4v2.5a2 2 0 01-2 2h0a2 2 0 01-2-2V4z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.5h6l1 11a2 2 0 01-2 2H10a2 2 0 01-2-2l1-11z" />
-          <path strokeLinecap="round" d="M11 14h2" />
+          <circle cx="12" cy="11.5" r="5.5" />
+          <circle cx="9.5" cy="10.5" r="0.85" fill="currentColor" stroke="none" />
+          <circle cx="14.5" cy="10.5" r="0.85" fill="currentColor" stroke="none" />
+          <path strokeLinecap="round" d="M9.5 14q2.5 1.8 5 0" />
         </svg>
       );
 
     case "Cosmetics":
-      /* Lipstick */
+      /* Lipstick — angled tube + cap */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 4h6l1 4H8l1-4z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8 8h8v11a2 2 0 01-2 2h-4a2 2 0 01-2-2V8z" />
-          <path strokeLinecap="round" d="M10 12h4" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10 3.5h4l0.5 3.5h-5L10 3.5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.5 7.5h7l0.5 12a1.5 1.5 0 01-1.5 1.5h-5A1.5 1.5 0 018 19.5l0.5-12z" />
+          <path strokeLinecap="round" d="M10 11h4" />
         </svg>
       );
 
     case "Skincare":
-      /* Lotion bottle + droplet */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" d="M10 3h4v3H10V3zM9 6h6l1 14a2 2 0 01-2 2h-4a2 2 0 01-2-2L9 6z" />
@@ -62,7 +60,6 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
       );
 
     case "Hair Care":
-      /* Comb */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 8l12-4v2L5 10V8z" />
@@ -71,7 +68,6 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
       );
 
     case "Oral Care":
-      /* Tooth */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
           <path
@@ -83,7 +79,6 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
       );
 
     case "Personal Care":
-      /* Soap / pump dispenser */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 10V8a3 3 0 016 0v2" />
@@ -93,25 +88,17 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
       );
 
     case "Medicines":
-      /* Pill bottle with Rx-style cross */
+      /* Pile of pills — overlapping capsules */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8 4h8v3H8V4zM7 7h10v13a2 2 0 01-2 2H9a2 2 0 01-2-2V7z" />
-          <path strokeLinecap="round" d="M12 11v4M10 13h4" />
-        </svg>
-      );
-
-    case "Medical Supplies":
-      /* Bandage roll */
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
-          <ellipse cx="12" cy="12" rx="7" ry="4" transform="rotate(-25 12 12)" />
-          <path strokeLinecap="round" d="M8.5 10.5l7 7M9.5 13.5l4 4" />
+          <ellipse cx="12" cy="16" rx="5" ry="2.5" transform="rotate(-18 12 16)" />
+          <ellipse cx="9.5" cy="12.5" rx="4" ry="2" transform="rotate(22 9.5 12.5)" />
+          <ellipse cx="14.5" cy="11" rx="4" ry="2" transform="rotate(-12 14.5 11)" />
+          <ellipse cx="12" cy="8.5" rx="3.5" ry="1.8" transform="rotate(8 12 8.5)" />
         </svg>
       );
 
     case "First Aid":
-      /* First aid kit with cross */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
           <rect x="4" y="7" width="16" height="12" rx="2" />
@@ -121,24 +108,24 @@ function CategoryIcon({ label }: { label: (typeof CATEGORIES)[number] }) {
       );
 
     case "Sport & Fitness":
-      /* Dumbbell */
+      /* Dumbbell — bar + end weights */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
-          <rect x="2" y="9" width="4" height="6" rx="1" />
-          <rect x="18" y="9" width="4" height="6" rx="1" />
-          <path strokeLinecap="round" d="M6 12h12" />
+          <rect x="2" y="8.5" width="4.5" height="7" rx="1.25" />
+          <rect x="17.5" y="8.5" width="4.5" height="7" rx="1.25" />
+          <path strokeLinecap="round" d="M6.5 12h11" strokeWidth={2.5} />
         </svg>
       );
 
     case "Home & Pet":
-      /* House + paw pad */
+      /* Dog — face + floppy ears + snout */
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 11l7.5-5.5L18 11v8a1 1 0 01-1 1h-3.5v-4h-5v4H4a1 1 0 01-1-1v-8z" />
-          <ellipse cx="17.5" cy="7" rx="2" ry="1.8" />
-          <circle cx="15.2" cy="5.2" r="0.9" fill="currentColor" stroke="none" />
-          <circle cx="17.5" cy="4.5" r="0.9" fill="currentColor" stroke="none" />
-          <circle cx="19.8" cy="5.2" r="0.9" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="12" r="4.8" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7.2 8.2L5 5.5 7.5 6.8M16.8 8.2L19 5.5 16.5 6.8" />
+          <ellipse cx="12" cy="13.5" rx="2" ry="1.4" />
+          <circle cx="9.8" cy="10.8" r="0.75" fill="currentColor" stroke="none" />
+          <circle cx="14.2" cy="10.8" r="0.75" fill="currentColor" stroke="none" />
         </svg>
       );
 

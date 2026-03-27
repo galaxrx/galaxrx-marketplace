@@ -150,23 +150,22 @@ export default function ProductNameCameraReader({ onDetected, onError }: Props) 
       }
       ctx.putImageData(imageData, 0, 0);
 
-      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.95));
-      if (!blob) {
+      const processedBlob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.95));
+      if (!processedBlob) {
+        onError?.("Could not capture image from camera.");
+        return;
+      }
+      const originalBlob = await new Promise<Blob | null>((resolve) => srcCanvas.toBlob(resolve, "image/jpeg", 0.95));
+      if (!originalBlob) {
         onError?.("Could not capture image from camera.");
         return;
       }
 
       const { recognize } = await import("tesseract.js");
-      // Try two OCR passes with complementary settings.
+      // Try two OCR passes: enhanced crop + original frame.
       const [passA, passB] = await Promise.all([
-        recognize(blob, "eng", {
-          tessedit_pageseg_mode: "6",
-          tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+/.()% ",
-        }),
-        recognize(blob, "eng", {
-          tessedit_pageseg_mode: "11",
-          preserve_interword_spaces: "1",
-        }),
+        recognize(processedBlob, "eng"),
+        recognize(originalBlob, "eng"),
       ]);
       const rawText = `${passA.data.text ?? ""}\n${passB.data.text ?? ""}`.trim();
       const productName = guessProductName(rawText);

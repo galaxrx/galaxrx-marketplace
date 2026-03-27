@@ -26,6 +26,11 @@ const LandingHeader = dynamic(
   { ssr: true }
 );
 
+const LandingSlideshow = dynamic(
+  () => import("@/components/landing/LandingSlideshow").then((m) => m.default),
+  { ssr: true }
+);
+
 const FAQ_LANDING = [
   {
     q: "Who can use GalaxRX?",
@@ -136,16 +141,16 @@ export default function HomePage() {
         <HeroWallpaper className="z-0" variant="calm" />
         <LandingHeader />
 
-        {/* Hero */}
-        <section className="relative z-10 overflow-hidden px-4 pb-14 pt-8 sm:px-6 sm:pb-16 sm:pt-10 lg:px-10 xl:px-12">
+        {/* Hero — mobile: stacked; desktop: balanced two-column grid with constrained copy width */}
+        <section className="relative z-10 overflow-hidden px-4 pb-14 pt-8 sm:px-6 sm:pb-16 sm:pt-10 lg:px-10 xl:px-14 2xl:px-16">
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
             <div className="landing-hero-orb-primary absolute -top-40 left-[5%] h-[min(28rem,80vw)] w-[min(28rem,80vw)] rounded-full bg-gold/18 blur-[100px]" />
             <div className="landing-hero-orb-secondary absolute top-0 -right-20 h-[min(22rem,70vw)] w-[min(22rem,70vw)] rounded-full bg-[#3d6fb8]/22 blur-[90px]" />
             <div className="absolute bottom-0 left-1/2 h-56 w-[130%] -translate-x-1/2 bg-gradient-to-t from-[#0D1B2A] via-transparent to-transparent opacity-95" />
           </div>
 
-          <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 xl:gap-16">
-            <div className="text-center lg:text-left">
+          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] items-center gap-10 lg:grid-cols-2 lg:items-center lg:gap-12 xl:max-w-[min(100%,1400px)] xl:gap-16 2xl:gap-20">
+            <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-[26rem] lg:text-left xl:max-w-[28rem] 2xl:max-w-[32rem]">
               <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
                 Verified B2B marketplace
               </p>
@@ -157,12 +162,12 @@ export default function HomePage() {
                   traded between pharmacies.
                 </span>
               </h1>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:mx-0">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:mx-0 lg:max-w-none">
                 GalaxRX is where licensed Australian pharmacies recover capital on excess inventory and source verified
                 stock — with Stripe-secured settlement and a fee only when you sell.
               </p>
 
-              <div className="mt-7 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center lg:justify-start">
+              <div className="mt-7 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:max-w-lg sm:flex-row sm:justify-center lg:mx-0 lg:max-w-none lg:justify-start">
                 <Link
                   href="/register"
                   aria-label="Join GalaxRX — register as a verified pharmacy"
@@ -192,9 +197,9 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
+            <div className="relative mx-auto w-full min-w-0 max-w-xl lg:mx-0 lg:max-w-none lg:justify-self-stretch">
               <div className="pointer-events-none absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-gold/35 via-white/10 to-transparent opacity-80 blur-[2px]" aria-hidden />
-              <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[5/4]">
+              <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[5/4]">
                 <Image
                   src="/up.jpg"
                   alt="Pharmacy professional reviewing inventory — representing verified B2B surplus trading on GalaxRX"
@@ -356,44 +361,49 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* Featured visual */}
+        {/* Premium surplus — platform slides + copy; desktop: two balanced columns */}
         <ScrollReveal as="section" className="relative border-t border-white/[0.06] bg-[#070F18]">
-          <div className="relative min-h-[320px] sm:min-h-[380px] lg:min-h-[420px]">
-            <div className="absolute inset-0" aria-hidden>
-              <Image
-                src="/up.jpg"
-                alt=""
-                fill
-                className="object-cover object-[center_25%]"
-                sizes="100vw"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/75 to-[#0D1B2A]/55" aria-hidden />
-            <div className="relative z-[1] flex min-h-[320px] flex-col justify-center px-4 py-14 sm:min-h-[380px] sm:px-8 lg:min-h-[420px] lg:px-16">
-              <div className="mx-auto max-w-3xl text-center lg:mx-0 lg:text-left">
-                <h2 className="font-heading text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
-                  Premium surplus trading,
-                  <span className="block bg-gradient-to-r from-gold to-[#dfc88a] bg-clip-text text-transparent">
-                    without the noise.
-                  </span>
-                </h2>
-                <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 lg:mx-0">
-                  One place to list clearance, discover verified stock, and close with confidence — so your team spends
-                  less time chasing buyers and more time on patient care.
-                </p>
-                <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                  <Link
-                    href="/register"
-                    className="inline-flex min-w-[11rem] items-center justify-center rounded-2xl bg-gold px-8 py-3.5 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-lg transition-all hover:bg-gold/92 sm:text-sm"
-                  >
-                    Join now
-                  </Link>
-                  <Link
-                    href="/listings"
-                    className="inline-flex min-w-[11rem] items-center justify-center rounded-2xl border border-white/25 bg-white/10 px-8 py-3.5 font-heading text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm transition-all hover:bg-white/15 sm:text-sm"
-                  >
-                    Browse listings
-                  </Link>
+          <div className="relative overflow-hidden">
+            <div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_20%,rgba(201,168,76,0.07),transparent_55%)]"
+              aria-hidden
+            />
+            <div className="relative z-[1] mx-auto w-full max-w-[min(100%,1280px)] px-4 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16 xl:max-w-[min(100%,1400px)] xl:px-14 2xl:px-16">
+              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16 2xl:gap-20">
+                <div className="min-w-0 text-center lg:max-w-[28rem] lg:text-left xl:max-w-[32rem]">
+                  <h2 className="font-heading text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
+                    Premium surplus trading,
+                    <span className="block bg-gradient-to-r from-gold to-[#dfc88a] bg-clip-text text-transparent">
+                      without the noise.
+                    </span>
+                  </h2>
+                  <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 lg:mx-0">
+                    One place to list clearance, discover verified stock, and close with confidence — so your team spends
+                    less time chasing buyers and more time on patient care.
+                  </p>
+                  <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center lg:justify-start">
+                    <Link
+                      href="/register"
+                      className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl bg-gold px-8 py-3.5 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-lg transition-all hover:bg-gold/92 sm:text-sm"
+                    >
+                      Join now
+                    </Link>
+                    <Link
+                      href="/listings"
+                      className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl border border-white/25 bg-white/[0.08] px-8 py-3.5 font-heading text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm transition-all hover:bg-white/15 sm:text-sm"
+                    >
+                      Browse listings
+                    </Link>
+                  </div>
+                </div>
+                <div className="min-w-0 mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none">
+                  <div className="relative">
+                    <div
+                      className="pointer-events-none absolute -inset-1 rounded-[1.15rem] bg-gradient-to-br from-gold/20 via-white/[0.06] to-transparent opacity-80 blur-sm"
+                      aria-hidden
+                    />
+                    <LandingSlideshow className="relative w-full" />
+                  </div>
                 </div>
               </div>
             </div>

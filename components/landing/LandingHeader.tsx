@@ -33,18 +33,18 @@ export default function LandingHeader() {
 
   return (
     <header className="sticky top-0 z-20 w-full max-w-none flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3.5 sm:py-4 border-b border-white/[0.08] bg-[#0D1B2A]/92 backdrop-blur-xl shadow-[0_8px_32px_-20px_rgba(0,0,0,0.45)]">
-      <Link href="/" className="flex items-center gap-2 sm:gap-3 min-h-[3rem] min-w-0">
-        <div className="relative h-9 w-24 sm:h-10 sm:w-28 md:h-14 md:w-36 shrink-0">
+      <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 min-h-[3.25rem] sm:min-h-[3.75rem] min-w-0">
+        <div className="relative h-12 w-32 sm:h-14 sm:w-40 md:h-16 md:w-48 lg:h-[4.5rem] lg:w-[13.5rem] shrink-0">
           <Image
             src="/logo.png"
             alt=""
             fill
             className="object-contain object-left"
             priority
-            sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 144px"
+            sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, (max-width: 1024px) 192px, 216px"
           />
         </div>
-        <span className="font-heading font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-gold truncate">
+        <span className="font-heading font-bold text-xl sm:text-2xl md:text-3xl tracking-tight text-gold truncate">
           GalaxRX
         </span>
       </Link>

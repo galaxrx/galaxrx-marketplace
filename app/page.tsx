@@ -147,9 +147,9 @@ const MARKET_PROOF = [
 ] as const;
 
 const HERO_PROOF_SIGNALS = [
-  { label: "Manual verify · typically <24h", sub: "Before first trade" },
-  { label: "Funds held in Stripe", sub: "Until delivery confirms" },
-  { label: "Dispatch: pharmacy-led", sub: "You set courier or pickup" },
+  { label: "Verify <24h", sub: "Before first trade" },
+  { label: "Funds held", sub: "Released after delivery" },
+  { label: "Pharmacy dispatch", sub: "Courier or pickup" },
 ] as const;
 
 function ShieldCheckIcon({ className }: { className?: string }) {
@@ -271,17 +271,16 @@ export default function HomePage() {
               <p className="mb-5 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
                 Verified B2B marketplace · Australia
               </p>
-              <h1 className="font-heading text-[1.95rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-4xl md:text-[2.75rem] lg:text-[3.1rem] xl:text-[3.35rem]">
+              <h1 className="font-heading text-[1.95rem] font-bold leading-[1.15] tracking-tight text-balance sm:text-4xl md:text-[2.75rem] lg:text-[3.1rem] xl:text-[3.35rem]">
                 <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
-                  Turn surplus stock into cash
+                  Turn surplus into cash
                 </span>
-                <span className="mt-4 block max-w-xl bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text text-[1.125rem] font-semibold leading-snug text-transparent sm:text-xl md:text-2xl lg:mx-0 lg:text-[1.75rem] lg:leading-[1.2]">
-                  Before it expires — between verified pharmacies, not anonymous buyers.
+                <span className="mt-5 block max-w-xl bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text text-[1.125rem] font-semibold leading-[1.3] text-transparent sm:text-xl md:text-2xl lg:mx-0 lg:text-[1.75rem]">
+                  Verified pharmacy-to-pharmacy trading.
                 </span>
               </h1>
               <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/58 sm:text-[1.0625rem] lg:mx-0 lg:max-w-none">
-                GalaxRX is the B2B layer for pharmacy surplus: list in minutes, discover verified stock, settle through Stripe.
-                No retail storefronts — licensed peers only.
+                List in minutes. Settle with Stripe. Licensed pharmacies only.
               </p>
 
               <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:max-w-lg sm:flex-row sm:justify-center lg:mx-0 lg:max-w-none lg:justify-start">
@@ -301,13 +300,13 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              <ul className="mt-10 grid gap-2.5 sm:max-w-lg sm:grid-cols-1 sm:justify-items-center lg:max-w-none lg:justify-items-start" aria-label="How GalaxRX operates">
+              <ul className="mt-10 flex gap-2.5 overflow-x-auto pb-1 sm:gap-3 lg:max-w-none" aria-label="How GalaxRX operates">
                 {HERO_PROOF_SIGNALS.map((s) => (
                   <li
                     key={s.label}
-                    className="flex w-full items-start gap-3 rounded-2xl border border-white/[0.08] bg-black/25 px-4 py-3 text-left backdrop-blur-sm transition-colors hover:border-gold/20 sm:items-center sm:py-3.5"
+                    className="flex min-w-[14.25rem] flex-1 items-center gap-3 rounded-2xl border border-white/[0.08] bg-black/25 px-4 py-3 text-left backdrop-blur-sm transition-colors hover:border-gold/20 sm:min-w-[15rem] sm:py-3.5"
                   >
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08] sm:mt-0">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08]">
                       <ShieldCheckIcon className="h-4 w-4 text-gold" />
                     </span>
                     <span className="min-w-0">

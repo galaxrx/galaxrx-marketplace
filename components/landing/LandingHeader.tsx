@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 const NAV_LINKS = [
-  { href: "#what-we-do", label: "What we do" },
+  { href: "/#mission", label: "Mission" },
+  { href: "/#how-it-works", label: "How it works" },
   { href: "/solutions", label: "Solutions" },
   { href: "/why-galaxrx", label: "Why GalaxRX" },
   { href: "/about", label: "About" },

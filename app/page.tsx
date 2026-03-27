@@ -94,6 +94,74 @@ const PILLARS = [
   },
 ];
 
+/** Too Good To Go–style keyword strip (pharmacy / trading terms). */
+const MARQUEE_WORDS = [
+  "CLEARANCE",
+  "SURPLUS",
+  "SHORT-DATED",
+  "WANTED",
+  "OFFERS",
+  "B2B",
+  "VERIFIED",
+  "OTC",
+  "LISTINGS",
+  "STRIPE",
+  "PHARMACY",
+  "AUSTRALIA",
+  "PICKUP",
+  "DELIVERY",
+  "TRADE",
+];
+
+const HOW_STEPS = [
+  {
+    n: 1,
+    title: "Discover stock near you",
+    body: "Browse surplus, expiry clearance, and Wanted posts from licensed pharmacies — filters and boards make it easy to find what you need.",
+    img: "/Verified%20stock.png",
+    alt: "Discover listings",
+  },
+  {
+    n: 2,
+    title: "Confirm and pay securely",
+    body: "Reserve lines or accept an offer, then pay through Stripe. Buyer funds stay protected until delivery is confirmed.",
+    img: "/LIST.png",
+    alt: "Confirm and pay",
+  },
+  {
+    n: 3,
+    title: "Arrange delivery or pickup",
+    body: "Coordinate shipping or collection directly with your trading partner at times that work for both dispensaries.",
+    img: "/PHONE.png",
+    alt: "Arrange logistics",
+  },
+  {
+    n: 4,
+    title: "Complete with confidence",
+    body: "Mark delivery done to release funds — transparent settlement so you can keep trading with peers you trust.",
+    img: "/Secure%20payment.png",
+    alt: "Complete settlement",
+  },
+];
+
+const SOLUTION_TEASERS = [
+  {
+    title: "Expiry clearance",
+    desc: "Move short-dated lines before they expire — list on a board built for discounted pharmacy stock.",
+    href: "/solutions/expiry-clearance",
+  },
+  {
+    title: "Sell surplus",
+    desc: "Turn excess inventory into recovered capital with fast listing and verified buyers only.",
+    href: "/solutions/sell-surplus",
+  },
+  {
+    title: "Find stock",
+    desc: "Post on Wanted when shelves are empty — let other pharmacies offer what they have.",
+    href: "/solutions/find-stock",
+  },
+];
+
 function ShieldCheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
@@ -109,62 +177,78 @@ function ShieldCheckIcon({ className }: { className?: string }) {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col text-white overflow-x-hidden w-full max-w-[100vw]">
+    <div className="min-h-screen flex flex-col text-white overflow-x-hidden w-full max-w-[100vw] font-body">
       <div className="relative border-b border-white/[0.06]">
         <HeroWallpaper className="z-0" variant="calm" />
         <LandingHeader />
 
-        {/* Hero — centered stack + visual below (Stitch-style) */}
-        <section className="relative z-10 overflow-hidden px-4 sm:px-6 lg:px-8 xl:px-10 pt-6 pb-10 sm:pt-8 sm:pb-12 md:pb-14">
+        {/* Hero — split layout (TGTG-style): copy + primary visual */}
+        <section className="relative z-10 overflow-hidden px-4 sm:px-6 lg:px-8 xl:px-10 pt-6 pb-12 sm:pt-8 sm:pb-16 md:pb-20">
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
             <div className="landing-hero-orb-primary absolute -top-40 left-[8%] h-[min(28rem,80vw)] w-[min(28rem,80vw)] rounded-full bg-gold/20 blur-[100px]" />
             <div className="landing-hero-orb-secondary absolute top-8 -right-24 h-[min(22rem,70vw)] w-[min(22rem,70vw)] rounded-full bg-[#3d6fb8]/25 blur-[90px]" />
             <div className="absolute bottom-0 left-1/2 h-48 w-[120%] -translate-x-1/2 bg-gradient-to-t from-[#0D1B2A] via-transparent to-transparent opacity-90" />
           </div>
-          <div className="relative w-full max-w-3xl mx-auto text-center flex flex-col items-center">
-            <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06]">
-              Verified B2B marketplace
-            </p>
-            <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-[2.75rem] font-bold tracking-tight text-balance mb-4 sm:mb-5 flex flex-col items-center gap-2.5 sm:gap-3 md:gap-3.5 leading-tight">
-              <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)] leading-snug">
-                Pharmacy surplus and clearance,
-              </span>
-              <span className="block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)] leading-snug">
-                trade with confidence.
-              </span>
-            </h1>
-            <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mb-8 sm:mb-9">
-              Licensed Australian pharmacies trade surplus and clearance here — recover capital from excess inventory
-              instead of letting it sit on the shelf.
-            </p>
-            <div className="flex flex-col w-full max-w-md sm:max-w-lg gap-3 sm:flex-row sm:justify-center">
-              <Link
-                href="/register"
-                aria-label="Join GalaxRX — free to sign up, then list and trade surplus with verified pharmacies"
-                className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3.5 rounded-xl font-bold font-heading text-xs sm:text-sm uppercase tracking-wide shadow-[0_8px_28px_-6px_rgba(201,168,76,0.55)] transition-all duration-300 hover:bg-gold/92 hover:shadow-[0_12px_36px_-8px_rgba(201,168,76,0.65)] hover:-translate-y-0.5 active:translate-y-0"
-              >
-                Join now
-              </Link>
-              <Link
-                href="/listings"
-                aria-label="Browse current pharmacy stock listings"
-                className="inline-flex items-center justify-center rounded-xl border border-gold/40 bg-white/[0.03] px-6 py-3.5 font-semibold font-heading text-xs sm:text-sm uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/55 hover:bg-white/[0.08] hover:shadow-[0_0_24px_-8px_rgba(201,168,76,0.2)]"
-              >
-                View listings
-              </Link>
+
+          <div className="mx-auto grid w-full max-w-6xl gap-10 lg:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center">
+            <div className="text-center lg:text-left">
+              <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06]">
+                Verified B2B marketplace
+              </p>
+              <h1 className="font-heading text-[1.75rem] sm:text-4xl md:text-[2.85rem] font-bold tracking-tight text-balance mb-4 sm:mb-5 leading-[1.12]">
+                <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
+                  Pharmacy surplus and clearance,
+                </span>
+                <span className="mt-1 block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)]">
+                  trade with confidence.
+                </span>
+              </h1>
+              <p className="text-white/60 text-[0.95rem] sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 mb-8">
+                Licensed Australian pharmacies trade surplus and clearance here — recover capital from excess inventory
+                instead of letting it sit on the shelf.
+              </p>
+              <div className="flex flex-col w-full max-w-md mx-auto lg:mx-0 sm:max-w-lg gap-3 sm:flex-row sm:justify-center lg:justify-start">
+                <Link
+                  href="/register"
+                  aria-label="Join GalaxRX — free to sign up, then list and trade surplus with verified pharmacies"
+                  className="inline-flex items-center justify-center bg-gold text-[#0D1B2A] px-6 py-3.5 rounded-xl font-bold font-heading text-xs sm:text-sm uppercase tracking-wide shadow-[0_8px_28px_-6px_rgba(201,168,76,0.55)] transition-all duration-300 hover:bg-gold/92 hover:shadow-[0_12px_36px_-8px_rgba(201,168,76,0.65)] hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  Join now
+                </Link>
+                <Link
+                  href="/listings"
+                  aria-label="Browse current pharmacy stock listings"
+                  className="inline-flex items-center justify-center rounded-xl border border-gold/40 bg-white/[0.03] px-6 py-3.5 font-semibold font-heading text-xs sm:text-sm uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/55 hover:bg-white/[0.08] hover:shadow-[0_0_24px_-8px_rgba(201,168,76,0.2)]"
+                >
+                  View listings
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+              <div
+                className="pointer-events-none absolute -inset-1 rounded-[1.35rem] bg-gradient-to-br from-gold/30 via-white/[0.12] to-transparent opacity-75 blur-sm"
+                aria-hidden
+              />
+              <div className="relative aspect-[4/3] sm:aspect-[16/11] w-full overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_80px_-24px_rgba(0,0,0,0.65),0_0_0_1px_rgba(201,168,76,0.12)] ring-1 ring-gold/20">
+                <Image
+                  src="/up.jpg"
+                  alt="Pharmacy professionals using GalaxRX"
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/55 via-transparent to-[#0a1522]/20"
+                  aria-hidden
+                />
+              </div>
             </div>
           </div>
 
-          <div className="relative mx-auto mt-10 w-full max-w-4xl sm:mt-12">
-            <div
-              className="pointer-events-none absolute -inset-1 rounded-[1.15rem] bg-gradient-to-br from-gold/25 via-white/[0.08] to-transparent opacity-70 blur-sm"
-              aria-hidden
-            />
-            <LandingSlideshow className="relative w-full" />
-          </div>
-
           <div
-            className="mt-8 sm:mt-10 w-full max-w-xl mx-auto pt-6 sm:pt-8 border-t border-white/[0.08]"
+            className="mt-10 sm:mt-12 w-full max-w-xl mx-auto pt-6 sm:pt-8 border-t border-white/[0.08]"
             role="note"
             aria-label="Promotional offer for new pharmacies"
           >
@@ -189,6 +273,186 @@ export default function HomePage() {
       </div>
 
       <main className="flex-1">
+        {/* Mission — centred manifesto block (TGTG-style) */}
+        <ScrollReveal
+          as="section"
+          id="mission"
+          className="relative overflow-hidden py-14 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06] scroll-mt-28"
+        >
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(201,168,76,0.06),transparent_55%)]"
+            aria-hidden
+          />
+          <div className="relative mx-auto max-w-3xl text-center">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-[1.65rem] font-bold text-white leading-snug tracking-tight text-balance">
+              GalaxRX is built for Australian pharmacies who want surplus and clearance to move quickly — without giving
+              up trust or payment certainty.
+            </h2>
+            <p className="mt-6 text-base sm:text-lg text-white/55 leading-relaxed">
+              Our marketplace connects verified dispensaries so you can list in seconds, discover stock when you need it,
+              and settle through Stripe with funds held until delivery is confirmed — peer-to-peer trading, with guardrails.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        {/* Why GalaxRX — four-up feature grid */}
+        <section
+          id="why-galaxrx-landing"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06] scroll-mt-28"
+        >
+          <div
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(201,168,76,0.04)_0%,transparent_40%)]"
+            aria-hidden
+          />
+          <ScrollReveal as="div" className="relative mb-10 sm:mb-14 text-center max-w-2xl mx-auto">
+            <p className="text-gold/90 text-xs font-semibold uppercase tracking-[0.28em] mb-3">Why use</p>
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-white uppercase tracking-[0.08em]">
+              GalaxRX
+            </h2>
+            <div className="mx-auto mt-5 h-px w-20 bg-gradient-to-r from-transparent via-gold/45 to-transparent" aria-hidden />
+          </ScrollReveal>
+          <div className="relative mx-auto grid w-full max-w-5xl gap-5 sm:gap-6 sm:grid-cols-2">
+            {PILLARS.map((item, i) => (
+              <ScrollReveal key={item.title} as="div" delay={i * 0.06}>
+                <div className="h-full rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/95 to-[#0e1623] p-6 sm:p-7 text-center sm:text-left shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/25 hover:shadow-[0_24px_48px_-20px_rgba(201,168,76,0.1)]">
+                  <div className="mx-auto sm:mx-0 mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/[0.1] bg-[#0a1522] shadow-inner ring-1 ring-white/[0.04]">
+                    <div className="relative h-11 w-11">
+                      <Image src={item.img} alt={item.alt} fill className="object-cover" sizes="44px" />
+                    </div>
+                  </div>
+                  <h3 className="font-heading text-lg sm:text-xl font-bold text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/55">{item.desc}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+
+        {/* Keyword marquee */}
+        <section
+          className="relative overflow-hidden border-y border-white/[0.06] bg-[#070F18] py-5 sm:py-6"
+          aria-label="Trading categories"
+        >
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-16 bg-gradient-to-r from-[#070F18] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-16 bg-gradient-to-l from-[#070F18] to-transparent" />
+          <div className="marquee-track gap-10 pr-10">
+            {[...MARQUEE_WORDS, ...MARQUEE_WORDS].map((w, i) => (
+              <span
+                key={`${w}-${i}`}
+                className="shrink-0 font-heading text-lg sm:text-xl font-bold uppercase tracking-[0.2em] text-white/25"
+              >
+                {w}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* How it works — alternating steps */}
+        <section
+          id="how-it-works"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06] scroll-mt-28"
+        >
+          <div
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(201,168,76,0.03)_50%,transparent_100%)]"
+            aria-hidden
+          />
+          <ScrollReveal as="div" className="relative mb-12 sm:mb-16 text-center">
+            <p className="text-gold/90 text-xs font-semibold uppercase tracking-[0.28em] mb-3">How to use GalaxRX</p>
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-[0.12em]">
+              Four simple steps
+            </h2>
+            <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
+          </ScrollReveal>
+
+          <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-14 sm:gap-16 md:gap-20">
+            {HOW_STEPS.map((step, i) => (
+              <ScrollReveal key={step.n} as="div" delay={i * 0.08}>
+                <div
+                  className={`flex flex-col gap-8 md:gap-12 md:flex-row md:items-center ${i % 2 === 1 ? "md:flex-row-reverse" : ""}`}
+                >
+                  <div className="relative flex-1 aspect-[4/3] sm:aspect-[16/10] w-full max-w-xl mx-auto overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a1522] shadow-[0_20px_50px_-24px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.04]">
+                    <Image src={step.img} alt={step.alt} fill className="object-cover" sizes="(max-width:768px) 100vw, 480px" />
+                    <div
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#0D1B2A]/40 to-transparent"
+                      aria-hidden
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 text-center md:text-left">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gold/35 bg-gold/[0.12] font-heading text-sm font-bold text-gold mb-4">
+                      {step.n}
+                    </span>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-white">{step.title}</h3>
+                    <p className="mt-3 text-sm sm:text-base leading-relaxed text-white/55 max-w-md mx-auto md:mx-0">
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+
+        {/* Platform screenshots */}
+        <ScrollReveal
+          as="section"
+          className="relative overflow-hidden py-12 sm:py-16 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]"
+        >
+          <div className="relative mx-auto max-w-3xl text-center mb-8 sm:mb-10">
+            <h2 className="font-heading text-xl sm:text-2xl font-bold text-white">See the platform</h2>
+            <p className="mt-2 text-sm sm:text-base text-white/50">Screens from the GalaxRX marketplace.</p>
+          </div>
+          <div className="relative mx-auto w-full max-w-4xl">
+            <div
+              className="pointer-events-none absolute -inset-1 rounded-[1.15rem] bg-gradient-to-br from-gold/25 via-white/[0.08] to-transparent opacity-70 blur-sm"
+              aria-hidden
+            />
+            <LandingSlideshow className="relative w-full" />
+          </div>
+        </ScrollReveal>
+
+        {/* Solutions teaser — business-style cards */}
+        <ScrollReveal
+          as="section"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_50%_100%,rgba(201,168,76,0.07),transparent_55%)]" aria-hidden />
+          <div className="relative mx-auto max-w-3xl text-center mb-10 sm:mb-12">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white">Solutions for your dispensary</h2>
+            <p className="mt-3 text-sm sm:text-base text-white/50 leading-relaxed">
+              Whether you are clearing lines or sourcing stock — start from a use case that matches your counter.
+            </p>
+          </div>
+          <div className="relative mx-auto grid w-full max-w-5xl gap-5 md:grid-cols-3">
+            {SOLUTION_TEASERS.map((s, i) => (
+              <ScrollReveal key={s.href} as="div" delay={i * 0.07}>
+                <Link
+                  href={s.href}
+                  className="group flex h-full flex-col rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/95 to-[#0e1623] p-6 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/30 hover:shadow-[0_24px_48px_-20px_rgba(201,168,76,0.12)]"
+                >
+                  <h3 className="font-heading text-lg font-bold text-white group-hover:text-gold/95 transition-colors">
+                    {s.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm text-white/55 leading-relaxed">{s.desc}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gold">
+                    Learn more
+                    <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                      →
+                    </span>
+                  </span>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+          <div className="relative mt-10 text-center">
+            <Link
+              href="/solutions"
+              className="inline-flex items-center justify-center rounded-xl border border-gold/35 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-gold hover:bg-white/[0.08] transition-colors"
+            >
+              View all solutions
+            </Link>
+          </div>
+        </ScrollReveal>
+
         {/* Fee spotlight */}
         <ScrollReveal
           as="section"
@@ -212,42 +476,6 @@ export default function HomePage() {
             </div>
           </div>
         </ScrollReveal>
-
-        {/* How GalaxRX works */}
-        <section
-          id="what-we-do"
-          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
-        >
-          <div
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(201,168,76,0.03)_0%,transparent_35%,transparent_100%)]"
-            aria-hidden
-          />
-          <ScrollReveal as="div" className="relative mb-10 sm:mb-12 text-center">
-            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-[0.12em] [text-shadow:0_2px_24px_rgba(0,0,0,0.3)]">
-              How GalaxRX works
-            </h2>
-            <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
-          </ScrollReveal>
-          <div className="relative mx-auto flex w-full max-w-xl flex-col gap-4 sm:gap-5">
-            {PILLARS.map((item, i) => (
-              <ScrollReveal key={item.title} as="div" delay={i * 0.09}>
-                <div className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/95 to-[#0e1623] px-4 py-5 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/20 hover:shadow-[0_24px_48px_-20px_rgba(201,168,76,0.12)] sm:px-5 sm:py-6">
-                  <div className="flex gap-4">
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-white/[0.1] bg-[#0a1522] shadow-inner ring-1 ring-white/[0.04] transition-all duration-300 group-hover:ring-gold/25 sm:h-14 sm:w-14">
-                      <Image src={item.img} alt={item.alt} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="56px" />
-                    </div>
-                    <div className="min-w-0 pt-0.5">
-                      <h3 className="font-heading text-lg font-bold leading-snug text-white transition-colors duration-300 group-hover:text-gold/95 sm:text-xl">
-                        {item.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-white/55">{item.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </section>
 
         {SHOW_TESTIMONIALS && (
           <ScrollReveal as="section" className="py-14 sm:py-20 md:py-28 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-[rgba(161,130,65,0.10)]">
@@ -275,7 +503,7 @@ export default function HomePage() {
         {/* FAQ */}
         <ScrollReveal
           as="section"
-          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0a111a] border-t border-white/[0.06]"
+          className="relative overflow-hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 bg-[#0D1B2A] border-t border-white/[0.06]"
         >
           <div
             className="pointer-events-none absolute right-0 top-1/4 h-64 w-64 rounded-full bg-gold/[0.04] blur-[80px]"

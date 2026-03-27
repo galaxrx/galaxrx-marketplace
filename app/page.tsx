@@ -361,53 +361,36 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* Premium surplus — platform slides + copy; desktop: two balanced columns */}
+        {/* Premium surplus — full-bleed slides + left gradient overlay (previous hero style) */}
         <ScrollReveal as="section" className="relative border-t border-white/[0.06] bg-[#070F18]">
-          <div className="relative overflow-hidden">
-            <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_20%,rgba(201,168,76,0.07),transparent_55%)]"
-              aria-hidden
-            />
-            <div className="relative z-[1] mx-auto w-full max-w-[min(100%,1280px)] px-4 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16 xl:max-w-[min(100%,1400px)] xl:px-14 2xl:px-16">
-              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16 2xl:gap-20">
-                <div className="min-w-0 text-center lg:max-w-[28rem] lg:text-left xl:max-w-[32rem]">
-                  <h2 className="font-heading text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
-                    Premium surplus trading,
-                    <span className="block bg-gradient-to-r from-gold to-[#dfc88a] bg-clip-text text-transparent">
-                      without the noise.
-                    </span>
-                  </h2>
-                  <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 lg:mx-0">
-                    One place to list clearance, discover verified stock, and close with confidence — so your team spends
-                    less time chasing buyers and more time on patient care.
-                  </p>
-                  <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                    <Link
-                      href="/register"
-                      className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl bg-gold px-8 py-3.5 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-lg transition-all hover:bg-gold/92 sm:text-sm"
-                    >
-                      Join now
-                    </Link>
-                    <Link
-                      href="/listings"
-                      className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl border border-white/25 bg-white/[0.08] px-8 py-3.5 font-heading text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm transition-all hover:bg-white/15 sm:text-sm"
-                    >
-                      Browse listings
-                    </Link>
-                  </div>
-                </div>
-                <div className="min-w-0 mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none">
-                  <div className="relative">
-                    <div
-                      className="pointer-events-none absolute -inset-1 rounded-[1.15rem] bg-gradient-to-br from-gold/20 via-white/[0.06] to-transparent opacity-80 blur-sm"
-                      aria-hidden
-                    />
-                    <LandingSlideshow className="relative w-full" />
-                  </div>
-                </div>
+          <LandingSlideshow variant="fullBleed">
+            <div className="mx-auto w-full max-w-3xl text-center lg:mx-0 lg:text-left">
+              <h2 className="font-heading text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
+                Premium surplus trading,
+                <span className="block bg-gradient-to-r from-gold to-[#dfc88a] bg-clip-text text-transparent">
+                  without the noise.
+                </span>
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 lg:mx-0">
+                One place to list clearance, discover verified stock, and close with confidence — so your team spends
+                less time chasing buyers and more time on patient care.
+              </p>
+              <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center lg:justify-start">
+                <Link
+                  href="/register"
+                  className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl bg-gold px-8 py-3.5 font-heading text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-lg transition-all hover:bg-gold/92 sm:text-sm"
+                >
+                  Join now
+                </Link>
+                <Link
+                  href="/listings"
+                  className="inline-flex min-h-[2.75rem] min-w-[11rem] items-center justify-center rounded-2xl border border-white/25 bg-white/10 px-8 py-3.5 font-heading text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm transition-all hover:bg-white/15 sm:text-sm"
+                >
+                  Browse listings
+                </Link>
               </div>
             </div>
-          </div>
+          </LandingSlideshow>
         </ScrollReveal>
 
         {/* FAQ */}

@@ -253,7 +253,7 @@ export default function HomePage() {
               />
               <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[5/4]">
                 <Image
-                  src="/up.jpg"
+                  src="/up.png"
                   alt="Pharmacy professional reviewing inventory — representing verified B2B surplus trading on GalaxRX"
                   fill
                   priority

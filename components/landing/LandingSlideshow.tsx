@@ -5,9 +5,9 @@ import { useState, useEffect, useCallback, type ReactNode } from "react";
 const SLIDE_IMAGES = ["/slides/1.png.png", "/slides/2.png.png", "/slides/3.png.png", "/slides/4.jpg.jpg"];
 const INTERVAL_MS = 6000;
 
-/** Responsive height: comfortable on phone; desktop uses vh (capped) so more of each slide is visible. */
+/** Responsive min height — with object-contain, extra height lets the photo scale up on wide screens. */
 const FULL_BLEED_MIN_H =
-  "min-h-[20rem] sm:min-h-[22rem] md:min-h-[min(44vh,32rem)] lg:min-h-[min(58vh,44rem)] xl:min-h-[min(62vh,50rem)] 2xl:min-h-[min(66vh,56rem)]";
+  "min-h-[20rem] sm:min-h-[22rem] md:min-h-[min(48vh,34rem)] lg:min-h-[min(65vh,48rem)] xl:min-h-[min(70vh,54rem)] 2xl:min-h-[min(75vh,60rem)]";
 
 type Variant = "default" | "fullBleed";
 
@@ -54,7 +54,8 @@ export default function LandingSlideshow({
             alt={variant === "fullBleed" ? "" : `Slide ${index + 1}`}
             className={
               variant === "fullBleed"
-                ? "absolute inset-0 h-full w-full object-cover object-[center_40%] sm:object-center"
+                ? /* contain = full image visible; letterboxing filled by parent bg-[#0a1522] */
+                  "absolute inset-0 h-full w-full object-contain object-center"
                 : "absolute inset-0 h-full w-full object-cover object-center"
             }
             loading={index === 0 ? "eager" : "lazy"}

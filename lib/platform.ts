@@ -20,7 +20,7 @@ export const PLATFORM = {
     process.env.NEXT_PUBLIC_LINKEDIN_URL?.trim() || "https://www.linkedin.com/company/galaxrx/",
   /** GalaxRX YouTube channel */
   youtubeUrl:
-    process.env.NEXT_PUBLIC_YOUTUBE_URL?.trim() || "https://www.youtube.com/channel/UCcdz1tIZWvOlSoznkj69H3g",
+    process.env.NEXT_PUBLIC_YOUTUBE_URL?.trim() || "https://www.youtube.com/@GalaxRX",
   abn: process.env.NEXT_PUBLIC_PLATFORM_ABN ?? "",
   // EFT / Direct deposit (for members to pay invoices or top-up)
   eft: {

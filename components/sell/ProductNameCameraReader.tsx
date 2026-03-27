@@ -8,6 +8,11 @@ type Props = {
 };
 
 type PermissionState = "pending" | "granted" | "denied";
+type OcrLineCandidate = {
+  line: string;
+  fontHeight: number;
+  confidence: number;
+};
 
 const normalizeLines = (rawText: string): string[] =>
   rawText
@@ -41,13 +46,52 @@ const scoreLineForProductName = (line: string): number => {
   return score;
 };
 
-const guessProductName = (rawText: string): string | null => {
+const extractOcrLineCandidates = (data: unknown): OcrLineCandidate[] => {
+  if (!data || typeof data !== "object") return [];
+  const maybeLines = (data as { lines?: unknown }).lines;
+  if (!Array.isArray(maybeLines)) return [];
+
+  return maybeLines
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const text = String((item as { text?: unknown }).text ?? "").trim();
+      if (!text) return null;
+      const bbox = ((item as { bbox?: unknown }).bbox ?? {}) as { y0?: number; y1?: number };
+      const fontHeight = Math.max(0, Number(bbox.y1 ?? 0) - Number(bbox.y0 ?? 0));
+      const confidenceRaw = (item as { confidence?: unknown; conf?: unknown }).confidence ?? (item as { conf?: unknown }).conf;
+      const confidence = Number.isFinite(Number(confidenceRaw)) ? Number(confidenceRaw) : 0;
+      return { line: text, fontHeight, confidence };
+    })
+    .filter((candidate): candidate is OcrLineCandidate => candidate !== null);
+};
+
+const guessProductName = (rawText: string, candidates: OcrLineCandidate[] = []): string | null => {
   const cleaned = normalizeLines(rawText);
 
   if (cleaned.length === 0) return null;
 
+  const byLine = new Map<string, { line: string; fontHeight: number; confidence: number }>();
+  for (const c of candidates) {
+    const normalized = c.line.replace(/\s+/g, " ").trim();
+    if (!normalized) continue;
+    const existing = byLine.get(normalized);
+    if (!existing) {
+      byLine.set(normalized, { line: normalized, fontHeight: c.fontHeight, confidence: c.confidence });
+      continue;
+    }
+    existing.fontHeight = Math.max(existing.fontHeight, c.fontHeight);
+    existing.confidence = Math.max(existing.confidence, c.confidence);
+  }
+
   const scored = cleaned
-    .map((line) => ({ line, score: scoreLineForProductName(line) }))
+    .map((line) => {
+      const extra = byLine.get(line) ?? { line, fontHeight: 0, confidence: 0 };
+      const lexicalScore = scoreLineForProductName(line);
+      // Prefer bigger printed text when lexical quality is similar.
+      const sizeScore = extra.fontHeight * 0.45;
+      const confidenceScore = extra.confidence * 0.1;
+      return { line, score: lexicalScore * 3 + sizeScore + confidenceScore };
+    })
     .sort((a, b) => b.score - a.score);
 
   const best = scored[0];
@@ -168,7 +212,11 @@ export default function ProductNameCameraReader({ onDetected, onError }: Props) 
         recognize(originalBlob, "eng"),
       ]);
       const rawText = `${passA.data.text ?? ""}\n${passB.data.text ?? ""}`.trim();
-      const productName = guessProductName(rawText);
+      const lineCandidates = [
+        ...extractOcrLineCandidates(passA.data),
+        ...extractOcrLineCandidates(passB.data),
+      ];
+      const productName = guessProductName(rawText, lineCandidates);
 
       if (!rawText || !productName) {
         setOcrHint("No clear name found. Hold steady, improve lighting, and keep only the product name in the box.");

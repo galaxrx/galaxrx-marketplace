@@ -16,11 +16,6 @@ export const metadata: Metadata = {
 const CONTACT_PHONE_RAW = PLATFORM.phone.trim();
 const CONTACT_TEL = platformTelHref(CONTACT_PHONE_RAW);
 
-const HeroWallpaper = dynamic(
-  () => import("@/components/landing/HeroWallpaper").then((m) => m.default),
-  { ssr: true }
-);
-
 const LandingHeader = dynamic(
   () => import("@/components/landing/LandingHeader").then((m) => m.default),
   { ssr: true }
@@ -138,33 +133,39 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen w-full max-w-[100vw] flex-col overflow-x-hidden text-white">
       <div className="relative border-b border-white/[0.06]">
-        <HeroWallpaper className="z-0" variant="calm" />
         <LandingHeader />
 
-        {/* Hero — mobile: stacked; desktop: balanced two-column grid with constrained copy width */}
-        <section className="relative z-10 overflow-hidden px-4 pb-14 pt-8 sm:px-6 sm:pb-16 sm:pt-10 lg:px-10 xl:px-14 2xl:px-16">
-          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-            <div className="landing-hero-orb-primary absolute -top-40 left-[5%] h-[min(28rem,80vw)] w-[min(28rem,80vw)] rounded-full bg-gold/18 blur-[100px]" />
-            <div className="landing-hero-orb-secondary absolute top-0 -right-20 h-[min(22rem,70vw)] w-[min(22rem,70vw)] rounded-full bg-[#3d6fb8]/22 blur-[90px]" />
-            <div className="absolute bottom-0 left-1/2 h-56 w-[130%] -translate-x-1/2 bg-gradient-to-t from-[#0D1B2A] via-transparent to-transparent opacity-95" />
+        {/* Hero — full-bleed pharmacy photo with readable overlay */}
+        <section className="relative isolate z-10 flex min-h-[min(100svh,40rem)] flex-col justify-center overflow-hidden sm:min-h-[min(92svh,44rem)] lg:min-h-[min(88svh,52rem)]">
+          <div className="absolute inset-0 -z-10" aria-hidden>
+            <Image
+              src="/up.jpg"
+              alt=""
+              fill
+              priority
+              className="object-cover object-[center_30%] sm:object-center"
+              sizes="100vw"
+              aria-hidden
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/96 via-[#0D1B2A]/78 to-[#0D1B2A]/45" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/92 via-[#0D1B2A]/35 to-[#0D1B2A]/25" />
           </div>
 
-          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] items-center gap-10 lg:grid-cols-2 lg:items-center lg:gap-12 xl:max-w-[min(100%,1400px)] xl:gap-16 2xl:gap-20">
-            <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-[26rem] lg:text-left xl:max-w-[28rem] 2xl:max-w-[32rem]">
-              <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
+          <div className="relative mx-auto w-full max-w-[min(100%,1280px)] px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-12 lg:px-10 lg:pb-20 lg:pt-14 xl:px-14 2xl:px-16">
+            <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-[36rem] lg:text-left">
+              <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-black/25 px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.08] sm:text-[0.65rem]">
                 Verified B2B marketplace
               </p>
               <h1 className="font-heading text-[1.85rem] font-bold leading-[1.12] tracking-tight text-balance sm:text-4xl md:text-5xl lg:text-[3.15rem] xl:text-[3.35rem]">
-                <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
+                <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.45)]">
                   Surplus and clearance,
                 </span>
                 <span className="mt-2 block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)]">
                   traded between pharmacies.
                 </span>
               </h1>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:mx-0 lg:max-w-none">
-                GalaxRX is where licensed Australian pharmacies recover capital on excess inventory and source verified
-                stock — with Stripe-secured settlement and a fee only when you sell.
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg lg:mx-0">
+                GalaxRX is where licensed Australian pharmacies recover capital on excess inventory and source verified stock.
               </p>
 
               <div className="mt-7 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:max-w-lg sm:flex-row sm:justify-center lg:mx-0 lg:max-w-none lg:justify-start">
@@ -178,7 +179,7 @@ export default function HomePage() {
                 <Link
                   href="/listings"
                   aria-label="Browse pharmacy stock listings"
-                  className="inline-flex items-center justify-center rounded-2xl border border-gold/45 bg-white/[0.04] px-7 py-4 font-heading text-xs font-semibold uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/60 hover:bg-white/[0.09] hover:shadow-[0_0_28px_-10px_rgba(201,168,76,0.25)] sm:text-sm"
+                  className="inline-flex items-center justify-center rounded-2xl border border-gold/50 bg-black/25 px-7 py-4 font-heading text-xs font-semibold uppercase tracking-wide text-gold backdrop-blur-md transition-all duration-300 hover:border-gold/65 hover:bg-black/35 hover:shadow-[0_0_28px_-10px_rgba(201,168,76,0.25)] sm:text-sm"
                 >
                   Browse listings
                 </Link>
@@ -188,37 +189,13 @@ export default function HomePage() {
                 {TRUST_BADGES.map((b) => (
                   <li
                     key={b}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-black/20 px-3 py-1.5 text-[0.7rem] font-medium text-white/75 backdrop-blur-sm sm:text-xs"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-black/30 px-3 py-1.5 text-[0.7rem] font-medium text-white/85 backdrop-blur-sm sm:text-xs"
                   >
                     <ShieldCheckIcon className="h-3.5 w-3.5 shrink-0 text-gold" />
                     {b}
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className="relative mx-auto w-full min-w-0 max-w-xl lg:mx-0 lg:max-w-none lg:justify-self-stretch">
-              <div className="pointer-events-none absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-gold/35 via-white/10 to-transparent opacity-80 blur-[2px]" aria-hidden />
-              <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[5/4]">
-                <Image
-                  src="/up.jpg"
-                  alt="Pharmacy professional reviewing inventory — representing verified B2B surplus trading on GalaxRX"
-                  fill
-                  priority
-                  className="object-cover object-[center_22%] sm:object-center"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/95 via-[#0D1B2A]/25 to-transparent sm:from-[#0D1B2A]/90"
-                  aria-hidden
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                  <p className="font-heading text-sm font-semibold uppercase tracking-[0.2em] text-gold/95">Built for pharmacies</p>
-                  <p className="mt-1 max-w-sm text-sm leading-relaxed text-white/85">
-                    Commercial trading — not retail. Every account is verified before anyone buys or sells.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -281,23 +258,40 @@ export default function HomePage() {
             </p>
             <div className="mx-auto mt-6 h-px w-20 bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden />
           </ScrollReveal>
-          <div className="relative mx-auto grid max-w-6xl gap-5 sm:grid-cols-2 lg:gap-6">
+          <div className="relative mx-auto grid max-w-6xl gap-7 sm:grid-cols-2 sm:gap-8 lg:gap-10">
             {HOW_STEPS.map((item, i) => (
-              <ScrollReveal key={item.title} as="div" delay={i * 0.06}>
-                <div className="group flex h-full flex-col rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#111c2e]/95 to-[#0e1623] p-6 shadow-[0_20px_48px_-32px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/22 hover:shadow-[0_28px_56px_-28px_rgba(201,168,76,0.14)] sm:p-7">
-                  <div className="relative mb-5 aspect-[16/10] w-full overflow-hidden rounded-xl border border-white/[0.08] bg-[#0a1522] ring-1 ring-white/[0.04]">
-                    <Image
-                      src={item.img}
-                      alt={item.alt}
-                      fill
-                      className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                    />
+              <ScrollReveal key={item.title} as="div" delay={i * 0.08} xOffset={i % 2 === 0 ? -16 : 16}>
+                <div
+                  className="group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/[0.1] bg-gradient-to-br from-[#111c2e]/98 to-[#0a1018] p-[1px] shadow-[0_28px_64px_-36px_rgba(0,0,0,0.75)] ring-1 ring-white/[0.04] transition-all duration-500 hover:-translate-y-1.5 hover:border-gold/30 hover:shadow-[0_36px_72px_-32px_rgba(201,168,76,0.18)] hover:ring-gold/15 lg:even:translate-y-8"
+                >
+                  <div className="relative overflow-hidden rounded-[1.3rem] bg-[#0a1522]">
+                    <div className="relative aspect-[16/10] w-full overflow-hidden">
+                      <span className="absolute left-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[#0D1B2A]/90 font-heading text-sm font-bold tabular-nums text-gold shadow-lg ring-1 ring-gold/35 backdrop-blur-sm sm:left-4 sm:top-4">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <Image
+                        src={item.img}
+                        alt={item.alt}
+                        fill
+                        className="object-cover object-center transition duration-700 ease-out group-hover:scale-[1.05]"
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                      />
+                      <div
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/75 via-[#0D1B2A]/10 to-transparent opacity-95 transition-opacity duration-500 group-hover:opacity-100"
+                        aria-hidden
+                      />
+                      <div
+                        className="pointer-events-none absolute inset-0 opacity-0 mix-blend-overlay transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(ellipse_90%_60%_at_50%_100%,rgba(201,168,76,0.12),transparent_55%)]"
+                        aria-hidden
+                      />
+                    </div>
+                    <div className="relative px-5 pb-6 pt-5 sm:px-7 sm:pb-7 sm:pt-6">
+                      <h3 className="font-heading text-xl font-bold text-white transition-colors duration-300 group-hover:text-gold/95 sm:text-2xl">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-white/55 sm:text-[0.95rem]">{item.desc}</p>
+                    </div>
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-white transition-colors duration-300 group-hover:text-gold/95">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-white/55">{item.desc}</p>
                 </div>
               </ScrollReveal>
             ))}

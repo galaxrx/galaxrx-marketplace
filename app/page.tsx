@@ -4,7 +4,6 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import CategoryMarquee from "@/components/landing/CategoryMarquee";
-import { FULL_BLEED_MIN_H } from "@/components/landing/fullBleedShared";
 import { PLATFORM, platformTelHref } from "@/lib/platform";
 import FooterEnquiryForm from "@/components/landing/FooterEnquiryForm";
 
@@ -16,6 +15,11 @@ export const metadata: Metadata = {
 
 const CONTACT_PHONE_RAW = PLATFORM.phone.trim();
 const CONTACT_TEL = platformTelHref(CONTACT_PHONE_RAW);
+
+const HeroWallpaper = dynamic(
+  () => import("@/components/landing/HeroWallpaper").then((m) => m.default),
+  { ssr: true }
+);
 
 const LandingHeader = dynamic(
   () => import("@/components/landing/LandingHeader").then((m) => m.default),
@@ -134,46 +138,31 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen w-full max-w-[100vw] flex-col overflow-x-hidden text-white">
       <div className="relative border-b border-white/[0.06]">
+        <HeroWallpaper className="z-0" variant="calm" />
         <LandingHeader />
 
-        {/* Hero — full-bleed background photo (cover = fills section like bg-cover); same overlays as Premium surplus */}
-        <section className={`relative isolate z-10 w-full overflow-hidden ${FULL_BLEED_MIN_H}`}>
-          <div className="absolute inset-0 z-0 bg-[#0a1522]" aria-hidden>
-            <Image
-              src="/up.jpg"
-              alt=""
-              fill
-              priority
-              className="h-full w-full object-cover object-[center_32%] sm:object-center"
-              sizes="100vw"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/50 via-transparent to-[#0D1B2A]/15"
-              aria-hidden
-            />
+        {/* Hero — text + framed photo (not full-bleed background) */}
+        <section className="relative z-10 overflow-hidden px-4 pb-14 pt-8 sm:px-6 sm:pb-16 sm:pt-10 lg:px-10 xl:px-14 2xl:px-16">
+          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+            <div className="landing-hero-orb-primary absolute -top-40 left-[5%] h-[min(28rem,80vw)] w-[min(28rem,80vw)] rounded-full bg-gold/18 blur-[100px]" />
+            <div className="landing-hero-orb-secondary absolute top-0 -right-20 h-[min(22rem,70vw)] w-[min(22rem,70vw)] rounded-full bg-[#3d6fb8]/22 blur-[90px]" />
+            <div className="absolute bottom-0 left-1/2 h-56 w-[130%] -translate-x-1/2 bg-gradient-to-t from-[#0D1B2A] via-transparent to-transparent opacity-95" />
           </div>
-          <div
-            className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/72 to-[#0D1B2A]/35"
-            aria-hidden
-          />
 
-          <div
-            className={`relative z-[3] flex flex-col justify-center px-4 py-12 sm:px-8 sm:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 2xl:px-20 ${FULL_BLEED_MIN_H}`}
-          >
-            <div className="mx-auto w-full max-w-3xl text-center lg:mx-0 lg:max-w-[36rem] lg:text-left">
-              <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-black/25 px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.08] sm:text-[0.65rem]">
+          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] items-center gap-10 lg:grid-cols-2 lg:items-center lg:gap-12 xl:max-w-[min(100%,1400px)] xl:gap-16 2xl:gap-20">
+            <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-[26rem] lg:text-left xl:max-w-[28rem] 2xl:max-w-[32rem]">
+              <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
                 Verified B2B marketplace
               </p>
               <h1 className="font-heading text-[1.85rem] font-bold leading-[1.12] tracking-tight text-balance sm:text-4xl md:text-5xl lg:text-[3.15rem] xl:text-[3.35rem]">
-                <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.45)]">
+                <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
                   Surplus and clearance,
                 </span>
                 <span className="mt-2 block bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text italic text-transparent drop-shadow-[0_0_28px_rgba(201,168,76,0.35)]">
                   traded between pharmacies.
                 </span>
               </h1>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg lg:mx-0">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg lg:mx-0 lg:max-w-none">
                 GalaxRX is where licensed Australian pharmacies recover capital on excess inventory and source verified stock.
               </p>
 
@@ -188,7 +177,7 @@ export default function HomePage() {
                 <Link
                   href="/listings"
                   aria-label="Browse pharmacy stock listings"
-                  className="inline-flex items-center justify-center rounded-2xl border border-gold/50 bg-black/25 px-7 py-4 font-heading text-xs font-semibold uppercase tracking-wide text-gold backdrop-blur-md transition-all duration-300 hover:border-gold/65 hover:bg-black/35 hover:shadow-[0_0_28px_-10px_rgba(201,168,76,0.25)] sm:text-sm"
+                  className="inline-flex items-center justify-center rounded-2xl border border-gold/45 bg-white/[0.04] px-7 py-4 font-heading text-xs font-semibold uppercase tracking-wide text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold/60 hover:bg-white/[0.09] hover:shadow-[0_0_28px_-10px_rgba(201,168,76,0.25)] sm:text-sm"
                 >
                   Browse listings
                 </Link>
@@ -198,13 +187,40 @@ export default function HomePage() {
                 {TRUST_BADGES.map((b) => (
                   <li
                     key={b}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-black/30 px-3 py-1.5 text-[0.7rem] font-medium text-white/85 backdrop-blur-sm sm:text-xs"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-black/20 px-3 py-1.5 text-[0.7rem] font-medium text-white/75 backdrop-blur-sm sm:text-xs"
                   >
                     <ShieldCheckIcon className="h-3.5 w-3.5 shrink-0 text-gold" />
                     {b}
                   </li>
                 ))}
               </ul>
+            </div>
+
+            <div className="relative mx-auto w-full min-w-0 max-w-xl lg:mx-0 lg:max-w-none lg:justify-self-stretch">
+              <div
+                className="pointer-events-none absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-gold/35 via-white/10 to-transparent opacity-80 blur-[2px]"
+                aria-hidden
+              />
+              <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-[#0a1522] shadow-[0_28px_64px_-28px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.05)] sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[5/4]">
+                <Image
+                  src="/up.jpg"
+                  alt="Pharmacy professional reviewing inventory — representing verified B2B surplus trading on GalaxRX"
+                  fill
+                  priority
+                  className="object-cover object-[center_22%] sm:object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/95 via-[#0D1B2A]/25 to-transparent sm:from-[#0D1B2A]/90"
+                  aria-hidden
+                />
+                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                  <p className="font-heading text-sm font-semibold uppercase tracking-[0.2em] text-gold/95">Built for pharmacies</p>
+                  <p className="mt-1 max-w-sm text-sm leading-relaxed text-white/85">
+                    Commercial trading — not retail. Every account is verified before anyone buys or sells.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>

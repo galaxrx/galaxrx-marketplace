@@ -136,7 +136,7 @@ export default function HomePage() {
       <div className="relative border-b border-white/[0.06]">
         <LandingHeader />
 
-        {/* Hero — same full-bleed treatment as Premium surplus (contain photo, navy letterbox, matching gradients) */}
+        {/* Hero — full-bleed background photo (cover = fills section like bg-cover); same overlays as Premium surplus */}
         <section className={`relative isolate z-10 w-full overflow-hidden ${FULL_BLEED_MIN_H}`}>
           <div className="absolute inset-0 z-0 bg-[#0a1522]" aria-hidden>
             <Image
@@ -144,7 +144,7 @@ export default function HomePage() {
               alt=""
               fill
               priority
-              className="object-contain object-center"
+              className="h-full w-full object-cover object-[center_32%] sm:object-center"
               sizes="100vw"
               aria-hidden
             />

@@ -14,14 +14,15 @@ function IconBottlePills({ className }: { className?: string }) {
   );
 }
 
-/** Pregnancy & Baby — baby */
+/** Pregnancy & Baby — baby (big head, arms, swaddle) */
 function IconBaby({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <ellipse cx="12" cy="9.5" rx="4" ry="4" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M7 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
-      <path strokeLinecap="round" d="M9.5 9h.01M14.5 9h.01" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10 12.5a2 2 0 0 0 4 0" />
+      <circle cx="12" cy="9" r="4" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 9L6 10.5M16 9l2 1.5" />
+      <path strokeLinecap="round" d="M9.5 8h.01M14.5 8h.01" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 11a2 2 0 0 0 4 0" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 20.5c0-3.5 2.8-6 5.5-6s5.5 2.5 5.5 6" />
     </svg>
   );
 }
@@ -49,13 +50,12 @@ function IconDroplet({ className }: { className?: string }) {
   );
 }
 
-/** Hair care — hair strands */
-function IconHair({ className }: { className?: string }) {
+/** Hair care — comb */
+function IconComb({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <path strokeLinecap="round" d="M7 5c0 8-2 14-3 17" />
-      <path strokeLinecap="round" d="M12 4c0 8 0 14 0 17" />
-      <path strokeLinecap="round" d="M17 5c0 8 2 14 3 17" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12-2 2L4 8l2-2z" />
+      <path strokeLinecap="round" d="M7 8l1 1M9 10l1 1M11 12l1 1M13 14l1 1" />
     </svg>
   );
 }
@@ -116,18 +116,18 @@ function IconDumbbell({ className }: { className?: string }) {
   );
 }
 
-/** Home & Pet — dog */
+/** Home & Pet — dog (floppy ears + muzzle, reads clearly at 16px) */
 function IconDog({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6.5 11.5c0-2.5 2-4.5 4.5-4.5h2l1.5-2 1.5 1.8L17 7c2.5 0 4.5 2 4.5 4.5v1c0 3-2.5 5.5-5.5 5.5h-4C7 18.5 4.5 16 4.5 13v-1.5z"
-      />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7.5L6.5 5.5M16 7.5l1.5-2" />
-      <path strokeLinecap="round" d="M9.5 12.5h.01M14.5 12.5h.01" />
-      <path strokeLinecap="round" d="M11 15h2" />
+      <ellipse cx="8.5" cy="7.5" rx="2.2" ry="3" transform="rotate(-15 8.5 7.5)" />
+      <ellipse cx="15.5" cy="7.5" rx="2.2" ry="3" transform="rotate(15 15.5 7.5)" />
+      <ellipse cx="12" cy="13" rx="5" ry="4.5" />
+      <ellipse cx="12" cy="14.5" rx="2.5" ry="2" />
+      <circle cx="9.5" cy="12" r="0.7" fill="currentColor" stroke="none" />
+      <circle cx="14.5" cy="12" r="0.7" fill="currentColor" stroke="none" />
+      <path strokeLinecap="round" d="M10 16h4" />
+      <path strokeLinecap="round" d="M12 16.5v2" />
     </svg>
   );
 }
@@ -137,7 +137,7 @@ const CATEGORIES: readonly { label: string; icon: (p: { className?: string }) =>
   { label: "Pregnancy & Baby", icon: IconBaby },
   { label: "Cosmetics", icon: IconLipstick },
   { label: "Skincare", icon: IconDroplet },
-  { label: "Hair Care", icon: IconHair },
+  { label: "Hair Care", icon: IconComb },
   { label: "Oral Care", icon: IconToothpaste },
   { label: "Personal Care", icon: IconUser },
   { label: "Medicines", icon: IconPills },

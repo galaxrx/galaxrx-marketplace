@@ -25,6 +25,14 @@ const BulkUploadHelper = dynamic(() => import("@/components/sell/BulkUploadHelpe
     </aside>
   ),
 });
+const ProductNameCameraReader = dynamic(() => import("@/components/sell/ProductNameCameraReader"), {
+  ssr: false,
+  loading: () => (
+    <div className="rounded-lg border border-[rgba(161,130,65,0.2)] bg-white/5 p-3 text-xs text-white/60">
+      Opening camera...
+    </div>
+  ),
+});
 
 import { CATEGORY_OPTIONS, type CategoryValue } from "@/lib/categories";
 import { shouldSkipImageLoadInProduction } from "@/lib/image-url";
@@ -57,6 +65,7 @@ export default function SellPageClient({ repeatId, editId }: Props) {
   const [searchResults, setSearchResults] = useState<Drug[]>([]);
   const [selectedDrug, setSelectedDrug] = useState<Drug | null>(null);
   const [manualProduct, setManualProduct] = useState({ productName: "", packSize: 20, category: "OTC" as CategoryValue });
+  const [showManualCamera, setShowManualCamera] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     stockType: "PACK" as "PACK" | "QUANTITY",
@@ -508,6 +517,34 @@ export default function SellPageClient({ repeatId, editId }: Props) {
               placeholder="e.g. Paracetamol 500mg Tablets"
               className={inputClass}
             />
+            <div className="mt-2">
+              {!showManualCamera ? (
+                <button
+                  type="button"
+                  onClick={() => setShowManualCamera(true)}
+                  className="text-sm px-3 py-2 rounded-md border border-gold/45 text-gold hover:bg-gold/10"
+                >
+                  Open camera to read product name
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <ProductNameCameraReader
+                    onDetected={(name) => {
+                      setManualProduct((p) => ({ ...p, productName: name }));
+                      toast.success("Product name detected from camera.");
+                    }}
+                    onError={(msg) => toast.error(msg)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowManualCamera(false)}
+                    className="text-xs text-white/70 hover:text-white"
+                  >
+                    Close camera
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <div>
             <label className={labelClass}>Reference pack size (units)</label>

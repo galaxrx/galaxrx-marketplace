@@ -15,7 +15,7 @@ export default function LandingSlideshow({
 }: {
   className?: string;
   variant?: Variant;
-  /** When variant is fullBleed, rendered on top of slides with left gradient (previous hero style). */
+  /** When variant is fullBleed, rendered on top of slides with a darker scrim behind copy. */
   children?: ReactNode;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -49,12 +49,7 @@ export default function LandingSlideshow({
           <img
             src={src}
             alt={variant === "fullBleed" ? "" : `Slide ${index + 1}`}
-            className={
-              variant === "fullBleed"
-                ? /* contain = full image visible; letterboxing filled by parent bg-[#0a1522] */
-                  "absolute inset-0 h-full w-full object-contain object-center"
-                : "absolute inset-0 h-full w-full object-cover object-center"
-            }
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading={index === 0 ? "eager" : "lazy"}
             aria-hidden={variant === "fullBleed" ? true : undefined}
           />
@@ -74,7 +69,7 @@ export default function LandingSlideshow({
       )}
       {variant === "fullBleed" && (
         <div
-          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#0D1B2A]/50 via-transparent to-[#0D1B2A]/15"
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#0D1B2A]/45 via-transparent to-[#0D1B2A]/25"
           aria-hidden
         />
       )}
@@ -82,7 +77,7 @@ export default function LandingSlideshow({
   );
 
   const dots = (
-    <div className="absolute bottom-4 left-1/2 z-[4] flex -translate-x-1/2 gap-2 rounded-full border border-white/[0.08] bg-black/35 px-2 py-1.5 backdrop-blur-sm sm:bottom-5">
+    <div className="absolute bottom-4 left-1/2 z-[5] flex -translate-x-1/2 gap-2 rounded-full border border-white/[0.08] bg-black/45 px-2 py-1.5 backdrop-blur-sm sm:bottom-6">
       {SLIDE_IMAGES.map((_, index) => (
         <button
           key={index}
@@ -109,11 +104,16 @@ export default function LandingSlideshow({
         onMouseLeave={() => setPaused(false)}
       >
         <div className="absolute inset-0 z-0 bg-[#0a1522]">{slideStack}</div>
-        {/* Left-heavy overlay — same spirit as previous static hero image */}
-        <div
-          className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/72 to-[#0D1B2A]/35"
-          aria-hidden
-        />
+
+        {/* Localized darker theme behind copy — not full-width wash */}
+        <div className="pointer-events-none absolute inset-0 z-[2]" aria-hidden>
+          {/* Mobile / small screens: heavier scrim toward bottom where stacked copy sits */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#05080d]/95 via-[#0D1B2A]/55 to-transparent sm:from-[#0D1B2A]/75 sm:via-[#0D1B2A]/35 sm:to-transparent lg:hidden" />
+          {/* Desktop: dark panel from the left behind left-aligned text */}
+          <div className="absolute inset-y-0 left-0 hidden w-[min(100%,28rem)] bg-gradient-to-r from-[#05080d]/98 via-[#0D1B2A]/92 to-transparent sm:w-[min(100%,34rem)] lg:block lg:w-[min(52%,42rem)] xl:w-[min(48%,44rem)]" />
+          <div className="absolute inset-y-0 left-0 hidden w-[min(52%,42rem)] bg-gradient-to-r from-black/50 via-[#0D1B2A]/40 to-transparent lg:block xl:from-black/40" />
+        </div>
+
         <div
           className={`relative z-[3] flex flex-col justify-center px-4 py-12 sm:px-8 sm:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 2xl:px-20 ${FULL_BLEED_MIN_H}`}
         >

@@ -321,18 +321,7 @@ export default function HomePage() {
                   aria-hidden
                 />
                 <div className="absolute bottom-0 left-0 right-0 border-t border-white/[0.06] bg-[#0D1B2A]/55 p-4 backdrop-blur-md sm:p-5">
-                  <div className="flex flex-wrap gap-2 sm:gap-2.5">
-                    <span className="rounded-full border border-gold/25 bg-black/30 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-gold/95 sm:text-xs">
-                      Proof at a glance
-                    </span>
-                    <span className="rounded-full border border-white/[0.1] bg-black/25 px-3 py-1 text-[0.65rem] font-medium text-white/75 sm:text-xs">
-                      B2B · not retail
-                    </span>
-                    <span className="rounded-full border border-white/[0.1] bg-black/25 px-3 py-1 text-[0.65rem] font-medium text-white/75 sm:text-xs">
-                      Stripe settlement
-                    </span>
-                  </div>
-                  <p className="mt-3 font-heading text-sm font-semibold text-white sm:text-base">Built for dispensary owners</p>
+                  <p className="font-heading text-sm font-semibold text-white sm:text-base">Built for dispensary owners</p>
                   <p className="mt-1 max-w-md text-sm leading-relaxed text-white/75">
                     Every account is verified before anyone buys or sells — commercial trading with a clear counterparty.
                   </p>

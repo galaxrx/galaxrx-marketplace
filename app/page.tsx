@@ -269,11 +269,11 @@ export default function HomePage() {
                 <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
                   <span className="flex flex-col gap-y-3 sm:gap-y-3.5 md:gap-y-4">
                     <span className="block leading-[1.18] sm:leading-[1.2]">Turn surplus</span>
-                    <span className="block leading-[1.18] sm:leading-[1.2]">into cash</span>
+                    <span className="block leading-[1.18] sm:leading-[1.2]">into recovery</span>
                   </span>
                 </span>
                 <span className="mt-5 block max-w-xl bg-gradient-to-r from-gold via-[#e8d5a3] to-gold bg-clip-text text-[1.125rem] font-semibold leading-[1.3] text-transparent sm:text-xl md:text-2xl lg:mx-0 lg:text-[1.75rem]">
-                  Verified pharmacy-to-pharmacy trading.
+                  GalaxRX turns shelf surplus into recoverable value.
                 </span>
               </h1>
               <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/58 sm:text-[1.0625rem] lg:mx-0 lg:max-w-none">

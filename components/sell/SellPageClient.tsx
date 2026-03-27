@@ -89,7 +89,7 @@ export default function SellPageClient({ repeatId, editId }: Props) {
     images: [] as string[],
   });
   const [publishedProduct, setPublishedProduct] = useState<string | null>(null);
-  const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(true);
   /** When editing: listing has accepted offer(s) not yet paid (seller can clear to mark available again). */
   const [isPending, setIsPending] = useState(false);
   /** User opted to clear pending (cancel accepted offers) when saving edit. */

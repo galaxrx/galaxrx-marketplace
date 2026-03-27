@@ -753,6 +753,18 @@ export default function HomePage() {
                       <circle cx="4" cy="4" r="2" />
                     </svg>
                   </a>
+                  <a
+                    href={PLATFORM.youtubeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] text-white/55 transition-colors hover:border-gold/30 hover:text-gold"
+                    aria-label="GalaxRX on YouTube"
+                  >
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+                      <path d="m10 15 5-3-5-3z" fill="currentColor" stroke="none" />
+                    </svg>
+                  </a>
                   {CONTACT_TEL ? (
                     <a
                       href={`tel:${CONTACT_TEL}`}

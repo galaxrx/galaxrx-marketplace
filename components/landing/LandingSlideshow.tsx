@@ -1,13 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { FULL_BLEED_MIN_H } from "@/components/landing/fullBleedShared";
 
 const SLIDE_IMAGES = ["/slides/1.png.png", "/slides/2.png.png", "/slides/3.png.png", "/slides/4.jpg.jpg"];
 const INTERVAL_MS = 6000;
-
-/** Responsive min height — with object-contain, extra height lets the photo scale up on wide screens. */
-const FULL_BLEED_MIN_H =
-  "min-h-[20rem] sm:min-h-[22rem] md:min-h-[min(48vh,34rem)] lg:min-h-[min(65vh,48rem)] xl:min-h-[min(70vh,54rem)] 2xl:min-h-[min(75vh,60rem)]";
 
 type Variant = "default" | "fullBleed";
 

@@ -4,6 +4,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import CategoryMarquee from "@/components/landing/CategoryMarquee";
+import { FULL_BLEED_MIN_H } from "@/components/landing/fullBleedShared";
 import { PLATFORM, platformTelHref } from "@/lib/platform";
 import FooterEnquiryForm from "@/components/landing/FooterEnquiryForm";
 
@@ -135,24 +136,32 @@ export default function HomePage() {
       <div className="relative border-b border-white/[0.06]">
         <LandingHeader />
 
-        {/* Hero — full-bleed pharmacy photo with readable overlay */}
-        <section className="relative isolate z-10 flex min-h-[min(100svh,40rem)] flex-col justify-center overflow-hidden sm:min-h-[min(92svh,44rem)] lg:min-h-[min(88svh,52rem)]">
-          <div className="absolute inset-0 -z-10" aria-hidden>
+        {/* Hero — same full-bleed treatment as Premium surplus (contain photo, navy letterbox, matching gradients) */}
+        <section className={`relative isolate z-10 w-full overflow-hidden ${FULL_BLEED_MIN_H}`}>
+          <div className="absolute inset-0 z-0 bg-[#0a1522]" aria-hidden>
             <Image
               src="/up.jpg"
               alt=""
               fill
               priority
-              className="object-cover object-[center_30%] sm:object-center"
+              className="object-contain object-center"
               sizes="100vw"
               aria-hidden
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/96 via-[#0D1B2A]/78 to-[#0D1B2A]/45" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/92 via-[#0D1B2A]/35 to-[#0D1B2A]/25" />
+            <div
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/50 via-transparent to-[#0D1B2A]/15"
+              aria-hidden
+            />
           </div>
+          <div
+            className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/72 to-[#0D1B2A]/35"
+            aria-hidden
+          />
 
-          <div className="relative mx-auto w-full max-w-[min(100%,1280px)] px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-12 lg:px-10 lg:pb-20 lg:pt-14 xl:px-14 2xl:px-16">
-            <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-[36rem] lg:text-left">
+          <div
+            className={`relative z-[3] flex flex-col justify-center px-4 py-12 sm:px-8 sm:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 2xl:px-20 ${FULL_BLEED_MIN_H}`}
+          >
+            <div className="mx-auto w-full max-w-3xl text-center lg:mx-0 lg:max-w-[36rem] lg:text-left">
               <p className="mb-4 inline-flex items-center rounded-full border border-gold/25 bg-black/25 px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.08] sm:text-[0.65rem]">
                 Verified B2B marketplace
               </p>

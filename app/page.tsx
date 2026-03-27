@@ -271,7 +271,7 @@ export default function HomePage() {
               <p className="mb-5 inline-flex items-center rounded-full border border-gold/25 bg-white/[0.04] px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-[0_0_24px_-4px_rgba(201,168,76,0.35)] backdrop-blur-md ring-1 ring-white/[0.06] sm:text-[0.65rem]">
                 Verified B2B marketplace · Australia
               </p>
-              <h1 className="font-heading text-[1.95rem] font-bold leading-[1.15] tracking-tight text-balance sm:text-4xl md:text-[2.75rem] lg:text-[3.1rem] xl:text-[3.35rem]">
+              <h1 className="font-heading text-[1.95rem] font-bold leading-[1.22] tracking-tight text-balance sm:text-4xl md:text-[2.75rem] lg:text-[3.1rem] xl:text-[3.35rem]">
                 <span className="block text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
                   Turn surplus into cash
                 </span>
@@ -300,22 +300,6 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              <ul className="mt-10 flex gap-2.5 overflow-x-auto pb-1 sm:gap-3 lg:max-w-none" aria-label="How GalaxRX operates">
-                {HERO_PROOF_SIGNALS.map((s) => (
-                  <li
-                    key={s.label}
-                    className="flex min-w-[14.25rem] flex-1 items-center gap-3 rounded-2xl border border-white/[0.08] bg-black/25 px-4 py-3 text-left backdrop-blur-sm transition-colors hover:border-gold/20 sm:min-w-[15rem] sm:py-3.5"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08]">
-                      <ShieldCheckIcon className="h-4 w-4 text-gold" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-[0.8125rem] font-semibold tracking-wide text-white/90 sm:text-sm">{s.label}</span>
-                      <span className="mt-0.5 block text-[0.7rem] text-white/45 sm:text-xs">{s.sub}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
             </div>
 
             <div className="relative mx-auto w-full min-w-0 max-w-xl lg:mx-0 lg:max-w-none lg:justify-self-stretch">
@@ -355,6 +339,26 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Hero proof signals (separate from hero copy) */}
+        <section className="relative z-10 border-t border-white/[0.06] bg-[#07121e]/70 px-4 py-6 sm:px-6 sm:py-7 lg:px-10">
+          <div className="mx-auto grid w-full max-w-[min(100%,1280px)] gap-2.5 sm:grid-cols-3 sm:gap-3">
+            {HERO_PROOF_SIGNALS.map((s) => (
+              <div
+                key={s.label}
+                className="flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-black/25 px-4 py-3 text-left backdrop-blur-sm transition-colors hover:border-gold/20 sm:py-3.5"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/20 bg-gold/[0.08]">
+                  <ShieldCheckIcon className="h-4 w-4 text-gold" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[0.8125rem] font-semibold tracking-wide text-white/90 sm:text-sm">{s.label}</span>
+                  <span className="mt-0.5 block text-[0.7rem] text-white/45 sm:text-xs">{s.sub}</span>
+                </span>
+              </div>
+            ))}
           </div>
         </section>
       </div>

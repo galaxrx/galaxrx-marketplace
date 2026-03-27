@@ -138,17 +138,7 @@ export default function CategoryMarquee() {
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" aria-hidden />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-3 pt-8 text-center sm:px-6 sm:pt-10">
-        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-gold/90 sm:text-xs">Depth of stock</p>
-        <h2 className="mt-2 font-heading text-lg font-bold text-white text-balance sm:text-xl md:text-2xl">
-          Non‑prescription lines pharmacies actually move
-        </h2>
-        <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-white/45 sm:text-[0.9375rem]">
-          A live slice of the surplus and clearance categories peers list — OTC, front-of-shop, and health essentials.
-        </p>
-      </div>
-
-      <div className="relative space-y-3 pb-8 sm:space-y-3.5 sm:pb-10" aria-hidden="true">
+      <div className="relative space-y-3 py-8 sm:space-y-3.5 sm:py-10" aria-hidden="true">
         <div className="overflow-hidden py-1">
           <div className="marquee-category-track flex w-max items-center gap-3 pr-3 sm:gap-4 sm:pr-4">
             {loop.map(({ label, icon }, i) => (

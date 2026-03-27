@@ -14,14 +14,14 @@ function IconBottlePills({ className }: { className?: string }) {
   );
 }
 
-/** Pregnancy & Baby */
+/** Pregnancy & Baby — baby */
 function IconBaby({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <circle cx="12" cy="9" r="3.5" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1" />
-      <path strokeLinecap="round" d="M9.5 8h.01M14.5 8h.01" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10 11a2 2 0 0 0 4 0" />
+      <ellipse cx="12" cy="9.5" rx="4" ry="4" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M7 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
+      <path strokeLinecap="round" d="M9.5 9h.01M14.5 9h.01" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 12.5a2 2 0 0 0 4 0" />
     </svg>
   );
 }
@@ -49,24 +49,28 @@ function IconDroplet({ className }: { className?: string }) {
   );
 }
 
-/** Hair care — comb */
-function IconComb({ className }: { className?: string }) {
+/** Hair care — hair strands */
+function IconHair({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 4l12 12-2 2L6 6l2-2z" />
-      <path strokeLinecap="round" d="M10 8l1 1M12 10l1 1M14 12l1 1M16 14l1 1" />
+      <path strokeLinecap="round" d="M7 5c0 8-2 14-3 17" />
+      <path strokeLinecap="round" d="M12 4c0 8 0 14 0 17" />
+      <path strokeLinecap="round" d="M17 5c0 8 2 14 3 17" />
     </svg>
   );
 }
 
-/** Oral care — toothbrush */
-function IconToothbrush({ className }: { className?: string }) {
+/** Oral care — toothpaste tube */
+function IconToothpaste({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <rect x="5" y="5" width="14" height="7" rx="1.5" />
-      <path strokeLinecap="round" d="M7.5 7.5h9M7.5 9.5h9" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 12v8" />
-      <circle cx="12" cy="21" r="1.25" fill="currentColor" stroke="none" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 6h8l1 3v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V9l1-3z"
+      />
+      <path strokeLinecap="round" d="M9 9h6M9 12h6" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 4h4v2h-4z" />
     </svg>
   );
 }
@@ -90,20 +94,24 @@ function IconPills({ className }: { className?: string }) {
   );
 }
 
-/** First aid — medical cross */
-function IconMedicalCross({ className }: { className?: string }) {
+/** First aid — kit (box + cross) */
+function IconFirstAidKit({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <circle cx="12" cy="12" r="9" />
-      <path strokeLinecap="round" d="M12 8v8M8 12h8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 10h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 10V8a3 3 0 0 1 6 0v2" />
+      <path strokeLinecap="round" d="M12 13v4M10 15h4" />
     </svg>
   );
 }
 
+/** Sport — dumbbell */
 function IconDumbbell({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={SW} aria-hidden>
-      <path strokeLinecap="round" d="M4 10h2v4H4M18 10h2v4h-2M7 9h10v6H7zM6 8v8M18 8v8" />
+      <rect x="3" y="9" width="6" height="6" rx="1.5" />
+      <rect x="15" y="9" width="6" height="6" rx="1.5" />
+      <path strokeLinecap="round" d="M9 12h6" strokeWidth={2.25} />
     </svg>
   );
 }
@@ -115,11 +123,11 @@ function IconDog({ className }: { className?: string }) {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M6 12c0-2 1.5-4 3.5-4h5c2 0 3.5 2 3.5 4v2c0 3-2.5 6-6 6s-6-3-6-6v-2z"
+        d="M6.5 11.5c0-2.5 2-4.5 4.5-4.5h2l1.5-2 1.5 1.8L17 7c2.5 0 4.5 2 4.5 4.5v1c0 3-2.5 5.5-5.5 5.5h-4C7 18.5 4.5 16 4.5 13v-1.5z"
       />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 8V6l2-1 2 1.5L14 6l2 1v2" />
-      <path strokeLinecap="round" d="M9.5 13h.01M14.5 13h.01" />
-      <path strokeLinecap="round" d="M10.5 15.5h3" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7.5L6.5 5.5M16 7.5l1.5-2" />
+      <path strokeLinecap="round" d="M9.5 12.5h.01M14.5 12.5h.01" />
+      <path strokeLinecap="round" d="M11 15h2" />
     </svg>
   );
 }
@@ -129,11 +137,11 @@ const CATEGORIES: readonly { label: string; icon: (p: { className?: string }) =>
   { label: "Pregnancy & Baby", icon: IconBaby },
   { label: "Cosmetics", icon: IconLipstick },
   { label: "Skincare", icon: IconDroplet },
-  { label: "Hair Care", icon: IconComb },
-  { label: "Oral Care", icon: IconToothbrush },
+  { label: "Hair Care", icon: IconHair },
+  { label: "Oral Care", icon: IconToothpaste },
   { label: "Personal Care", icon: IconUser },
   { label: "Medicines", icon: IconPills },
-  { label: "First Aid", icon: IconMedicalCross },
+  { label: "First Aid", icon: IconFirstAidKit },
   { label: "Sport & Fitness", icon: IconDumbbell },
   { label: "Home & Pet", icon: IconDog },
 ];
